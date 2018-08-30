@@ -6,6 +6,7 @@ if(!defined("ACCESS")){
 }
 define("lm","<br>");
 require_once ROOT."Core/Loader.php";
+require_once ROOT."vendor/autoload.php";
 Loader::$myclassDir= "Vendor/myclass/";
 Loader::$is_debug= 1;
 spl_autoload_register('Loader::autoload');

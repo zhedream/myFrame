@@ -7,7 +7,6 @@ class BaseController{
     public $smarty;
 
     function __construct(){
-        require(ROOT  . 'libs\Smarty\Smarty.class.php');
         $this->smarty = new \Smarty;
         // $this->smarty->template_dir = APP_PATH."\/view/".PLAT;
         $this->smarty->template_dir = ROOT."\/views/";
