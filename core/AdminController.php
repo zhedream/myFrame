@@ -10,7 +10,4 @@ class AdminController extends BaseController{
 }
 
 
-
-
-
 ?>

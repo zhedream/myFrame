@@ -5,12 +5,11 @@ if(!defined("ACCESS")){
     header("location:../index.php");
 }
 define("lm","<br>");
-require_once "Core/Loader.class.php";
+require_once ROOT."Core/Loader.php";
 Loader::$myclassDir= "Vendor/myclass/";
 Loader::$is_debug= 1;
-spl_autoload_register("Loader::ForMyframeCore");
-spl_autoload_register("Loader::ForMyframeApp");
-spl_autoload_register("Loader::ForMyframeSmarty");
+spl_autoload_register('Loader::autoload');
+spl_autoload_register("Loader::ForClass");
 
 class App{
 
@@ -30,7 +29,7 @@ class App{
         //目录斜线
         define("DS",DIRECTORY_SEPARATOR);
         //根目录
-        define("ROOT",getcwd() . DS);
+        // define("ROOT",getcwd() . DS);
         //主程序目录
         define("APP_PATH",ROOT . "app" . DS);
         //Home目录
@@ -66,10 +65,11 @@ class App{
         $a = isset($_REQUEST['a']) ? $_REQUEST['a'] : "Index";
         // var_dump($GLOBALS);
         // exit;
-        $p = ucfirst(strtolower($p)); 
-        if(!in_array($p,['Home','Admin'])){
-            $p = "Home";
-        }
+        // $p = ucfirst(strtolower($p)); 
+        // if(!in_array($p,['Home','Admin'])){
+        //     $p = "Home";
+        // }
+        $p = '';
         $c = ucfirst(strtolower($c));
         define("PLAT", $p);// 前台 后台
         define("CONTROLLER", $c);
@@ -80,13 +80,16 @@ class App{
     private static function initDispatch(){
         $ac = ACTION;
         $cName = CONTROLLER."Controller";
-        $cPath = APP_PATH.PLAT."/Controller/". $cName .".class.php";
+        $cPath = APP_PATH.PLAT."controllers/". $cName .".php";
         // var_dump($cPath);
 
         if(file_exists($cPath)){
             
-            $Controller= PLAT."\\Controller\\".$cName;
-            $controllerObj = new $Controller;
+            $Controller= 'app\\'.PLAT."controllers\\".$cName;
+            echo $Controller.lm;
+            // $controllerObj = new $Controller;
+            $controllerObj = new app\controllers\indexController;
+            
             if(method_exists($controllerObj,$ac)){
                 if(Loader::$is_debug)
                 echo "存在方法APP".lm;
@@ -103,6 +106,7 @@ class App{
         }else{
 
             echo "控制器不存在,将跳转<br>";
+            // die('END');
             $Controller= PLAT."\\Controller\\"."IndexController";
             $controllerObj = new $Controller;
             $controllerObj->error_jump(PLAT,"index","index");

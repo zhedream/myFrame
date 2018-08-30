@@ -1,8 +1,8 @@
 <?php 
-namespace Home\Controller;
-use \Core\HomeController;
+namespace app\controllers;
+use Core\HomeController;
 use Core\DB;
-use Model\TestModel;
+use app\Models\TestModel;
 class IndexController extends HomeController{
 
 

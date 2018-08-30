@@ -1,17 +1,19 @@
 <?php
 
 namespace Core;
-
+// use vendor\Smarty\Smarty;
 class BaseController{
 
     public $smarty;
 
     function __construct(){
-        $this->smarty = new \smarty;
-        $this->smarty->template_dir = APP_PATH.PLAT."\/View/".CONTROLLER."/";
-        $this->smarty->compile_dir = APP_PATH.PLAT."\/View_c/";
+        require(ROOT  . 'libs\Smarty\Smarty.class.php');
+        $this->smarty = new \Smarty;
+        // $this->smarty->template_dir = APP_PATH."\/view/".PLAT;
+        $this->smarty->template_dir = ROOT."\/views/";
+        $this->smarty->compile_dir = ROOT."\/views_c/";
         $this->smarty->caching = false;
-        $this->smarty->cache_dir = APP_PATH.PLAT."\/Cache/";
+        $this->smarty->cache_dir = ROOT."\/cache/";
         $this->smarty->left_delimiter = "<{";
         $this->smarty->right_delimiter = "}>";
     }

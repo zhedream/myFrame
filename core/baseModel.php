@@ -22,7 +22,7 @@ class baseModel{
     
     private static function db(){
 		if (self::$pdo == NULL) {
-            $db = (include "Config/config.php")['db'];
+            $db = (include ROOT."Config/config.php")['db'];
             $dsn = "mysql:host=".$db['host'].";dbname=".$db['dbname'];
             try{
                 self::$pdo = new PDO($dsn,$db['user'],$db['pwd']);

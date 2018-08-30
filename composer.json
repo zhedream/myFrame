@@ -1,0 +1,13 @@
+{
+    "name": "myframe",
+    "description": "My Framework.",
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
+    },
+    "require": {
+        "smarty/smarty": "^3.1"
+    }
+}

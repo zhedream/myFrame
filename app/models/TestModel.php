@@ -1,6 +1,6 @@
 <?php
 
-namespace Model;
+namespace app\Models;
 use Core\BaseModel;
 
 class TestModel extends BaseModel{
