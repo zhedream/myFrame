@@ -5,7 +5,11 @@ use Core\DB;
 use app\Models\TestModel;
 class IndexController extends HomeController{
 
-
+	/**
+     * Matches /blog exactly
+     *
+     * @Route("/blog", name="blog_list")
+     */
 	function index(){
 		
 		$data =  ( TestModel::findOne('select * from dy_film_type'));

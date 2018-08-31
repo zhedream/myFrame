@@ -2,7 +2,9 @@
 
 namespace Core;
 // use vendor\Smarty\Smarty;
-class BaseController{
+// use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+// use Symfony\Component\Routing\Annotation\Route;
+class BaseController  {
 
     public $smarty;
 
