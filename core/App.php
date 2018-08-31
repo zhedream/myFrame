@@ -6,7 +6,6 @@ if(!defined("ACCESS")){
 }
 define("lm","<br>");
 require_once ROOT."Core/Loader.php";
-require_once ROOT."vendor/autoload.php";
 Loader::$myclassDir= "Vendor/myclass/";
 Loader::$is_debug= 1;
 spl_autoload_register('Loader::autoload');
@@ -82,14 +81,13 @@ class App{
         $ac = ACTION;
         $cName = CONTROLLER."Controller";
         $cPath = APP_PATH.PLAT."controllers/". $cName .".php";
-        // var_dump($cPath);
 
         if(file_exists($cPath)){
             
             $Controller= 'app\\'.PLAT."controllers\\".$cName;
             echo $Controller.lm;
-            // $controllerObj = new $Controller;
-            $controllerObj = new app\controllers\indexController;
+            $controllerObj = new $Controller;
+            // $controllerObj = new app\controllers\indexController;
             
             if(method_exists($controllerObj,$ac)){
                 if(Loader::$is_debug)
@@ -115,12 +113,6 @@ class App{
 
 
     }
-
-
-
-
-
-
 
 }
 

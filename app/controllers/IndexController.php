@@ -13,7 +13,13 @@ class IndexController extends HomeController{
 		$this->assign('data',$data);
 		$this->assign('name','刘浩哲');
 		$this->display('testbootsrap.html');
-
+		
+	}
+	
+	function aa(){
+		$data = TestModel::getUserInfo();
+		$this->assign('data',$data);
+		$this->display('a/a.html');
 	}
 
 	function jump(){

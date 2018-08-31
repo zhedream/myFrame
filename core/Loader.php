@@ -1,5 +1,5 @@
 <?php
-
+require_once ROOT."vendor/autoload.php";
 class Loader{
     public static $myclassDir = "/Vendor/class/";
     public static $is_debug = true;
@@ -50,17 +50,6 @@ public static function auto_load($className){
         echo "未找到{$className}类<br>";
     }
 }
-
-public static function ForMyframeCore($className){
-
-    $path = "./".$className.".class.php";
-    if(file_exists($path)){
-        include_once $path; //不加 抑制符  报错说明 到最后 都找不到 正确的类   require_once
-        if(self::$is_debug)
-        echo "正在加载Core类:{$className}<br>";
-    }
-}
-
 
 // 加载类结束
 
