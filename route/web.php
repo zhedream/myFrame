@@ -2,21 +2,9 @@
 
 use core\Route;
 
-Route::get('/getindex','IndexController@getindex');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Route::get('/','app/controllers/IndexController@index');
+Route::get('/user','app/controllers/UserController@index');
+Route::get('/blog','app/controllers/BlogController@index');
 
 
 ?>
