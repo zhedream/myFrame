@@ -1,15 +1,15 @@
 <?php
-
 if(!defined("ACCESS")){
     echo "未经过 主入口<br>";
     header("location:../index.php");
 }
-define("lm","<br>");
 require_once ROOT."Core/Loader.php";
 Loader::$myclassDir= "Vendor/myclass/";
 Loader::$is_debug= 1;
 spl_autoload_register('Loader::autoload');
 spl_autoload_register("Loader::ForClass");
+
+use core\Route;
 
 class App{
 
@@ -18,8 +18,7 @@ class App{
         self::initCharset();
         self::initDir();
         self::initError();
-        self::initURL();
-        self::initDispatch();
+        Route::initDispatch();
     }
 
     private static function initCharset(){
@@ -58,26 +57,9 @@ class App{
 
     }
         // 路由
-    private static function initURL(){
-
-        $p = isset($_REQUEST['p']) ? $_REQUEST['p'] : "Home";
-        $c = isset($_REQUEST['c']) ? $_REQUEST['c'] : "Index";
-        $a = isset($_REQUEST['a']) ? $_REQUEST['a'] : "Index";
-        // var_dump($GLOBALS);
-        // exit;
-        // $p = ucfirst(strtolower($p)); 
-        // if(!in_array($p,['Home','Admin'])){
-        //     $p = "Home";
-        // }
-        $p = '';
-        $c = ucfirst(strtolower($c));
-        define("PLAT", $p);// 前台 后台
-        define("CONTROLLER", $c);
-        define("ACTION", $a);
-        // var_dump(PLAT."--".CONTROLLER."--".ACTION);
-    }
-
     private static function initDispatch(){
+
+        Route::initURL();
         $ac = ACTION;
         $cName = CONTROLLER."Controller";
         $cPath = APP_PATH.PLAT."controllers/". $cName .".php";

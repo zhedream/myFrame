@@ -1,23 +1,29 @@
 <?php 
 namespace app\controllers;
+use core\Request;
 use Core\HomeController;
 use Core\DB;
 use app\Models\TestModel;
-class IndexController extends HomeController{
+class UserController extends HomeController{
 
-	/**
-     * Matches /blog exactly
-     *
-     * @Route("/blog", name="blog_list")
-     */
 	function index(){
 		
 		$data =  ( TestModel::findOne('select * from dy_film_type'));
 
 		$this->assign('data',$data);
-		$this->assign('name','刘浩哲');
+		$this->assign('name','User-> index');
 		$this->display('testbootsrap.html');
 		
+	}
+
+	function user(Request $req,$id){
+		echo "Request->".$req->test."<br>";
+		echo "第一个路由参数->".$id."<br>";
+	    var_dump($req->routevar);
+	}
+	function ab(Request $req,$id){
+		// echo "AB";
+		var_dump($req->routevar['id']);
 	}
 	
 	function aa(){

@@ -1,5 +1,11 @@
 <?php
 require_once ROOT."vendor/autoload.php";
+
+Loader::$myclassDir= "Vendor/myclass/";
+Loader::$is_debug= 1;
+spl_autoload_register('Loader::autoload');
+spl_autoload_register("Loader::ForClass");
+
 class Loader{
     public static $myclassDir = "/Vendor/class/";
     public static $is_debug = true;
@@ -20,7 +26,8 @@ class Loader{
         $path = str_replace('\\', '/', $class);
         if(file_exists(ROOT . $path . '.php')){
             require(ROOT . $path . '.php');
-            echo "正在自动加载类".__FUNCTION__.":{$class}<br>";
+            // return;
+            // echo "正在自动加载类".__FUNCTION__.":{$class}<br>";
         }
     }
 

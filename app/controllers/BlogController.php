@@ -3,7 +3,7 @@ namespace app\controllers;
 use Core\HomeController;
 use Core\DB;
 use app\Models\TestModel;
-class IndexController extends HomeController{
+class BlogController extends HomeController{
 
 	/**
      * Matches /blog exactly
@@ -15,7 +15,7 @@ class IndexController extends HomeController{
 		$data =  ( TestModel::findOne('select * from dy_film_type'));
 
 		$this->assign('data',$data);
-		$this->assign('name','刘浩哲');
+		$this->assign('name','这里是BlogController');
 		$this->display('testbootsrap.html');
 		
 	}
