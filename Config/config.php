@@ -23,6 +23,11 @@ return array(
             'charset'=>'utf8',      //数据库的默认编码
             'prefix'=>'dy_'        //数据表前缀
 		),
+		'redis'=>array(
+			'scheme' => 'tcp',
+			'host'   => 'localhost',
+			'port'   => 6379,
+		),
 		'upload'=>array(
 				//设置文件上传允许的后缀
 				'allow_suffix'=>['jpg','jpeg','gif','png','bmp'],

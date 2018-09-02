@@ -30,6 +30,7 @@ class baseModel{
                 self::$pdo->exec("set names utf8");
             }catch(PDOException $e){
                 echo "{$dbname}数据库连接失败！".$e->getMessage();
+                // die('')
             }
 		}
     }

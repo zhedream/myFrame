@@ -4,10 +4,6 @@ if(!defined("ACCESS")){
     header("location:../index.php");
 }
 require_once ROOT."Core/Loader.php";
-Loader::$myclassDir= "Vendor/myclass/";
-Loader::$is_debug= 1;
-spl_autoload_register('Loader::autoload');
-spl_autoload_register("Loader::ForClass");
 
 use core\Route;
 

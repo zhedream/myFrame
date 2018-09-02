@@ -2,30 +2,30 @@
 
 namespace Core;
 use \PDO;
+DB::client();
 class DB{
 
     static $pdo = null;
 
     function __construct(){
 		
-		self::db();
+		self::client();
     }
-    private static function db(){
+    static function client(){
 		if (self::$pdo == NULL) {
-            $db = (include "Config/config.php")['db'];
-            $dsn = "mysql:host=".$db['host'].";dbname=".$db['dbname'];
+            $conf = $GLOBALS['config']['db'];
+            $dsn = "mysql:host=".$conf['host'].";dbname=".$conf['dbname'];
             try{
-                self::$pdo = new PDO($dsn,$db['user'],$db['pwd']);
+                self::$pdo = new PDO($dsn,$conf['user'],$conf['pwd']);
                 self::$pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION); // 设置报错提示
                 self::$pdo->exec("set names utf8");
             }catch(PDOException $e){
-                echo "{$dbname}数据库连接失败！".$e->getMessage();
+                echo "数据库连接失败！".$e->getMessage();
             }
 		}
     }
 
     static function findAll($sql,$data=[]){
-        if (self::$pdo === NULL) self::db();
         $stmt = self::$pdo->prepare($sql);
         if($stmt->execute($data)){
             $stmt->setFetchMode(PDO::FETCH_ASSOC);//PDO::FETCH_ASSOC
@@ -35,7 +35,6 @@ class DB{
             return false;
     }
     static function findOne($sql,$data=[]){
-        if (self::$pdo === NULL) self::db();
         $stmt = self::$pdo->prepare($sql);
         if($stmt->execute($data)){
             $stmt->setFetchMode(PDO::FETCH_ASSOC);//PDO::FETCH_ASSOC
@@ -45,7 +44,6 @@ class DB{
             return false;
     }
     static function findOneFirst($sql,$data=[]){
-        if (self::$pdo === NULL) self::db();
         $stmt = self::$pdo->prepare($sql);
         if($stmt->execute($data)){
             $stmt->setFetchMode();//PDO::FETCH_ASSOC
@@ -55,7 +53,6 @@ class DB{
         return false;
     }
     static function exec($sql,$data=[]){
-        if (self::$pdo === NULL) self::db();
         $stmt = self::$pdo->prepare($sql);
         return $stmt->execute($data);
     }
@@ -70,8 +67,6 @@ class DB{
          */
     static function Transaction($Action){
 
-        if (self::$pdo === NULL) self::db();
-
         self::$pdo->beginTransaction();
         foreach ($Action as $v) {
             if(!self::exec($v[0],$v[1])){
@@ -85,7 +80,8 @@ class DB{
          * 开启了事务不提交 可测试 Sql 语句,不会插入 数据库
          */
     static function testSql($Action){
-        if (self::$pdo === NULL) self::db();
+        
+        if (self::$pdo === NULL){ self::client(); echo '修复连接';}
         self::$pdo->beginTransaction();
         foreach ($Action as $v) 
             if(!self::exec($v[0],$v[1]))
@@ -94,6 +90,9 @@ class DB{
     }
 
 }
+
+
+
 
 
 
