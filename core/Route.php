@@ -1,10 +1,10 @@
 <?php
 namespace core;
-
+use core\Request;
 class Route{
     static $method;
     static $pathinfo;
-
+    
     static $gets=[];
     static $posts=[];
 
@@ -22,11 +22,19 @@ class Route{
         if(self::$method == 'GET'){
             // print_r($_GET);
             foreach (self::$gets as $key => $value) {
-                if($value['url']==self::$pathinfo){
-                    // echo self::$pathinfo."该路由为注册路由,控制器{$value['controller']},方法{$value['action']}";
+
+                $patt = "/".$value['patt']."/";
+                // preg_match()
+                $isMatched = preg_match($patt, self::$pathinfo, $matches);
+                // var_dump($matches);
+                
+                if($isMatched){
+                    // echo "<hr>".self::$pathinfo."该路由为GET注册路由,控制器{$value['controller']},方法{$value['action']}, 正则{$value['patt']} <hr>";
                     $controller = new $value['controller'];
                     $ac = $value['action'];
-                    $controller->$ac();
+
+                    $controller->$ac(new Request($value,$matches),isset($matches[1])?$matches[1]:null);
+                    // die("<br>END");
                     return;
                 }
             }
@@ -34,11 +42,19 @@ class Route{
         else if(self::$method == 'POST'){
             // print_r($_POST);
             foreach (self::$posts as $key => $value) {
-                if($value['url']==self::$pathinfo){
-                    // echo self::$pathinfo."该路由为注册路由,控制器{$value['controller']},方法{$value['action']}";
+
+                $patt = "/".$value['patt']."/";
+                // preg_match()
+                $isMatched = preg_match($patt, self::$pathinfo, $matches);
+                var_dump($matches);
+                
+                if($isMatched){
+                    echo "<hr>".self::$pathinfo."该路由为POST注册路由,控制器{$value['controller']},方法{$value['action']}, 正则{$value['patt']} <hr>";
                     $controller = new $value['controller'];
                     $ac = $value['action'];
-                    $controller->$ac();
+
+                    $controller->$ac(new Request($value,$matches),isset($matches[1])?$matches[1]:null);
+                    die("<br>END");
                     return;
                 }
             }
@@ -70,19 +86,90 @@ class Route{
         list($controller,$action) = explode('@', $path);
         $controller = str_replace('/', '\\', $controller);
 
+        $pathinfo =  explode('/', $url);
+
+
+        // var_dump($pathinfo);
+        $patt = "";
+        if(count( $pathinfo)>0 && $pathinfo[1]!=""){
+        for ($i=1; $i < count( $pathinfo); $i++) { 
+            if(preg_match('/\{.*\}/', $pathinfo[$i], $matches))
+                $patt .= "\/(\d+)";
+            else
+                $patt .= "\/".$pathinfo[$i];
+        }
+            $patt .= "\/?$";
+        }
+        else
+        {
+            $patt = "^\/$";
+        }
+
+        // die;
+
         self::$gets[] = [
             'url'=>$url,
             'controller'=>$controller,
             'action'=>$action,
+            'patt'=>$patt,
         ];
-        return;
-        echo "<hr>";
-        echo "路由注册成功：url->( {$url} ),控制器->( {$controller} ),方法->( {$action} )";
-        echo '<hr>';
+        // return;
+        // echo "<hr>";
+        // echo "GET路由注册成功：url->( {$url} ),控制器->( {$controller} ),方法->( {$action}  ) 正则{$patt}<br>";
+        // echo '<hr>';
+
+
+
+        
     }
 
 
     static function post(){
+
+        try{
+            foreach (self::$posts as $key => $value)
+                if($value['url']==$url)
+                    throw new \Exception("路由地址( {$url} )已存在",0); // 处理错误信息 的 对象
+        }catch(\Exception $e){
+            echo "<hr>出错文件:&nbsp".$e->getFile()."<hr>";
+            echo "错误信息:&nbsp".$e->getMessage()."<hr>";
+            echo "错误行号:&nbsp".$e->getLine()."<hr>";
+            die;
+        }
+        list($controller,$action) = explode('@', $path);
+        $controller = str_replace('/', '\\', $controller);
+
+        $pathinfo =  explode('/', $url);
+
+
+        // var_dump($pathinfo);
+        $patt = "";
+        if(count( $pathinfo)>0 && $pathinfo[1]!=""){
+        for ($i=1; $i < count( $pathinfo); $i++) { 
+            if(preg_match('/\{.*\}/', $pathinfo[$i], $matches))
+                $patt .= "\/(\d+)";
+            else
+                $patt .= "\/".$pathinfo[$i];
+        }
+            $patt .= "\/?$";
+        }
+        else
+        {
+            $patt = "^\/$";
+        }
+
+        // die;
+
+        self::$posts[] = [
+            'url'=>$url,
+            'controller'=>$controller,
+            'action'=>$action,
+            'patt'=>$patt,
+        ];
+        // return;
+        // echo "<hr>";
+        echo "POST路由注册成功：url->( {$url} ),控制器->( {$controller} ),方法->( {$action}  ) 正则{$patt}<br>";
+        // echo '<hr>';
 
 
     }

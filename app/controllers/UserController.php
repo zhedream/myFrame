@@ -1,5 +1,6 @@
 <?php 
 namespace app\controllers;
+use core\Request;
 use Core\HomeController;
 use Core\DB;
 use app\Models\TestModel;
@@ -13,6 +14,16 @@ class UserController extends HomeController{
 		$this->assign('name','User-> index');
 		$this->display('testbootsrap.html');
 		
+	}
+
+	function user(Request $req,$id){
+		echo "Request->".$req->test."<br>";
+		echo "第一个路由参数->".$id."<br>";
+	    var_dump($req->routevar);
+	}
+	function ab(Request $req,$id){
+		// echo "AB";
+		var_dump($req->routevar['id']);
 	}
 	
 	function aa(){

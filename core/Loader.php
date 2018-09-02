@@ -26,8 +26,8 @@ class Loader{
         $path = str_replace('\\', '/', $class);
         if(file_exists(ROOT . $path . '.php')){
             require(ROOT . $path . '.php');
-            return;
-            echo "正在自动加载类".__FUNCTION__.":{$class}<br>";
+            // return;
+            // echo "正在自动加载类".__FUNCTION__.":{$class}<br>";
         }
     }
 
