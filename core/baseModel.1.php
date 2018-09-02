@@ -1,43 +1,42 @@
-<?php
+<?php 
 
 namespace Core;
 use \PDO;
-DB::client();
-class DB{
 
+class baseModel{
+
+    static $mysql;
     static $pdo = null;
 
-    function __construct(){
-		
-		self::client();
-    }
+	function __construct(){
+        baseModel::db();
+	}
 
-    static function getDB(){
-        if (self::$pdo === NULL) {
-            // echo '2<br>';
-            self::client();
-            return self::$pdo;
-        }
-        else{
-            // echo '3<br>';
-            return self::$pdo;
-        }
+    public function getTableName(){
+        //$config;
+        $config = $GLOBALS['config'];
+        //拼接表名
+        return $config['db']['prefix'].$this->table;
+
     }
-    static function client(){
+    
+    private static function db(){
 		if (self::$pdo == NULL) {
-            $conf = $GLOBALS['config']['db'];
-            $dsn = "mysql:host=".$conf['host'].";dbname=".$conf['dbname'];
+            $db = (include ROOT."Config/config.php")['db'];
+            $dsn = "mysql:host=".$db['host'].";dbname=".$db['dbname'];
             try{
-                self::$pdo = new PDO($dsn,$conf['user'],$conf['pwd']);
+                self::$pdo = new PDO($dsn,$db['user'],$db['pwd']);
                 self::$pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION); // 设置报错提示
                 self::$pdo->exec("set names utf8");
             }catch(PDOException $e){
-                echo "数据库连接失败！".$e->getMessage();
+                echo "{$dbname}数据库连接失败！".$e->getMessage();
+                // die('')
             }
 		}
     }
 
     static function findAll($sql,$data=[]){
+        if (self::$pdo === NULL) self::db();
         $stmt = self::$pdo->prepare($sql);
         if($stmt->execute($data)){
             $stmt->setFetchMode(PDO::FETCH_ASSOC);//PDO::FETCH_ASSOC
@@ -47,6 +46,7 @@ class DB{
             return false;
     }
     static function findOne($sql,$data=[]){
+        if (self::$pdo === NULL) self::db();
         $stmt = self::$pdo->prepare($sql);
         if($stmt->execute($data)){
             $stmt->setFetchMode(PDO::FETCH_ASSOC);//PDO::FETCH_ASSOC
@@ -56,6 +56,7 @@ class DB{
             return false;
     }
     static function findOneFirst($sql,$data=[]){
+        if (self::$pdo === NULL) self::db();
         $stmt = self::$pdo->prepare($sql);
         if($stmt->execute($data)){
             $stmt->setFetchMode();//PDO::FETCH_ASSOC
@@ -65,6 +66,7 @@ class DB{
         return false;
     }
     static function exec($sql,$data=[]){
+        if (self::$pdo === NULL) self::db();
         $stmt = self::$pdo->prepare($sql);
         return $stmt->execute($data);
     }
@@ -79,6 +81,8 @@ class DB{
          */
     static function Transaction($Action){
 
+        if (self::$pdo === NULL) self::db();
+
         self::$pdo->beginTransaction();
         foreach ($Action as $v) {
             if(!self::exec($v[0],$v[1])){
@@ -92,8 +96,7 @@ class DB{
          * 开启了事务不提交 可测试 Sql 语句,不会插入 数据库
          */
     static function testSql($Action){
-        
-        if (self::$pdo === NULL){ self::client(); echo '修复连接';}
+        if (self::$pdo === NULL) self::db();
         self::$pdo->beginTransaction();
         foreach ($Action as $v) 
             if(!self::exec($v[0],$v[1]))
@@ -101,12 +104,23 @@ class DB{
         self::$pdo->rollBack();
     }
 
+    public function __call($name,$arr){
+
+        echo "该模型".__CLASS__."不存在方法".$name.lm;
+
+    }
+    
+    public static function __callstatic($name,$arr){
+
+        echo "该模型".__CLASS__."不存在静态方法".$name.lm;
+
+    }
+
+
+
 }
 
 
 
 
-
-
-
-?>
+ ?>

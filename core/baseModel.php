@@ -2,7 +2,8 @@
 
 namespace Core;
 use \PDO;
-
+use Core\DB;
+use Core\RD;
 class baseModel{
 
     static $mysql;
@@ -22,16 +23,7 @@ class baseModel{
     
     private static function db(){
 		if (self::$pdo == NULL) {
-            $db = (include ROOT."Config/config.php")['db'];
-            $dsn = "mysql:host=".$db['host'].";dbname=".$db['dbname'];
-            try{
-                self::$pdo = new PDO($dsn,$db['user'],$db['pwd']);
-                self::$pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION); // 设置报错提示
-                self::$pdo->exec("set names utf8");
-            }catch(PDOException $e){
-                echo "{$dbname}数据库连接失败！".$e->getMessage();
-                // die('')
-            }
+                self::$pdo = DB::getDB();
 		}
     }
 
