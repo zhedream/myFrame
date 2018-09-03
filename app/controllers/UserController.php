@@ -8,7 +8,7 @@ class UserController extends HomeController{
 
 	function index(){
 		
-		$data =  ( TestModel::findOne('select * from dy_film_type'));
+		$data =  ( TestModel::findOne('select * from mbg_articles'));
 
 		$this->assign('data',$data);
 		$this->assign('name','User-> index');
