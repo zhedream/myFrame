@@ -20,13 +20,10 @@ class TestController extends HomeController{
 
     function mail($data){
 
-
         // var_dump($data);
-
+        echo 'this is TestController';
         $mail = new Mail;
-        echo $mail->send('激活邮件','点击这里激活','l19517863@126.com');
-
-        return;
+        echo $mail->send('激活邮件1','点击这里激活','l19517863@126.com');
 
     }
 
