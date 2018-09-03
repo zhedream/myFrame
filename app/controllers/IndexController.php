@@ -2,6 +2,7 @@
 namespace app\controllers;
 use Core\HomeController;
 use Core\DB;
+use core\RD;
 use app\Models\TestModel;
 class IndexController extends HomeController{
 
@@ -11,12 +12,11 @@ class IndexController extends HomeController{
      * @Route("/blog", name="blog_list")
      */
 	function index(){
-		
-		$data =  ( TestModel::findOne('select * from mbg_articles'));
-		var_dump($data);
-		$this->assign('data',$data);
-		$this->assign('name','刘浩哲');
-		$this->display('testbootsrap.html');
+		echo "qwe";
+		$redis = RD::getRD();
+		$redis->setex('asdf',123,120);
+		$blogs = DB::findAll('select * from mbg_articles');
+		view('index',['blogs'=>$blogs]);
 		
 	}
 	
