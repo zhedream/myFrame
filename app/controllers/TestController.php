@@ -17,6 +17,13 @@ class TestController extends HomeController{
         var_dump( DB::findOne("select * from dy_user where id=?",[1]));
     }
 
+    function mail($data){
+
+
+        var_dump($data);
+
+    }
+
 }
 
  ?>

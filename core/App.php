@@ -9,8 +9,15 @@ use core\Route;
 
 class App{
 
-    public static function run(){
+    public static function run($argv=[]){
 
+        if(php_sapi_name() == 'cli'){
+            self::initDir();
+            self::initError();
+            self::CliDispatch($argv);
+            return ;
+        }
+            
         self::initCharset();
         self::initDir();
         self::initError();
@@ -52,44 +59,35 @@ class App{
         @ini_set("error_reporting","E_ALL");
 
     }
-        // 路由
-    private static function initDispatch(){
+    /**
+     * cli 路由
+     * 1. 控制器
+     * 2. 方法
+     * 3. 之后为其他参数会被传递到 方法
+     */
+    private static function CliDispatch($argv){
 
-        Route::initURL();
-        $ac = ACTION;
-        $cName = CONTROLLER."Controller";
-        $cPath = APP_PATH.PLAT."controllers/". $cName .".php";
-
-        if(file_exists($cPath)){
-            
-            $Controller= 'app\\'.PLAT."controllers\\".$cName;
-            echo $Controller.lm;
-            $controllerObj = new $Controller;
-            // $controllerObj = new app\controllers\indexController;
-            
-            if(method_exists($controllerObj,$ac)){
-                if(Loader::$is_debug)
-                echo "存在方法APP".lm;
-                $controllerObj->$ac();
-            }else{
-
-                if(Loader::$is_debug)
-                var_dump(get_class_methods($controllerObj));
-                $a = get_class_methods($controllerObj)[0];
-                if(Loader::$is_debug)
-                echo "{$ac}方法不存在,将掉用{$a}方法".lm;
-                $controllerObj->$a();
-            }
-        }else{
-
-            echo "控制器不存在,将跳转<br>";
-            // die('END');
-            $Controller= PLAT."\\Controller\\"."IndexController";
-            $controllerObj = new $Controller;
-            $controllerObj->error_jump(PLAT,"index","index");
+        if(php_sapi_name() == 'cli')
+        {
+            $controller = ucfirst($argv[1]) . 'Controller';
+            $action = $argv[2];
         }
-
-
+        else
+        {
+            if( isset($_SERVER['PATH_INFO']) ){
+                $pathInfo = $_SERVER['PATH_INFO'];
+                $pathInfo = explode('/', $pathInfo);
+                $controller = ucfirst($pathInfo[1]) . 'Controller';
+                $action = $pathInfo[2];
+            }
+            else{
+                $controller = 'IndexController';
+                $action = 'index';
+            }
+        }
+        $fullController = 'app\\controllers\\'.$controller;
+        $_C = new $fullController;
+        $_C->$action(array_slice($argv,3));
     }
 
 }
