@@ -3,6 +3,7 @@ namespace app\controllers;
 use Core\HomeController;
 use Core\DB;
 use Core\RD;
+use libs\Mail;
 use app\Models\TestModel;
 class TestController extends HomeController{
 
@@ -20,7 +21,12 @@ class TestController extends HomeController{
     function mail($data){
 
 
-        var_dump($data);
+        // var_dump($data);
+
+        $mail = new Mail;
+        echo $mail->send('激活邮件','点击这里激活','l19517863@126.com');
+
+        return;
 
     }
 
