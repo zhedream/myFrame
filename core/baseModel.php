@@ -6,11 +6,11 @@ use Core\DB;
 use Core\RD;
 class baseModel{
 
-    static $mysql;
     static $pdo = null;
 
 	function __construct(){
         baseModel::db();
+        $this->a= 2;
 	}
 
     public function getTableName(){

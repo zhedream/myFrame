@@ -29,7 +29,7 @@ return array(
 			'port'   => 6379,
 		),
 		'upload'=>array(
-				//设置文件上传允许的后缀
+				//设置文件上传允许的后缀1
 				'allow_suffix'=>['jpg','jpeg','gif','png','bmp'],
 				'upload_dir'=>UPLOAD_PATH,
 				'water_img'=>PUBLIC_PATH.'logo.png'
