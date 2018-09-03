@@ -12,8 +12,8 @@ class IndexController extends HomeController{
      */
 	function index(){
 		
-		$data =  ( TestModel::findOne('select * from dy_film_type'));
-
+		$data =  ( TestModel::findOne('select * from mbg_articles'));
+		var_dump($data);
 		$this->assign('data',$data);
 		$this->assign('name','刘浩哲');
 		$this->display('testbootsrap.html');
