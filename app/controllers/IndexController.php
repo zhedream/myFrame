@@ -1,9 +1,8 @@
 <?php 
 namespace app\controllers;
 use Core\HomeController;
-use Core\DB;
-use core\RD;
 use app\Models\TestModel;
+use core\RD;
 class IndexController extends HomeController{
 
 	/**
@@ -12,12 +11,15 @@ class IndexController extends HomeController{
      * @Route("/blog", name="blog_list")
      */
 	function index(){
+		echo "Index.php<br>";
 		var_dump(TestModel::findOne('select * from mbg_articles where id=2'));
-		echo "qwe";
 		$redis = RD::getRD();
 		$redis->setex('asdf',123,120);
-		$blogs = DB::findAll('select * from mbg_articles');
+		$blogs = TestModel::findAll('select * from mbg_articles');
 		view('index',['blogs'=>$blogs]);
+
+		$loger = new \libs\Log('index');
+		$loger->log('success阿瑟东');
 		
 	}
 	

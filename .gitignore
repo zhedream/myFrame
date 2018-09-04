@@ -14,3 +14,4 @@ yarn-error.log
 .env
 /views_c
 composer.lock
+/logs/
