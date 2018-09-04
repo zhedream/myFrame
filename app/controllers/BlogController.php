@@ -14,12 +14,12 @@ class BlogController extends HomeController{
 	}
 
 
-	function get($id){
+	function get(Request $req,$id){
 		var_dump( Article::get($id));
 
 	}
 
-	function increase($id){
+	function increase(Request $req,$id){
 		$article = new Article;
 		echo ( $article->increase($id));
 

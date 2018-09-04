@@ -16,6 +16,17 @@ class UserController extends HomeController{
 		
 	}
 
+	function regist(Request $req,$id){
+
+		view('user.regist');
+
+	}
+
+	function doregist(Request $req,$id){
+
+	
+	}
+
 }
 
  ?>

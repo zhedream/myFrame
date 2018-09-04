@@ -1,7 +1,7 @@
 <?php 
 namespace app\controllers;
 use Core\HomeController;
-use app\Models\TestModel;
+use app\Models\Test;
 use core\RD;
 class IndexController extends HomeController{
 
@@ -14,7 +14,7 @@ class IndexController extends HomeController{
 		echo "Index.php<br>";
 		$redis = RD::getRD();
 		$redis->setex('asdf',123,120);
-		$blogs = TestModel::findAll('select * from mbg_articles');
+		$blogs = Test::findAll('select * from mbg_articles');
 		view('index',['blogs'=>$blogs]);
 
 		$loger = new \libs\Log('index');
@@ -23,7 +23,7 @@ class IndexController extends HomeController{
 	}
 	
 	function aa(){
-		$data = TestModel::getUserInfo();
+		$data = Test::getUserInfo();
 		$this->assign('data',$data);
 		$this->display('a/a.html');
 	}

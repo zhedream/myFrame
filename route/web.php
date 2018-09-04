@@ -3,6 +3,10 @@
 use core\Route;
 
 Route::get('/','app/controllers/IndexController@index');
+// 注册
+Route::get('/user/regist','app/controllers/UserController@regist');
+Route::post('/user/regist','app/controllers/UserController@doregist');
+// blog
 Route::post('/blog/display/{id}','app/controllers/BlogController@increase');
 Route::get('/blog/{id}','app/controllers/BlogController@get');
 

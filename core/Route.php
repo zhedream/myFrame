@@ -33,7 +33,8 @@ class Route{
                     $controller = new $value['controller'];
                     $ac = $value['action'];
                         // 分发 路由
-                    $controller->$ac(isset($matches[1])?$matches[1]:null,new Request($value,$matches));
+                    // $controller->$ac(isset($matches[1])?$matches[1]:null,new Request($value,$matches));
+                    $controller->$ac(new Request($value,$matches),isset($matches[1])?$matches[1]:null);
                     // die("<br>END");
                     return;
                 }
@@ -51,7 +52,8 @@ class Route{
                     // echo "<hr>".self::$pathinfo."该路由为POST注册路由,控制器{$value['controller']},方法{$value['action']}, 正则{$value['patt']} <hr>";
                     $controller = new $value['controller'];
                     $ac = $value['action'];
-                    $controller->$ac(isset($matches[1])?$matches[1]:null,new Request($value,$matches));
+                    // $controller->$ac(isset($matches[1])?$matches[1]:null,new Request($value,$matches));
+                    $controller->$ac(new Request($value,$matches),isset($matches[1])?$matches[1]:null);
                     // die("<br>END");
                     return;
                 }
