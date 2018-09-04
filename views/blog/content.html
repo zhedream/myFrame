@@ -5,7 +5,7 @@
     <title><{$blog['title']}></title>
 </head>
 <body>
-    <a href="/index.html">首页</a>
+    <a href="/index.html">首页</a> <br>
     阅读量: <span id="display"><{$blog['display']}></span> <br>
     <{$blog['content']}>
     
@@ -29,11 +29,15 @@ var url = "/blog/display?id=" + id;
 $.ajax({
     type:"GET",
     url:url,
-    dataType:json,
+    dataType: "json",
     success:function(data)
     {
         // 把返回的浏览量放到页面
         $("#display").html(data);
+    },
+    error:function(){
+        console.log('格式错误');
+        
     }
 });
 
