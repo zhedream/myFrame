@@ -4,16 +4,23 @@ namespace Core;
 use \PDO;
 use Core\DB;
 use Core\RD;
+baseModel::baseModelRun();
 class baseModel{
 
     static $pdo = null;
+    static $redis = null;
 
 	function __construct(){
-        baseModel::db();
-        $this->a= 2;
-	}
+        self::db();
+        self::rd();
+    }
+    
+    static function baseModelRun(){
+        self::db();
+        self::rd();
+    }
 
-    public function getTableName(){
+    public function table(){
         //$config;
         $config = $GLOBALS['config'];
         //拼接表名
@@ -26,9 +33,13 @@ class baseModel{
                 self::$pdo = DB::getDB();
 		}
     }
+    private static function rd(){
+		if (self::$redis == NULL) {
+                self::$redis = RD::getRD();
+		}
+    }
 
     static function findAll($sql,$data=[]){
-        if (self::$pdo === NULL) self::db();
         $stmt = self::$pdo->prepare($sql);
         if($stmt->execute($data)){
             $stmt->setFetchMode(PDO::FETCH_ASSOC);//PDO::FETCH_ASSOC
@@ -38,7 +49,7 @@ class baseModel{
             return false;
     }
     static function findOne($sql,$data=[]){
-        if (self::$pdo === NULL) self::db();
+        // if (self::$pdo === NULL) self::db();
         $stmt = self::$pdo->prepare($sql);
         if($stmt->execute($data)){
             $stmt->setFetchMode(PDO::FETCH_ASSOC);//PDO::FETCH_ASSOC
@@ -48,7 +59,6 @@ class baseModel{
             return false;
     }
     static function findOneFirst($sql,$data=[]){
-        if (self::$pdo === NULL) self::db();
         $stmt = self::$pdo->prepare($sql);
         if($stmt->execute($data)){
             $stmt->setFetchMode();//PDO::FETCH_ASSOC
@@ -58,7 +68,6 @@ class baseModel{
         return false;
     }
     static function exec($sql,$data=[]){
-        if (self::$pdo === NULL) self::db();
         $stmt = self::$pdo->prepare($sql);
         return $stmt->execute($data);
     }
@@ -73,8 +82,6 @@ class baseModel{
          */
     static function Transaction($Action){
 
-        if (self::$pdo === NULL) self::db();
-
         self::$pdo->beginTransaction();
         foreach ($Action as $v) {
             if(!self::exec($v[0],$v[1])){
@@ -88,7 +95,6 @@ class baseModel{
          * 开启了事务不提交 可测试 Sql 语句,不会插入 数据库
          */
     static function testSql($Action){
-        if (self::$pdo === NULL) self::db();
         self::$pdo->beginTransaction();
         foreach ($Action as $v) 
             if(!self::exec($v[0],$v[1]))

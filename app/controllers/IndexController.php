@@ -12,6 +12,7 @@ class IndexController extends HomeController{
      * @Route("/blog", name="blog_list")
      */
 	function index(){
+		var_dump(TestModel::findOne('select * from mbg_articles where id=2'));
 		echo "qwe";
 		$redis = RD::getRD();
 		$redis->setex('asdf',123,120);

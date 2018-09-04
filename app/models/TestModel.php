@@ -5,7 +5,7 @@ use Core\BaseModel;
 
 class TestModel extends BaseModel{
 
-    static function getUserInfo(){
+    function getUserInfo(){
         return [
             'name'=>'者之梦'
         ];
