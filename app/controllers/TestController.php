@@ -1,6 +1,7 @@
 <?php 
 namespace app\controllers;
 use Core\HomeController;
+use core\Request;
 use Core\DB;
 use Core\RD;
 use libs\Mail;
@@ -26,6 +27,18 @@ class TestController extends HomeController{
         echo $mail->send('激活邮件1','点击这里激活','l19517863@126.com');
 
     }
+
+    function user(Request $req,$id){
+		echo "Request->".$req->test."<br>";
+		echo "第一个路由参数->".$id."<br>";
+	    var_dump($req->routevar);
+    }
+    
+    function aa(){
+		$data = TestModel::getUserInfo();
+		$this->assign('data',$data);
+		$this->display('a/a.html');
+	}
 
     function html4(){
 

@@ -3,9 +3,9 @@
 namespace app\Models;
 use Core\BaseModel;
 
-class TestModel extends BaseModel{
+class Test extends BaseModel{
 
-    function getUserInfo(){
+    function get(){
         return [
             'name'=>'者之梦'
         ];

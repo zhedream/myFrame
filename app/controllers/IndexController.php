@@ -12,7 +12,6 @@ class IndexController extends HomeController{
      */
 	function index(){
 		echo "Index.php<br>";
-		var_dump(TestModel::findOne('select * from mbg_articles where id=2'));
 		$redis = RD::getRD();
 		$redis->setex('asdf',123,120);
 		$blogs = TestModel::findAll('select * from mbg_articles');
