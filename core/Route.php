@@ -32,8 +32,8 @@ class Route{
                     // echo "<hr>".self::$pathinfo."该路由为GET注册路由,控制器{$value['controller']},方法{$value['action']}, 正则{$value['patt']} <hr>";
                     $controller = new $value['controller'];
                     $ac = $value['action'];
-
-                    $controller->$ac(new Request($value,$matches),isset($matches[1])?$matches[1]:null);
+                        // 分发 路由
+                    $controller->$ac(isset($matches[1])?$matches[1]:null,new Request($value,$matches));
                     // die("<br>END");
                     return;
                 }
@@ -46,15 +46,13 @@ class Route{
                 $patt = "/".$value['patt']."/";
                 // preg_match()
                 $isMatched = preg_match($patt, self::$pathinfo, $matches);
-                var_dump($matches);
-                
+                // var_dump($matches);
                 if($isMatched){
-                    echo "<hr>".self::$pathinfo."该路由为POST注册路由,控制器{$value['controller']},方法{$value['action']}, 正则{$value['patt']} <hr>";
+                    // echo "<hr>".self::$pathinfo."该路由为POST注册路由,控制器{$value['controller']},方法{$value['action']}, 正则{$value['patt']} <hr>";
                     $controller = new $value['controller'];
                     $ac = $value['action'];
-
-                    $controller->$ac(new Request($value,$matches),isset($matches[1])?$matches[1]:null);
-                    die("<br>END");
+                    $controller->$ac(isset($matches[1])?$matches[1]:null,new Request($value,$matches));
+                    // die("<br>END");
                     return;
                 }
             }
@@ -62,8 +60,6 @@ class Route{
         }
 
         view("error");
-        // echo '<hr>';
-        // print_r($_SERVER);
 
         die();
         a:;
@@ -124,7 +120,7 @@ class Route{
     }
 
 
-    static function post(){
+    static function post($url,$path){
 
         try{
             foreach (self::$posts as $key => $value)
@@ -168,7 +164,7 @@ class Route{
         ];
         // return;
         // echo "<hr>";
-        echo "POST路由注册成功：url->( {$url} ),控制器->( {$controller} ),方法->( {$action}  ) 正则{$patt}<br>";
+        // echo "POST路由注册成功：url->( {$url} ),控制器->( {$controller} ),方法->( {$action}  ) 正则{$patt}<br>";
         // echo '<hr>';
 
 

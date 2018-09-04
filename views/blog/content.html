@@ -27,7 +27,7 @@ var id = "<{$blog['id']}>";
 var url = "/blog/display/" + id;
 // 请求这个地址
 $.ajax({
-    type:"GET",
+    type:"POST",
     url:url,
     dataType: "json",
     success:function(data)

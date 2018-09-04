@@ -11,7 +11,7 @@ class RD{
 
     private static function client(){
         if (self::$redis === NULL) {
-            echo '<br>client<br>';
+            // echo '<br>client<br>';
             // $conf = (include ROOT."Config/config.php")['redis'];
             $conf = $GLOBALS['config']['redis'];
 

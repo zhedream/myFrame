@@ -6,15 +6,22 @@ use core\RD;
 
 class Article extends BaseModel{
 
-    function increase($id){
+    static function get($id){
 
-        // $this->redis;
-        echo self::$redis->get('name');
-        $data = RD::chache('key',60,function()use($id){
-            return self::findOne("select * from mbg_articles where id=".$id);
+        return RD::chache('Articles:'.$id,60,function()use($id){
+            return self::findOne("select * from mbg_articles where id=?",[$id]);
         });
+    }
 
-        var_dump($data);
-
+    function increase($id){
+        
+        if(self::$redis->hexists ('Hash:Aricles:display',$id)){
+            return self::$redis->hincrby('Hash:Aricles:display',$id,1);
+        }
+        $num = self::findOneFirst('select display from mbg_articles where id=?',[$id]);
+        // var_dump($num);
+        if($num!==null)
+            return self::$redis->hset('Hash:Aricles:display',$id,(int)$num+1);
+        return false;
     }
 }

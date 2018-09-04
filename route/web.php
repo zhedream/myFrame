@@ -3,7 +3,8 @@
 use core\Route;
 
 Route::get('/','app/controllers/IndexController@index');
-Route::get('/blog/display/{id}','app/controllers/BlogController@dis');
+Route::post('/blog/display/{id}','app/controllers/BlogController@increase');
+Route::get('/blog/{id}','app/controllers/BlogController@get');
 
 
 

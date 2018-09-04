@@ -8,24 +8,25 @@ use app\Models\Article;
 class BlogController extends HomeController{
 
 	function index(){
-		
-		$data =  ( Test::findOne('select * from dy_film_type'));
 
-		$this->assign('data',$data);
-		$this->assign('name','这里是BlogController');
-		$this->display('testbootsrap.html');
+		echo 'this is BLog index';
 		
 	}
 
-	function dis(Request $req,$id){
+
+	function get($id){
+		var_dump( Article::get($id));
+
+	}
+
+	function increase($id){
 		$article = new Article;
-		$article->increase($id);
+		echo ( $article->increase($id));
 
 	}
 
 	function jump(){
 		$this->success_jump("home","index","index");
-
 	}
 
 }
