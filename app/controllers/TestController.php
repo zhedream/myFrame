@@ -40,7 +40,7 @@ class TestController extends HomeController{
 		$this->display('a/a.html');
 	}
 
-    function html4(){
+    function content2html(){
 
         $blogs = DB::findAll('select * from mbg_articles');
         ob_start();
@@ -56,7 +56,7 @@ class TestController extends HomeController{
         }
 
     }
-    function html1(){
+    function index2html(){
 
         $blogs = DB::findAll('select * from mbg_articles');
         ob_start();
