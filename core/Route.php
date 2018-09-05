@@ -4,11 +4,12 @@ use core\Request;
 class Route{
     static $method;
     static $pathinfo;
+    static $router;
     
     static $gets=[];
     static $posts=[];
 
-    static function initDispatch(){
+    private function initDispatch(){
         // goto a; // 原始路由
         self::$method = $_SERVER['REQUEST_METHOD'];
         self::$pathinfo = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] :'/';
@@ -61,9 +62,9 @@ class Route{
 
         }
 
-        view("error");
+        // view("error");
 
-        die();
+        die('未知');
         a:;
         echo "goto";
 
@@ -179,6 +180,13 @@ class Route{
  */
     static function view($viewFileName, $data = []){
         view($viewFileName, $data);
+
+    }
+
+
+    public static function __callstatic($name,$arr){
+
+        echo "该模型".__CLASS__."不存在静态方法".$name.lm;
 
     }
 
