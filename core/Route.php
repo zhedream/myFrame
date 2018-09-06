@@ -13,11 +13,13 @@ class Route{
         self::$method = $_SERVER['REQUEST_METHOD'];
         self::$pathinfo = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] :'/';
 
-        // echo '<hr>';
-        // echo self::$method;
-        // echo '<hr>';
-        // echo self::$pathinfo;
-        // echo '<hr>';
+        echo '<hr>';
+        echo $_SERVER['PATH_INFO'];
+        echo '<hr>';
+        echo self::$method;
+        echo '<hr>';
+        echo self::$pathinfo;
+        echo '<hr>';
 
         if(self::$method == 'GET'){
             // print_r($_GET);
@@ -88,7 +90,7 @@ class Route{
 
 
         // var_dump($pathinfo);
-        $patt = "";
+        $patt = "^";
         if(count( $pathinfo)>0 && $pathinfo[1]!=""){
         for ($i=1; $i < count( $pathinfo); $i++) { 
             if(preg_match('/\{.*\}/', $pathinfo[$i], $matches))
@@ -141,7 +143,7 @@ class Route{
 
 
         // var_dump($pathinfo);
-        $patt = "";
+        $patt = "^";
         if(count( $pathinfo)>0 && $pathinfo[1]!=""){
         for ($i=1; $i < count( $pathinfo); $i++) { 
             if(preg_match('/\{.*\}/', $pathinfo[$i], $matches))

@@ -12,12 +12,13 @@ class App{
     public static function run($argv=[]){
 
         if(php_sapi_name() == 'cli'){
+            echo 'cli1';
             self::initDir();
             self::initError();
             self::CliDispatch($argv);
             return ;
         }
-            
+            echo 'net';
         self::initCharset();
         self::initDir();
         self::initError();
@@ -68,7 +69,8 @@ class App{
     private static function CliDispatch($argv){
 
         if(php_sapi_name() == 'cli')
-        {
+        {   
+            echo 'cli2';
             $controller = ucfirst($argv[1]) . 'Controller';
             $action = $argv[2];
         }

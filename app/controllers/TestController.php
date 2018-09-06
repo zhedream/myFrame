@@ -41,7 +41,7 @@ class TestController extends HomeController{
 	}
 
     function content2html(){
-
+        echo 'content2html';
         $blogs = DB::findAll('select * from mbg_articles');
         ob_start();
         foreach ($blogs as $key => $value) {
@@ -71,6 +71,10 @@ class TestController extends HomeController{
         // 清空缓冲区
         ob_clean();
 
+    }
+
+    function a(){
+        echo 'asdf';
     }
 
 }

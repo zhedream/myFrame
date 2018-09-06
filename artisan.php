@@ -4,7 +4,7 @@ if(php_sapi_name() != 'cli')
     die('使用错误');
 require __DIR__.'/vendor/autoload.php';
 
-var_dump($argv);
+// var_dump($argv);
 
 if($argv[1]=='serve'){
     echo 'http://localhost:9999';
@@ -15,8 +15,17 @@ if($argv[1]=='index2html'){
     echo '更新完毕 http://www.my.com/index.html';
 }
 if($argv[1]=='content2html'){
-    exec("php public/index.php test content2html");
+    system("php public/index.php test content2html");
     echo 'content更新完毕 http://www.my.com';
+}
+
+if($argv[1]=='aa'){
+    
+    // if($argv[2]=='sendmail'){
+        system('dir');
+        // var_dump( exec("mkdir aa"));
+        // echo '开启邮件进程';
+    // }
 }
 
 
