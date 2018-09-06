@@ -14,7 +14,7 @@ class User extends BaseModel{
     }
 
     static function store($email,$password,$code){
-        if(RD::waitOut('mailout',$email)){
+        if( RD::waitOut('mailout',$email)){
             RD::iqueue('sendmail',[$email,$password,$code]);
             echo "邮件已发送,请查收";
         }

@@ -41,8 +41,10 @@ class TestController extends HomeController{
 	}
 
     function content2html(){
-        echo 'content2html';
+        echo 'content2html<br>';
         $blogs = DB::findAll('select * from mbg_articles');
+        // var_dump($blogs);
+        // die();
         ob_start();
         foreach ($blogs as $key => $value) {
             $this->assign('blog',$value);

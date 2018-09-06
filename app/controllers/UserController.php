@@ -21,14 +21,14 @@ class UserController extends HomeController{
 		
 		User::store($email,$password,$code);
 
-
-
-
-
-
-
-	
 	}
+
+	function active(Request $req,$id){
+		echo date("Y-m-d H:i:s");
+		echo '激活成功'.$_GET['code'];
+		var_dump( RD::getTimeOut('userActive',$_GET['code'],true));
+	}
+
 	function login(Request $req,$id){
 		echo 'this is UserController login';
 		view('user.login');

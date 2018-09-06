@@ -15,17 +15,17 @@ if($argv[1]=='index2html'){
     echo '更新完毕 http://www.my.com/index.html';
 }
 if($argv[1]=='content2html'){
-    system("php public/index.php test content2html");
+    exec("php public/index.php test content2html");
     echo 'content更新完毕 http://www.my.com';
 }
 
-if($argv[1]=='aa'){
+if($argv[1]=='q'){
+    if($argv[2]=='mail')
+        exec("php public/index.php queue sendmail",$data);
+
+    if($argv[2]=='other')
+        exec("php public/index.php queue sendmail",$data);
     
-    // if($argv[2]=='sendmail'){
-        system('dir');
-        // var_dump( exec("mkdir aa"));
-        // echo '开启邮件进程';
-    // }
 }
 
 
