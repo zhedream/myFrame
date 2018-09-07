@@ -2,14 +2,26 @@
 namespace core;
 use core\Request;
 class Route{
+
+    private static $self = null;
+    private function __construct(){}
+    private function __clone(){}
+
+    static function new(){
+        if(self::$self===null)
+            self::$self = new self;
+        return self::$self;
+    }
+    
     static $method;
     static $pathinfo;
-    static $router;
+    static $map = [];
     
+    static $lastUrl;
     static $gets=[];
     static $posts=[];
 
-    private function initDispatch(){
+    static function initDispatch(){
         // goto a; // 原始路由
         self::$method = $_SERVER['REQUEST_METHOD'];
         self::$pathinfo = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] :'/';
@@ -73,7 +85,7 @@ class Route{
     }
 
     static function get($url,$path){
-        
+        $self = self::new();
         try{
             foreach (self::$gets as $key => $value)
                 if($value['url']==$url)
@@ -118,15 +130,15 @@ class Route{
         // echo "<hr>";
         // echo "GET路由注册成功：url->( {$url} ),控制器->( {$controller} ),方法->( {$action}  ) 正则{$patt}<br>";
         // echo '<hr>';
+        self::$lastUrl = $url;
 
-
-
+        return $self;
         
     }
 
 
     static function post($url,$path){
-
+        $self = self::new();
         try{
             foreach (self::$posts as $key => $value)
                 if($value['url']==$url)
@@ -172,24 +184,31 @@ class Route{
         // echo "POST路由注册成功：url->( {$url} ),控制器->( {$controller} ),方法->( {$action}  ) 正则{$patt}<br>";
         // echo '<hr>';
 
-
+        self::$lastUrl = $url;
+        
+        return $self;
     }
 
-/**
- *  加载视图
- *  参数一、加载的视图的文件名
- *  参数二、向视图中传的数据
- */
+    /**
+     *  加载视图
+     *  参数一、加载的视图的文件名
+     *  参数二、向视图中传的数据
+     */
     static function view($viewFileName, $data = []){
         view($viewFileName, $data);
 
     }
 
-
-    public static function __callstatic($name,$arr){
-
-        echo "该模型".__CLASS__."不存在静态方法".$name.lm;
-        call_user_func_array(__NAMESPACE__ .'\Route::'.$name, $arr); 
+    /**
+     * 为添加的路由 命名
+     * 1. 名称
+     */
+    function name($name){
+        self::$map[] = [
+            'url'=>self::$lastUrl,
+            'name'=>$name
+        ];
+        echo $name;
 
     }
 

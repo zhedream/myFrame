@@ -20,7 +20,7 @@ class Route{
     static $gets=[];
     static $posts=[];
 
-    public function initDispatch(){
+    static function initDispatch(){
         // goto a; // 原始路由
         self::$method = $_SERVER['REQUEST_METHOD'];
         self::$pathinfo = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] :'/';
@@ -49,7 +49,7 @@ class Route{
                         // 分发 路由
                     // $controller->$ac(isset($matches[1])?$matches[1]:null,new Request($value,$matches));
                     $data = $controller->$ac(new Request($value,$matches),isset($matches[1])?$matches[1]:null);
-                    // die("<br>END");
+                    // 反射
                     return;
                 }
             }
@@ -207,9 +207,8 @@ class Route{
         var_dump($data);
     }
 
-    function name(){
-
-
+    function name($name){
+        echo $name;
 
     }
 
@@ -218,12 +217,7 @@ class Route{
 
 }
 
-// use core\RD;
-$user = [
-    'name'=>'lhz',
-    'age'=>18,
-];
-Route::bb($user);
+Route::get('/','app/controllers/IndexController@index')->name('user');
 
 
 
