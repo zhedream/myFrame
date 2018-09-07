@@ -15,6 +15,8 @@ class Route{
         self::$pathinfo = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] :'/';
 
         // echo '<hr>';
+        // echo $_SERVER['PATH_INFO'];
+        // echo '<hr>';
         // echo self::$method;
         // echo '<hr>';
         // echo self::$pathinfo;
@@ -35,7 +37,7 @@ class Route{
                     $ac = $value['action'];
                         // 分发 路由
                     // $controller->$ac(isset($matches[1])?$matches[1]:null,new Request($value,$matches));
-                    $controller->$ac(new Request($value,$matches),isset($matches[1])?$matches[1]:null);
+                    $data = $controller->$ac(new Request($value,$matches),isset($matches[1])?$matches[1]:null);
                     // die("<br>END");
                     return;
                 }
@@ -89,7 +91,7 @@ class Route{
 
 
         // var_dump($pathinfo);
-        $patt = "";
+        $patt = "^";
         if(count( $pathinfo)>0 && $pathinfo[1]!=""){
         for ($i=1; $i < count( $pathinfo); $i++) { 
             if(preg_match('/\{.*\}/', $pathinfo[$i], $matches))
@@ -142,7 +144,7 @@ class Route{
 
 
         // var_dump($pathinfo);
-        $patt = "";
+        $patt = "^";
         if(count( $pathinfo)>0 && $pathinfo[1]!=""){
         for ($i=1; $i < count( $pathinfo); $i++) { 
             if(preg_match('/\{.*\}/', $pathinfo[$i], $matches))

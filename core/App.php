@@ -17,7 +17,6 @@ class App{
             self::CliDispatch($argv);
             return ;
         }
-            
         self::initCharset();
         self::initDir();
         self::initError();
@@ -68,7 +67,7 @@ class App{
     private static function CliDispatch($argv){
 
         if(php_sapi_name() == 'cli')
-        {
+        {   
             $controller = ucfirst($argv[1]) . 'Controller';
             $action = $argv[2];
         }
