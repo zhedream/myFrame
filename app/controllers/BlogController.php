@@ -21,7 +21,10 @@ class BlogController extends HomeController{
 
 	function increase(Request $req,$id){
 		$article = new Article;
-		echo ( $article->increase($id));
+		echo json_encode([
+			'display'=>$article->increase($id),
+			'email'=>$_SESSION['email'],
+		]);
 
 	}
 

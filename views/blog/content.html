@@ -28,7 +28,32 @@ $(function(){
         success:function(data)
         {
             // 把返回的浏览量放到页面
-            $("#display").html(data);
+            $("#display").html(data.display);
+            var memu = document.getElementById('memu_static');
+            console.log(memu);
+            if(memu){
+                console.log('true,这是静态页');
+                var html = '<a href="/">首页</a>';
+                // 判断登录
+                if(data.email == '' || data.email==null)
+                {
+                    html += ` <a href="/user/regist">注册</a> 
+                            <a href="/user/login">登录</a>`;
+                }
+                else
+                {
+                    html += data.email + 
+                            ` <a href="/blog/index">日志列表</a> 
+                            <a href="/blog/create">发表日志</a> 
+                            <a href="/user/logout">退出</a>`;
+                }
+                $(memu).html(html);
+                
+            }
+            else{
+                console.log('false,这是动态页');
+                   
+            }
         },
         error:function(){
             console.log('格式错误');
@@ -38,21 +63,4 @@ $(function(){
 
 })
 
-
 </script>
-<script>
-
-        $(function(){
-        
-            var memu = document.getElementById('memu_static');
-            console.log(memu);
-            if(memu)
-                console.log('true,这是静态页');
-            else   
-                console.log('false,这是动态页');
-                   
-        
-        
-        })
-        
-        </script>
