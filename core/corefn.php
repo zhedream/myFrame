@@ -10,9 +10,7 @@ function view($viewFileName, $data = [])
 {
     // 解压数组成变量
     extract($data);
-
     $path = str_replace('.', '/', $viewFileName) . '.html';
-
     // 加载视图
     require(ROOT . 'views/' . $path);
 }
