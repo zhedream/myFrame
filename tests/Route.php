@@ -2,6 +2,17 @@
 namespace core;
 use core\Request;
 class Route{
+
+    private static $self = null;
+    private function __construct(){}
+    private function __clone(){}
+
+    static function new(){
+        if(self::$self===null)
+            self::$self = new self;
+        return self::$self;
+    }
+    
     static $method;
     static $pathinfo;
     static $router;
@@ -9,7 +20,7 @@ class Route{
     static $gets=[];
     static $posts=[];
 
-    private function initDispatch(){
+    public function initDispatch(){
         // goto a; // 原始路由
         self::$method = $_SERVER['REQUEST_METHOD'];
         self::$pathinfo = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] :'/';
@@ -73,6 +84,7 @@ class Route{
     }
 
     static function get($url,$path){
+        $self = self::new();
         
         try{
             foreach (self::$gets as $key => $value)
@@ -120,13 +132,13 @@ class Route{
         // echo '<hr>';
 
 
-
+        return $self;
         
     }
 
 
     static function post($url,$path){
-
+        $self = self::new();
         try{
             foreach (self::$posts as $key => $value)
                 if($value['url']==$url)
@@ -172,7 +184,7 @@ class Route{
         // echo "POST路由注册成功：url->( {$url} ),控制器->( {$controller} ),方法->( {$action}  ) 正则{$patt}<br>";
         // echo '<hr>';
 
-
+        return $self;
     }
 
 /**
@@ -185,11 +197,19 @@ class Route{
 
     }
 
+    static function aa($data){
+       
+        var_dump($data);
 
-    public static function __callstatic($name,$arr){
+    }
 
-        echo "该模型".__CLASS__."不存在静态方法".$name.lm;
-        call_user_func_array(__NAMESPACE__ .'\Route::'.$name, $arr); 
+    private function bb($data){
+        var_dump($data);
+    }
+
+    function name(){
+
+
 
     }
 
@@ -197,6 +217,13 @@ class Route{
     
 
 }
+
+// use core\RD;
+$user = [
+    'name'=>'lhz',
+    'age'=>18,
+];
+Route::bb($user);
 
 
 
