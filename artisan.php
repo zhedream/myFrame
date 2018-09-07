@@ -10,11 +10,11 @@ if($argv[1]=='serve'){
     echo 'http://localhost:9999';
     exec("php -S localhost:9999 -t public/");
 }
-if($argv[1]=='index2html'){
+if($argv[1]=='index'){
     exec("php public/index.php test index2html");
     echo '更新完毕 http://www.my.com/index.html';
 }
-if($argv[1]=='content2html'){
+if($argv[1]=='content'){
     exec("php public/index.php test content2html");
     echo 'content更新完毕 http://www.my.com';
 }

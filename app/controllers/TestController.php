@@ -47,9 +47,9 @@ class TestController extends HomeController{
         // die();
         ob_start();
         foreach ($blogs as $key => $value) {
-            $this->assign('blog',$value);
-            $this->display('blog/content.html');
-
+            // $this->assign('blog',$value);
+            // $this->display('blog/content.html');
+            view('blog.content',['blog'=>$value,'_static'=>'_static']);
             $str = ob_get_contents();
             // 生成静态页
             file_put_contents(ROOT.'/public/content/'.$value['id'].'.html', $str);
@@ -66,7 +66,7 @@ class TestController extends HomeController{
         // $this->assign('blogs',$blogs);
         // $this->display('index.html');
 
-        view('index',['blogs'=>$blogs]);
+        view('index',['blogs'=>$blogs,'_static'=>'_static']);
         $str = ob_get_contents();
         // 生成静态页
         file_put_contents(ROOT.'/public/index.html', $str);

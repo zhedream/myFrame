@@ -16,11 +16,16 @@ class User extends BaseModel{
     static function store($email,$password,$code){
         if( RD::waitOut('mailout',$email)){
             RD::iqueue('sendmail',[$email,$password,$code]);
-            echo "邮件已发送,请查收";
+            return true;
         }
         else
-            echo "60秒后，才能再次发送";
-
+            return false;
     }
+
+    static function usersave($user){
+        self::exec("insert into mbg_authors (email,name,password) values(?,?,?)",[$user[0],getChar(2),md5($user[1])]);
+    }
+
+
 
 }

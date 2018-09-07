@@ -13,13 +13,13 @@ class Route{
         self::$method = $_SERVER['REQUEST_METHOD'];
         self::$pathinfo = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] :'/';
 
-        echo '<hr>';
-        echo $_SERVER['PATH_INFO'];
-        echo '<hr>';
-        echo self::$method;
-        echo '<hr>';
-        echo self::$pathinfo;
-        echo '<hr>';
+        // echo '<hr>';
+        // echo $_SERVER['PATH_INFO'];
+        // echo '<hr>';
+        // echo self::$method;
+        // echo '<hr>';
+        // echo self::$pathinfo;
+        // echo '<hr>';
 
         if(self::$method == 'GET'){
             // print_r($_GET);
@@ -36,7 +36,7 @@ class Route{
                     $ac = $value['action'];
                         // 分发 路由
                     // $controller->$ac(isset($matches[1])?$matches[1]:null,new Request($value,$matches));
-                    $controller->$ac(new Request($value,$matches),isset($matches[1])?$matches[1]:null);
+                    $data = $controller->$ac(new Request($value,$matches),isset($matches[1])?$matches[1]:null);
                     // die("<br>END");
                     return;
                 }

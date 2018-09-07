@@ -14,7 +14,7 @@ class Article extends BaseModel{
     }
 
     function increase($id){
-        
+        ob_clean(); // 清空缓存区
         if(self::$redis->hexists ('Hash:Aricles:display',$id)){
             return self::$redis->hincrby('Hash:Aricles:display',$id,1);
         }

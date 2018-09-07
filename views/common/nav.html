@@ -1,6 +1,62 @@
-<h1>智聊系统</h1>
-<a href="/">首页</a>
-<a href="javascript:;">日志列表</a>
-<a href="/user/regist">注册</a>
-<a href="/user/login">登录</a>
+<?php if(isset($_SESSION['_MESS_'])): ?>
+    <div id="_mess_" style="border: 1px solid #25b952;background-color:#b9ecbd;padding:5px;">
+        <?=$_SESSION['_MESS_']?>
+    </div>
+    <?php unset($_SESSION['_MESS_']) ?>
+    <script>
+    var m = document.getElementById('_mess_');
+    var s = 3;
+    var si = setInterval(function(){
+        s--;
+        if(s==0)
+        {
+            m.style.display='none';
+            clearInterval(si);
+        }
+    }, 1000);
+    </script>
+<?php endif; ?>
+
+<style>
+body{
+    display: none;
+}
+</style>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script> -->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+<div id="nav">
+    <!-- <?php var_dump($_static)?> -->
+    <h1>智聊系统</h1>
+    <div id="memu<?php echo isset($_static)?$_static:'' ?>">
+            <!-- 没有设置 静态菜单 变量 则php 输出 菜单 -->
+        <?php if(!isset($_static) || $_static==''){ ?>
+            <a href="/">首页</a>
+            <?php if(!isset($_SESSION['email'])): ?>
+            <a href="/user/regist">注册</a>
+            <a href="/user/login">登录</a>
+            <?php else: ?>
+            <?=$_SESSION['email']?>
+            <a href="javascript:;">日志列表</a>
+            <a href="/blog/create">发表日志</a>
+            <a href="/user/logout">退出</a>
+            <?php endif; ?>
+        <?php } ?>
+    </div>
+
+
+</div>
+
+<script>
+    $('body').fadeIn(1000);
+    // var app = new Vue({
+    //     'el':'#nav',
+    //     'data':{
+
+    //     }
+    // })
+</script>
+
+
 <hr>

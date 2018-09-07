@@ -11,7 +11,7 @@ class RD{
 
     private static function client(){
         if (self::$redis === NULL) {
-            echo '<br>client<br>';
+            // echo '<br>client<br>';
             // $conf = (include ROOT."Config/config.php")['redis'];
             $conf = $GLOBALS['config']['redis'];
 
@@ -105,6 +105,16 @@ class RD{
         }
             return false;
 
+    }
+    /**
+     * 删除时效 信息
+     * 1. 时效 类型
+     * 2. 键
+     * return 
+     */
+    public static function delTimeOut(string $type,string $key,bool $pop = false){
+        $key = "String:timeout:".$type.":".($key);
+        return self::$redis->del($key);
     }
 
     /**

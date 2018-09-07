@@ -9,11 +9,15 @@
 function view($viewFileName, $data = [])
 {
     // 解压数组成变量
+    // ob_clean();
     extract($data);
+    // var_dump($blogs);
+    // var_dump($_static);
     $path = str_replace('.', '/', $viewFileName) . '.html';
     // 加载视图
     require(ROOT . 'views/' . $path);
 }
+
 
 
 /**
@@ -45,7 +49,7 @@ function getUrlParams($except = [])
 function redirect($url)
 {
     header('Location:' . $url);
-    exit;
+    // exit;
 }
 
 /**
@@ -58,8 +62,11 @@ function back()
 
 /**
  * 提示消息的函数
- * type 0:alert   1:显示单独的消息页面  2：在下一个页面显示
- * 说明：$seconds 只有在 type=1时有效，代码几秒自动跳动
+ * type 0:alert   
+ * 1. 消息 
+ * 2. 类型
+ * 3. 地址
+ * 4. 跳转时间 type 1 使用
  */
 function message($message, $type, $url, $seconds = 5)
 {
@@ -72,6 +79,7 @@ function message($message, $type, $url, $seconds = 5)
     else if($type == 1)
     {
         // 加载消息页面
+        ob_clean();
         view('common.success', [
             'message' => $message,
             'url' => $url,
@@ -86,6 +94,19 @@ function message($message, $type, $url, $seconds = 5)
         redirect($url);
     }
 }
+
+function getChar($num)  // $num为生成汉字的数量
+    {
+        $b = '';
+        for ($i=0; $i<$num; $i++) 
+        {
+            // 使用chr()函数拼接双字节汉字，前一个chr()为高位字节，后一个为低位字节
+            $a = chr(mt_rand(0xB0,0xD0)).chr(mt_rand(0xA1, 0xF0));
+            // 转码
+            $b .= iconv('GB2312', 'UTF-8', $a);
+        }
+        return $b;
+    }
 
 
 

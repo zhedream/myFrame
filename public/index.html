@@ -4,13 +4,41 @@
     <meta charset="UTF-8">
     <title>首页</title>
 </head>
-<body>
+<body style="display:none;">
+    
+<style>
+body{
+    display: none;
+}
+</style>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script> -->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+<div id="nav">
+    <!-- string(7) "_static"
+ -->
     <h1>智聊系统</h1>
-<a href="/">首页</a>
-<a href="javascript:;">日志列表</a>
-<a href="/user/regist">注册</a>
-<a href="/user/login">登录</a>
-<hr>    <h1>最新发表的日志</h1>
+    <div id="memu_static">
+            <!-- 没有设置 静态菜单 变量 则php 输出 菜单 -->
+            </div>
+
+
+</div>
+
+<script>
+    $('body').fadeIn(1000);
+    // var app = new Vue({
+    //     'el':'#nav',
+    //     'data':{
+
+    //     }
+    // })
+</script>
+
+
+<hr>
+    <h1>最新发表的日志</h1>
     <ul>
         
             <li>
@@ -69,4 +97,55 @@
             </ul>
     <hr>
 <p>代码必须多敲，项目必须重复写，这样才能精进~</p></body>
+
+
+<script>
+
+$(function(){
+
+    var memu = document.getElementById('memu_static');
+    console.log(memu);
+    if(memu){
+        console.log('true,这是静态页');
+
+        $.ajax({
+            type:"GET",
+            url:'/user/loging',
+            dataType:'json',  // 声明服务器返回的是JSON（解析JSON）
+            success:function(data)
+            {
+
+                var html = '<a href="/">首页</a>';
+                // 判断登录
+                if(data.email == '' || data.email==null)
+                {
+                    // js 中定义多行字符串时要使用 ` （反引号 1左边的键子）
+                    html += ` <a href="/user/regist">注册</a> 
+                            <a href="/user/login">登录</a>`;
+                }
+                else
+                {
+                    html += data.email + 
+                            ` <a href="/blog/index">日志列表</a> 
+                            <a href="/blog/create">发表日志</a> 
+                            <a href="/user/logout">退出</a>`;
+                }
+
+                // 获取id=menu的div 并把按钮放进去
+                $(memu).html(html);
+            }
+        });
+        
+    }
+    else{
+        
+        console.log('false,这是动态页');
+    }
+           
+
+
+})
+
+</script>
+
 </html>
