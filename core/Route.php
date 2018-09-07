@@ -21,6 +21,8 @@ class Route{
     static $gets=[];
     static $posts=[];
 
+    static $routeName;
+
     static function initDispatch(){
         // goto a; // 原始路由
         self::$method = $_SERVER['REQUEST_METHOD'];
@@ -44,6 +46,7 @@ class Route{
                 // var_dump($matches);
                 
                 if($isMatched){
+                    self::$routeName = isset($value['name'])?$value['name']:null;
                     // echo "<hr>".self::$pathinfo."该路由为GET注册路由,控制器{$value['controller']},方法{$value['action']}, 正则{$value['patt']} <hr>";
                     $controller = new $value['controller'];
                     $ac = $value['action'];
@@ -64,6 +67,7 @@ class Route{
                 $isMatched = preg_match($patt, self::$pathinfo, $matches);
                 // var_dump($matches);
                 if($isMatched){
+                    self::$routeName = isset($value['name'])?$value['name']:null;
                     // echo "<hr>".self::$pathinfo."该路由为POST注册路由,控制器{$value['controller']},方法{$value['action']}, 正则{$value['patt']} <hr>";
                     $controller = new $value['controller'];
                     $ac = $value['action'];
@@ -130,7 +134,12 @@ class Route{
         // echo "<hr>";
         // echo "GET路由注册成功：url->( {$url} ),控制器->( {$controller} ),方法->( {$action}  ) 正则{$patt}<br>";
         // echo '<hr>';
-        self::$lastUrl = $url;
+
+        self::$lastUrl = [
+            'method'=>'get',
+            'url'=>$url,
+        ];
+        // self::$lastUrl = &end(self::$gets);
 
         return $self;
         
@@ -184,7 +193,10 @@ class Route{
         // echo "POST路由注册成功：url->( {$url} ),控制器->( {$controller} ),方法->( {$action}  ) 正则{$patt}<br>";
         // echo '<hr>';
 
-        self::$lastUrl = $url;
+        self::$lastUrl = [
+            'method'=>'post',
+            'url'=>$url,
+        ];
         
         return $self;
     }
@@ -204,11 +216,15 @@ class Route{
      * 1. 名称
      */
     function name($name){
-        self::$map[] = [
-            'url'=>self::$lastUrl,
-            'name'=>$name
-        ];
-        echo $name;
+        self::$map[$name] = self::$lastUrl;
+
+        if(self::$lastUrl['method']=='get')
+            self::$gets[count(self::$gets)-1]['name'] = $name;
+        else
+            self::$posts[count(self::$posts)-1]['name'] = $name;
+        // var_dump(self::$map);
+        // var_dump(self::$gets);
+        // var_dump(self::$posts);
 
     }
 
