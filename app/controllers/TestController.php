@@ -79,6 +79,15 @@ class TestController extends HomeController{
         echo 'asdf';
     }
 
+    function routeName(){
+        echo routeName();
+    }
+
+    function makeUrl(Request $req,$id){
+        echo routeName().'<br>';
+        echo Route('asd',['id'=>$id],true);
+    }
+
 }
 
  ?>

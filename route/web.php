@@ -25,6 +25,8 @@ Route::get('/test/redis','app/controllers/TestController@redis');
 Route::get('/test/mail','app/controllers/TestController@mail');
 Route::get('/test/mysql','app/controllers/TestController@mysql');
 Route::get('/test/user/{id}','app/controllers/TestController@user');
+Route::get('/test/routeName/{id}','app/controllers/TestController@routeName')->name('vvvv');
+Route::get('/test/makeUrl/{id}','app/controllers/TestController@makeUrl')->name('asd');
 // 静态化
 Route::get('/test/content2html','app/controllers/TestController@content2html');
 

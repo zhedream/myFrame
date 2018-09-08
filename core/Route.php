@@ -37,7 +37,6 @@ class Route{
         // echo '<hr>';
 
         if(self::$method == 'GET'){
-            // print_r($_GET);
             foreach (self::$gets as $key => $value) {
 
                 $patt = "/".$value['patt']."/";
@@ -82,12 +81,17 @@ class Route{
 
         // view("error");
 
-        die('未知');
+        die('页面不见了');
         a:;
         echo "goto";
 
     }
 
+    /**
+     * 注册 get 路由
+     * 1. 地址
+     * 2. 分发控制器方法
+     */
     static function get($url,$path){
         $self = self::new();
         try{
@@ -109,7 +113,7 @@ class Route{
         // var_dump($pathinfo);
         $patt = "^";
         if(count( $pathinfo)>0 && $pathinfo[1]!=""){
-        for ($i=1; $i < count( $pathinfo); $i++) { 
+        for ($i=1; $i < count( $pathinfo); $i++) {
             if(preg_match('/\{.*\}/', $pathinfo[$i], $matches))
                 $patt .= "\/(\d+)";
             else
@@ -145,7 +149,11 @@ class Route{
         
     }
 
-
+    /**
+     * 注册 post 路由
+     * 1. 地址
+     * 2. 分发控制器方法
+     */
     static function post($url,$path){
         $self = self::new();
         try{
@@ -163,16 +171,16 @@ class Route{
 
         $pathinfo =  explode('/', $url);
 
-
         // var_dump($pathinfo);
         $patt = "^";
         if(count( $pathinfo)>0 && $pathinfo[1]!=""){
-        for ($i=1; $i < count( $pathinfo); $i++) { 
-            if(preg_match('/\{.*\}/', $pathinfo[$i], $matches))
-                $patt .= "\/(\d+)";
-            else
-                $patt .= "\/".$pathinfo[$i];
-        }
+            for ($i=1; $i < count( $pathinfo); $i++) {
+                if(preg_match('/\{.*\}/', $pathinfo[$i], $matches))
+                    $patt .= "\/(\d+)";
+                else
+                    $patt .= "\/".$pathinfo[$i];
+            }
+
             $patt .= "\/?$";
         }
         else
@@ -207,8 +215,8 @@ class Route{
      *  参数二、向视图中传的数据
      */
     static function view($viewFileName, $data = []){
-        view($viewFileName, $data);
 
+        view($viewFileName, $data);
     }
 
     /**
@@ -216,16 +224,59 @@ class Route{
      * 1. 名称
      */
     function name($name){
+
         self::$map[$name] = self::$lastUrl;
 
         if(self::$lastUrl['method']=='get')
             self::$gets[count(self::$gets)-1]['name'] = $name;
         else
             self::$posts[count(self::$posts)-1]['name'] = $name;
-        // var_dump(self::$map);
-        // var_dump(self::$gets);
-        // var_dump(self::$posts);
 
+    }
+
+    /**
+     * 生产路由 URL
+     */
+    function makeUrl($name,$data = [],$full = false){
+        
+        // extract($data);
+        if(!isset(self::$map[$name])){
+            try{
+                throw new \Exception('不存在路由名称',0); // 处理错误信息 的 对象
+            }catch(\Exception $e){
+                echo "<hr>出错文件:&nbsp".$e->getFile()."<hr>";
+                echo "错误信息:&nbsp".$e->getMessage()."<hr>";
+                echo "错误行号:&nbsp".$e->getLine()."<hr>";
+                die;
+            }
+        }
+        // var_dump( self::$map[$name]);
+        $url =  self::$map[$name]['url'];
+
+        foreach ($data as $key => $val) {
+
+            $patt = "/"."\{$key\}"."/";
+            $url = preg_replace($patt,$val,$url);
+        }
+
+        if(preg_match('/\{.*\}/', $url, $matches)){
+
+            try{
+                throw new \Exception('请检查路由参数',0); // 处理错误信息 的 对象
+            }catch(\Exception $e){
+                echo "<hr>出错文件:&nbsp".$e->getFile()."<hr>";
+                echo "错误信息:&nbsp".$e->getMessage()."<hr>";
+                echo "错误行号:&nbsp".$e->getLine()."<hr>";
+                die;
+            }
+        }
+
+        if($full){
+            $app_url = $GLOBALS['config']['APP_URL'];
+            return $app_url.$url; 
+        }
+        return ($url);
+        
     }
 
 
