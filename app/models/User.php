@@ -1,10 +1,10 @@
 <?php
 
 namespace app\Models;
-use Core\BaseModel;
+use Core\Model;
 use core\RD;
 
-class User extends BaseModel{
+class User extends Model{
 
     static function get($id){
 

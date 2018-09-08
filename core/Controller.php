@@ -1,10 +1,7 @@
 <?php
-
 namespace Core;
-// use vendor\Smarty\Smarty;
-// use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-// use Symfony\Component\Routing\Annotation\Route;
-class BaseController  {
+
+class Controller  {
 
     public $smarty;
 

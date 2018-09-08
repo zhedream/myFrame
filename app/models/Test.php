@@ -1,9 +1,9 @@
 <?php
 
 namespace app\Models;
-use Core\BaseModel;
+use Core\Model;
 
-class Test extends BaseModel{
+class Test extends Model{
 
     function get(){
         return [

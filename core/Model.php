@@ -1,11 +1,10 @@
 <?php 
-
 namespace Core;
 use \PDO;
 use Core\DB;
 use Core\RD;
-baseModel::baseModelRun();
-class baseModel{
+Model::ModelRun();
+class Model{
 
     static $pdo = null;
     static $redis = null;
@@ -15,7 +14,7 @@ class baseModel{
         self::rd();
     }
     
-    static function baseModelRun(){
+    static function ModelRun(){
         self::db();
         self::rd();
     }
