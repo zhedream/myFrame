@@ -2,12 +2,65 @@
 我的一个简单的MVC框架
 ## 自动加载
 
-## 类
+## 核心类
 
 ## DB类
 
 ## Route 类
 2018年8月31日 v0.1.1
+
+2018年9月9日 v1.0.0
+    注册路由->链式 命名路由->生产URL
+
+## 核心控制器
+    MockController 用于模拟数据
+    QueueController 处理消息队列
+    StaticController 处理静态化
+# 目录结构
+    app/
+        controllers/ -> 存放控制器
+            --核心控制器
+            TempController.php      -> 控制器模板
+            MockController.php      -> 用于模拟数据
+            QueueController.php     -> 处理消息队列
+            StaticController.php    -> 处理静态化
+        models/ 存放模型
+            Temp.php    -> 模型模板
+    Config/
+        config.php      -> 配置文件
+    core/ 核心代码
+        Controller.php  -> 核心控制器
+        App.php         -> 入口文件整合
+        corefn.php      -> 全局核心辅助函数
+        DB.php          -> 数据库类 单例
+        Loader.php      -> 自动加载类
+        Model.php       -> 核心模型
+        RD.php          -> redis类 队列/缓存
+        Request.php     -> 处理请求类  待完善 目前没卵用
+        Route.php       -> 路由
+    libs/ 拓展类
+        Log.php         -> 日志类
+        Mail.php        -> 邮件类
+    logs/ 日志文件夹
+    public/ 
+        入口文件&前端页面&资源
+        css/            -> 样式文件
+        images/         -> 图片文件
+        js/             -> JS文件
+        index.php       -> 入口文件
+        .htaccess       -> 路由重写文件
+    route/ 
+        web.php         -> 注册路由
+    tests/ 存放一些PHP测试文件
+    uploads/ 用户上传资源
+    verdor/ composer
+    views/ 视图资源
+
+    composer.json       -> 使用的包
+    .gitignore          -> git 忽略文件
+    artisna.php         -> 命令行指令文件
+
+
 
 
 
