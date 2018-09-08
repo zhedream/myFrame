@@ -12,16 +12,16 @@ class Route{
             self::$self = new self;
         return self::$self;
     }
+    static $csrfPass = []; //csrf 白名单
+    static $method; // 请求方式
+    static $pathinfo; // 请求路径
+    static $map = []; // 名称映射
     
-    static $method;
-    static $pathinfo;
-    static $map = [];
-    
-    static $lastUrl;
-    static $gets=[];
+    static $lastUrl; // 命名中转
+    static $gets=[]; //保存GET 路由
     static $posts=[];
 
-    static $routeName;
+    static $routeName; // 请求路由 名称
 
     static function initDispatch(){
         // goto a; // 原始路由
@@ -59,6 +59,26 @@ class Route{
         }
         else if(self::$method == 'POST'){
             // print_r($_POST);
+            if(true || !in_array('',self::$csrfPass)){
+                if(!isset($_POST['_token'])){
+                    echo json_encode( [
+                            'err'=>007,
+                            'msg'=>'请求无效,无令牌'
+                    ]);
+                    return ;
+                }
+                    
+                if($_POST['_token']!=$_SESSION['_token']){
+                    // var_dump($_SESSION['_token']);
+                    echo json_encode( [
+                            'a'=>$_SESSION['_token'],
+                            'err'=>007,
+                            'msg'=>'请求超时,令牌过期'
+                        ]);
+                        return ;
+                }
+            }
+
             foreach (self::$posts as $key => $value) {
 
                 $patt = "/".$value['patt']."/";

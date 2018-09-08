@@ -128,6 +128,56 @@ function Route($name,$data = [],$full = false){
 }
 
 /**
+ * 过滤XSS（在线编辑器填写的内容不能使用该函数过滤）
+ * 1. 过滤内容
+ */
+function e($content)
+{
+    return htmlspecialchars($content);
+}
+
+/**
+ *  使用 htmlpurifer 选择过滤(性能慢只用于富文本)
+ * 1. 过滤内容
+ */
+function hpe($content)
+{
+    // 一直保存在内存中(直到脚本执行结束)
+    static $purifier = null;
+    if($purifier === null)
+    {
+        $config = \HTMLPurifier_Config::createDefault();
+        $config->set('Core.Encoding', 'utf-8');
+        $config->set('HTML.Doctype', 'HTML 4.01 Transitional');
+        $config->set('Cache.SerializerPath', ROOT.'cache');
+        $config->set('HTML.Allowed', 'div,b,strong,i,em,a[href|title],ul,ol,ol[start],li,p[style],br,span[style],img[width|height|alt|src],*[style|class],pre,hr,code,h2,h3,h4,h5,h6,blockquote,del,table,thead,tbody,tr,th,td');
+        $config->set('CSS.AllowedProperties', 'font,font-size,font-weight,font-style,margin,width,height,font-family,text-decoration,padding-left,color,background-color,text-align');
+        $config->set('AutoFormat.AutoParagraph', TRUE);
+        $config->set('AutoFormat.RemoveEmpty', TRUE);
+        $purifier = new \HTMLPurifier($config);
+    }
+    return $purifier->purify($content);
+}
+
+function csrf()
+{
+    if(!isset($_SESSION['_token']))
+    {
+        // 生成一个随机的字符串
+        $_token = md5( rand(1,99999) . microtime() );
+        $_SESSION['_token'] = $_token;
+    }
+    return $_SESSION['_token'];
+}
+
+// 生成令牌隐藏域
+function csrf_field()
+{
+    $csrf = isset($_SESSION['_token']) ? $_SESSION['_token'] : csrf();
+    echo "<input type='hidden' name='_token' value='{$csrf}'>";
+}
+
+/**
  * 抛出 异常
  */
 function Exception($str){
