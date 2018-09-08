@@ -24,4 +24,6 @@ class Article extends Model{
             return self::$redis->hset('Hash:Aricles:display',$id,(int)$num+1);
         return false;
     }
+
+    
 }

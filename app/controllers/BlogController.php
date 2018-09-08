@@ -32,6 +32,10 @@ class BlogController extends HomeController{
 		$this->success_jump("home","index","index");
 	}
 
+	function create(){
+        echo 'blog.create';
+    }
+
 }
 
  ?>

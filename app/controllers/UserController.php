@@ -51,6 +51,12 @@ class UserController extends HomeController{
 		view('user.login');
 	}
 
+	function logout(){
+
+		$_SESSION['email'] = null;
+		message('退出成功',1,Route('user.login'));
+	}
+
 	function dologin(Request $req,$id){
 
 		$email = $_POST['email'];
