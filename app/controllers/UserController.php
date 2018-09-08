@@ -46,7 +46,6 @@ class UserController extends HomeController{
 	}
 
 	function login(Request $req,$id){
-		
 		if(isset($_SESSION['email']))
 			redirect('/');
 		view('user.login');

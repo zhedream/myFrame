@@ -108,6 +108,40 @@ function getChar($num)  // $num为生成汉字的数量
         return $b;
     }
 
+/**
+ * 获取当前路由 名称
+ */
+function routeName(){
+    return core\Route::$routeName;
+}
+
+/**
+ * 生产url
+ * 1. 路由名称
+ * 2. 路由参数
+ */
+function Route($name,$data = [],$full = false){
+    
+    $router =  core\Route::new();
+    return $router->makeUrl($name,$data,$full);
+
+}
+
+/**
+ * 抛出 异常
+ */
+function Exception($str){
+
+    try{
+        throw new \Exception($str,0); // 处理错误信息 的 对象
+    }catch(\Exception $e){
+        echo "<hr>出错文件:&nbsp".$e->getFile()."<hr>";
+        echo "错误信息:&nbsp".$e->getMessage()."<hr>";
+        echo "错误行号:&nbsp".$e->getLine()."<hr>";
+        die;
+    }
+}
+
 
 
 

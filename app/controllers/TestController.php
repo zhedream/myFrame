@@ -79,6 +79,15 @@ class TestController extends HomeController{
         echo 'asdf';
     }
 
+    function routeName(){
+        echo routeName();
+    }
+
+    function makeUrl(Request $req,$id){
+        echo '路由名称: '.routeName().'<br>';
+        echo '生产路由: '.Route(routeName(),['id'=>$id],true);
+    }
+
 }
 
  ?>

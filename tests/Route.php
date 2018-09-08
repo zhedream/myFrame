@@ -15,13 +15,10 @@ class Route{
     
     static $method;
     static $pathinfo;
-    static $map = [];
+    static $router;
     
-    static $lastUrl;
     static $gets=[];
     static $posts=[];
-
-    static $routeName;
 
     static function initDispatch(){
         // goto a; // 原始路由
@@ -37,6 +34,7 @@ class Route{
         // echo '<hr>';
 
         if(self::$method == 'GET'){
+            // print_r($_GET);
             foreach (self::$gets as $key => $value) {
 
                 $patt = "/".$value['patt']."/";
@@ -45,14 +43,13 @@ class Route{
                 // var_dump($matches);
                 
                 if($isMatched){
-                    self::$routeName = isset($value['name'])?$value['name']:null;
                     // echo "<hr>".self::$pathinfo."该路由为GET注册路由,控制器{$value['controller']},方法{$value['action']}, 正则{$value['patt']} <hr>";
                     $controller = new $value['controller'];
                     $ac = $value['action'];
                         // 分发 路由
                     // $controller->$ac(isset($matches[1])?$matches[1]:null,new Request($value,$matches));
                     $data = $controller->$ac(new Request($value,$matches),isset($matches[1])?$matches[1]:null);
-                    // die("<br>END");
+                    // 反射
                     return;
                 }
             }
@@ -66,7 +63,6 @@ class Route{
                 $isMatched = preg_match($patt, self::$pathinfo, $matches);
                 // var_dump($matches);
                 if($isMatched){
-                    self::$routeName = isset($value['name'])?$value['name']:null;
                     // echo "<hr>".self::$pathinfo."该路由为POST注册路由,控制器{$value['controller']},方法{$value['action']}, 正则{$value['patt']} <hr>";
                     $controller = new $value['controller'];
                     $ac = $value['action'];
@@ -81,19 +77,15 @@ class Route{
 
         // view("error");
 
-        die('页面不见了');
+        die('未知');
         a:;
         echo "goto";
 
     }
 
-    /**
-     * 注册 get 路由
-     * 1. 地址
-     * 2. 分发控制器方法
-     */
     static function get($url,$path){
         $self = self::new();
+        
         try{
             foreach (self::$gets as $key => $value)
                 if($value['url']==$url)
@@ -113,7 +105,7 @@ class Route{
         // var_dump($pathinfo);
         $patt = "^";
         if(count( $pathinfo)>0 && $pathinfo[1]!=""){
-        for ($i=1; $i < count( $pathinfo); $i++) {
+        for ($i=1; $i < count( $pathinfo); $i++) { 
             if(preg_match('/\{.*\}/', $pathinfo[$i], $matches))
                 $patt .= "\/(\d+)";
             else
@@ -139,21 +131,12 @@ class Route{
         // echo "GET路由注册成功：url->( {$url} ),控制器->( {$controller} ),方法->( {$action}  ) 正则{$patt}<br>";
         // echo '<hr>';
 
-        self::$lastUrl = [
-            'method'=>'get',
-            'url'=>$url,
-        ];
-        // self::$lastUrl = &end(self::$gets);
 
         return $self;
         
     }
 
-    /**
-     * 注册 post 路由
-     * 1. 地址
-     * 2. 分发控制器方法
-     */
+
     static function post($url,$path){
         $self = self::new();
         try{
@@ -171,16 +154,16 @@ class Route{
 
         $pathinfo =  explode('/', $url);
 
+
         // var_dump($pathinfo);
         $patt = "^";
         if(count( $pathinfo)>0 && $pathinfo[1]!=""){
-            for ($i=1; $i < count( $pathinfo); $i++) {
-                if(preg_match('/\{.*\}/', $pathinfo[$i], $matches))
-                    $patt .= "\/(\d+)";
-                else
-                    $patt .= "\/".$pathinfo[$i];
-            }
-
+        for ($i=1; $i < count( $pathinfo); $i++) { 
+            if(preg_match('/\{.*\}/', $pathinfo[$i], $matches))
+                $patt .= "\/(\d+)";
+            else
+                $patt .= "\/".$pathinfo[$i];
+        }
             $patt .= "\/?$";
         }
         else
@@ -201,88 +184,40 @@ class Route{
         // echo "POST路由注册成功：url->( {$url} ),控制器->( {$controller} ),方法->( {$action}  ) 正则{$patt}<br>";
         // echo '<hr>';
 
-        self::$lastUrl = [
-            'method'=>'post',
-            'url'=>$url,
-        ];
-        
         return $self;
     }
 
-    /**
-     *  加载视图
-     *  参数一、加载的视图的文件名
-     *  参数二、向视图中传的数据
-     */
+/**
+ *  加载视图
+ *  参数一、加载的视图的文件名
+ *  参数二、向视图中传的数据
+ */
     static function view($viewFileName, $data = []){
-
         view($viewFileName, $data);
+
     }
 
-    /**
-     * 为添加的路由 命名
-     * 1. 名称
-     */
+    static function aa($data){
+       
+        var_dump($data);
+
+    }
+
+    private function bb($data){
+        var_dump($data);
+    }
+
     function name($name){
+        echo $name;
 
-        self::$map[$name] = self::$lastUrl;
-
-        if(self::$lastUrl['method']=='get')
-            self::$gets[count(self::$gets)-1]['name'] = $name;
-        else
-            self::$posts[count(self::$posts)-1]['name'] = $name;
-
-    }
-
-    /**
-     * 生产路由 URL
-     */
-    function makeUrl($name,$data = [],$full = false){
-        
-        // extract($data);
-        if(!isset(self::$map[$name])){
-            try{
-                throw new \Exception('不存在路由名称',0); // 处理错误信息 的 对象
-            }catch(\Exception $e){
-                echo "<hr>出错文件:&nbsp".$e->getFile()."<hr>";
-                echo "错误信息:&nbsp".$e->getMessage()."<hr>";
-                echo "错误行号:&nbsp".$e->getLine()."<hr>";
-                die;
-            }
-        }
-        // var_dump( self::$map[$name]);
-        $url =  self::$map[$name]['url'];
-
-        foreach ($data as $key => $val) {
-
-            $patt = "/"."\{$key\}"."/";
-            $url = preg_replace($patt,$val,$url);
-        }
-
-        if(preg_match('/\{.*\}/', $url, $matches)){
-
-            try{
-                throw new \Exception('请检查路由参数',0); // 处理错误信息 的 对象
-            }catch(\Exception $e){
-                echo "<hr>出错文件:&nbsp".$e->getFile()."<hr>";
-                echo "错误信息:&nbsp".$e->getMessage()."<hr>";
-                echo "错误行号:&nbsp".$e->getLine()."<hr>";
-                die;
-            }
-        }
-
-        if($full){
-            $app_url = $GLOBALS['config']['APP_URL'];
-            return $app_url.$url; 
-        }
-        return ($url);
-        
     }
 
 
     
 
 }
+
+Route::get('/','app/controllers/IndexController@index')->name('user');
 
 
 
