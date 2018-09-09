@@ -14,7 +14,7 @@ Route::get('/user/logout','app/controllers/UserController@logout')->name('user.l
 Route::get('/user/loging','app/controllers/UserController@loging');
 Route::post('/user/login','app/controllers/UserController@dologin');
 // blog
-Route::post('/blog/display/{id}','app/controllers/BlogController@increase')->name('display');
+Route::get('/blog/display/{id}','app/controllers/BlogController@increase')->name('display');
 Route::get('/blog/{id}','app/controllers/BlogController@get');
 Route::get('/blog/create','app/controllers/BlogController@create')->name('blog.create');
 

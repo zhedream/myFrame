@@ -3,11 +3,14 @@ namespace app\controllers;
 use Core\Controller;
 use core\Request;
 use Core\DB;
+use Core\RD;
 use app\Models\Temp;
 class StaticController extends Controller{
 
     function index(){
-        $blogs = DB::findAll('select * from mbg_articles');
+        $blogs = RD::chache('index',60,function(){
+            return Test::findAll('select * from mbg_articles limit 20');
+        });
         ob_start();
         view('index',['blogs'=>$blogs,'_static'=>'_static']);
         $str = ob_get_contents();
@@ -17,7 +20,9 @@ class StaticController extends Controller{
         ob_clean();
     }
 	function contents(){
-        $blogs = DB::findAll('select * from mbg_articles');
+        $blogs = RD::chache('contents',3600,function(){
+                return DB::findAll('select * from mbg_articles');
+        });
         ob_start();
         foreach ($blogs as $key => $value) {
             view('blog.content',['blog'=>$value,'_static'=>'_static']);
