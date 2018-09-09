@@ -26,6 +26,13 @@ class Article extends Model{
         }
         return false;
     }
+    function allUserBlog($id){
+
+        return RD::chache('Articles_user:'.$id,60,function()use($id){
+            return self::findAll("select * from mbg_articles where user_id=?",[$id]);
+        });
+
+    }
 
     
 }

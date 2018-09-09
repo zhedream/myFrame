@@ -192,6 +192,30 @@ function Exception($str){
     }
 }
 
+function jj($data,$option = true){
+    ob_clean();
+    $callinfo = debug_backtrace()[0];
+    $file = $callinfo['file'];
+    $line = $callinfo['line'];
+    $data['callinfo'] = ['file'=>$file,'line'=>$line];
+    // array_unshift($data,$aa);
+
+    if($option)
+        echo json_encode($data,true);
+    else
+        echo json_encode($data);
+    
+    die;
+
+}
+
+
+function dd($data,$option = true){
+    ob_clean();
+    var_dump($data);
+    die;
+
+}
 
 
 

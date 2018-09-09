@@ -8,8 +8,18 @@ use app\Models\Article;
 class BlogController extends HomeController{
 
 	function index(){
+		if($_SESSION['email']){
+			$article = new Article;
+			$blogs = $article->allUserBlog($_SESSION['id']);
+			view('blog.index',[
+				'blogs'=>$blogs
+			]);
+			// echo 'this is BLog index';
 
-		echo 'this is BLog index';
+		}else{
+			message('未登录',1,Route('user.login'));
+		}
+		
 		
 	}
 
@@ -33,8 +43,16 @@ class BlogController extends HomeController{
 	}
 
 	function create(){
-        echo 'blog.create';
-    }
+        view('blog.create');
+	}
+	
+	function store(){
+		$article = new Article;
+
+		// var_dump($_POST);
+		jj($_POST);
+
+	}
 
 }
 
