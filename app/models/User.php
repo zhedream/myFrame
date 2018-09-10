@@ -9,7 +9,7 @@ class User extends Model{
     static function get($id){
 
         return RD::chache('Users:'.$id,30,function()use($id){
-            return self::findOne("select * from mbg_authors where id=?",[$id]);
+            return self::findOne("select * from users where id=?",[$id]);
         });
     }
 
@@ -23,7 +23,7 @@ class User extends Model{
     }
 
     static function usersave($user){
-        self::exec("insert into mbg_authors (email,name,password) values(?,?,?)",[$user[0],getChar(2),md5($user[1])]);
+        self::exec("insert into users (email,name,password) values(?,?,?)",[$user[0],getChar(2),md5($user[1])]);
     }
 
 

@@ -16,7 +16,7 @@ class TestController extends HomeController{
 
     function mysql(){
         echo 'this is TestController';
-        var_dump( DB::findOne("select * from mbg_articles where id=?",[2]));
+        var_dump( DB::findOne("select * from articles where id=?",[2]));
     }
 
     function mail($data){
@@ -42,7 +42,7 @@ class TestController extends HomeController{
 
     function content2html(){
         echo 'content2html<br>';
-        $blogs = DB::findAll('select * from mbg_articles');
+        $blogs = DB::findAll('select * from articles');
         // var_dump($blogs);
         // die();
         ob_start();
@@ -60,7 +60,7 @@ class TestController extends HomeController{
     }
     function index2html(){
 
-        $blogs = DB::findAll('select * from mbg_articles');
+        $blogs = DB::findAll('select * from articles');
         ob_start();
         
         // $this->assign('blogs',$blogs);

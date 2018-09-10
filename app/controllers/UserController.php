@@ -19,7 +19,7 @@ class UserController extends HomeController{
 	function doregist(Request $req,$id){
 		$email = $_POST['email'];
 		$password = 123123;
-		$num = User::findOne('select count(*) from mbg_authors where email=?',[$email]);
+		$num = User::findOne('select count(*) from users where email=?',[$email]);
 		if($num){
 			
 			return message('该账号已注册',1,'/user/login');
@@ -62,7 +62,7 @@ class UserController extends HomeController{
 		$email = $_POST['email'];
 		$password = md5($_POST['password']);
 
-		$user = User::findOne('select * from mbg_authors where email=? and password=?',[$email,$password]);
+		$user = User::findOne('select * from users where email=? and password=?',[$email,$password]);
 		if($user){
 			var_dump($user);
 			$_SESSION['email'] = $user['email'];

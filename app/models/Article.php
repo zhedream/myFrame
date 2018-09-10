@@ -9,7 +9,7 @@ class Article extends Model{
     static function get($id){
 
         return RD::chache('Articles:'.$id,60,function()use($id){
-            return self::findOne("select * from mbg_articles where id=?",[$id]);
+            return self::findOne("select * from articles where id=?",[$id]);
         });
     }
 
@@ -18,7 +18,7 @@ class Article extends Model{
         if(self::$redis->hexists ('Hash:Aricles:display',$id))
             return self::$redis->hincrby('Hash:Aricles:display',$id,1);
         
-        $num = self::findOneFirst('select display from mbg_articles where id=?',[$id]);
+        $num = self::findOneFirst('select display from articles where id=?',[$id]);
         if($num!==null){
             
             self::$redis->hset('Hash:Aricles:display',$id,(int)$num);
@@ -29,7 +29,7 @@ class Article extends Model{
     function allUserBlog($id){
 
         return RD::chache('Articles_user:'.$id,60,function()use($id){
-            return self::findAll("select * from mbg_articles where user_id=?",[$id]);
+            return self::findAll("select * from articles where user_id=?",[$id]);
         });
 
     }

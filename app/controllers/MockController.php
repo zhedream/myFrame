@@ -15,7 +15,7 @@ class MockController extends Controller{
             $email = rand(50000,99999999999).'@126.com';
             $password = md5('123123');
             $name = getChar(2);
-            DB::exec("INSERT INTO mbg_authors (email,name,password) VALUES(?,?,?)",[$email,$name,$password]);
+            DB::exec("INSERT INTO users (email,name,password) VALUES(?,?,?)",[$email,$name,$password]);
         }
     }
 
@@ -39,7 +39,7 @@ class MockController extends Controller{
             $date = rand(1233333399,1535592288);
             $date = date('Y-m-d H:i:s', $date);
             $user_id = rand(1,20);
-            DB::exec("INSERT INTO mbg_articles (title,`description`,content,display,accessable,type,created_at,user_id) VALUES(?,?,?,?,?,?,?,? )"
+            DB::exec("INSERT INTO articles (title,`description`,content,display,accessable,type,created_at,user_id) VALUES(?,?,?,?,?,?,?,? )"
                 ,[$title,$description,$content,$display,$accessable,$type,$date,$user_id]);
 
         }
