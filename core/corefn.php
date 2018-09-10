@@ -180,8 +180,8 @@ function csrf_field()
 /**
  * 抛出 异常
  */
-function Exception($str){
-
+function throwE($str){
+    ob_clean();
     $callinfo = debug_backtrace()[0];
     $file = $callinfo['file'];
     $line = $callinfo['line'];

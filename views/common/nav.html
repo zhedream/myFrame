@@ -34,7 +34,7 @@ body{
         <?php if(!isset($_static) || $_static==''){ ?>
             <a href="/">首页</a>
             <?php if(!isset($_SESSION['email'])): ?>
-            <a href="<?=Route('user.reg') ?>">注册</a>
+            <a href="<?=Route('user.regist') ?>">注册</a>
             <a href="<?=Route('user.login')?>">登录</a>
             <?php else: ?>
             <?=$_SESSION['email']?>
@@ -45,7 +45,7 @@ body{
         <?php }else{ ?>
             <a href="/">首页</a>
             <a href="<?=Route('user.regist') ?>">注册</a>
-            <a href="<?=Route('user.login')?>">登录</a>
+            <a href="<?=Route('user.login') ?>">登录</a>
         <?php }?>
     </div>
 

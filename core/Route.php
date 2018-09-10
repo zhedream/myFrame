@@ -114,16 +114,11 @@ class Route{
      */
     static function get($url,$path){
         $self = self::new();
-        try{
-            foreach (self::$gets as $key => $value)
-                if($value['url']==$url)
-                    throw new \Exception("路由地址( {$url} )已存在",0); // 处理错误信息 的 对象
-        }catch(\Exception $e){
-            echo "<hr>出错文件:&nbsp".$e->getFile()."<hr>";
-            echo "错误信息:&nbsp".$e->getMessage()."<hr>";
-            echo "错误行号:&nbsp".$e->getLine()."<hr>";
-            die;
-        }
+
+        foreach (self::$gets as $key => $value)
+            if($value['url']==$url)
+                throwE("GET路由地址( {$url} )已存在");
+                
         list($controller,$action) = explode('@', $path);
         $controller = str_replace('/', '\\', $controller);
 
@@ -176,16 +171,9 @@ class Route{
      */
     static function post($url,$path){
         $self = self::new();
-        try{
-            foreach (self::$posts as $key => $value)
-                if($value['url']==$url)
-                    throw new \Exception("路由地址( {$url} )已存在",0); // 处理错误信息 的 对象
-        }catch(\Exception $e){
-            echo "<hr>出错文件:&nbsp".$e->getFile()."<hr>";
-            echo "错误信息:&nbsp".$e->getMessage()."<hr>";
-            echo "错误行号:&nbsp".$e->getLine()."<hr>";
-            die;
-        }
+        foreach (self::$posts as $key => $value)
+            if($value['url']==$url)
+                throwE("POST路由地址( {$url} )已存在");
         list($controller,$action) = explode('@', $path);
         $controller = str_replace('/', '\\', $controller);
 
@@ -261,14 +249,7 @@ class Route{
         
         // extract($data);
         if(!isset(self::$map[$name])){
-            try{
-                throw new \Exception('不存在路由名称',0); // 处理错误信息 的 对象
-            }catch(\Exception $e){
-                echo "<hr>出错文件:&nbsp".$e->getFile()."<hr>";
-                echo "错误信息:&nbsp".$e->getMessage()."<hr>";
-                echo "错误行号:&nbsp".$e->getLine()."<hr>";
-                die;
-            }
+            throwE('不存在路由名称'.$name);
         }
         // var_dump( self::$map[$name]);
         $url =  self::$map[$name]['url'];
@@ -280,15 +261,7 @@ class Route{
         }
 
         if(preg_match('/\{.*\}/', $url, $matches)){
-
-            try{
-                throw new \Exception('请检查路由参数',0); // 处理错误信息 的 对象
-            }catch(\Exception $e){
-                echo "<hr>出错文件:&nbsp".$e->getFile()."<hr>";
-                echo "错误信息:&nbsp".$e->getMessage()."<hr>";
-                echo "错误行号:&nbsp".$e->getLine()."<hr>";
-                die;
-            }
+            throwE('请检查路由参数');
         }
 
         if($full){
