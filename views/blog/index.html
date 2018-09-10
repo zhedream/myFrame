@@ -66,8 +66,8 @@
             <td><?= $v['accessable']=='public'?'公开':'私有' ?></td>
             <td><?=$v['display']?></td>
             <td>
-                <a href="/blog/edit?id=<?=$v['id']?>">修改</a>
-                <form action="/blog/delete" method="post">
+                <a href="/blog/edit?id=<?=$v['id']?>">修改1</a>
+                <form action="<?=Route('blog.del')?>" method="post">
                     <?php csrf_field() ?>
                     <input type="hidden" name="id" value="<?=$v['id']?>">
                     <input type="submit" value="删除">

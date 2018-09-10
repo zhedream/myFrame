@@ -19,7 +19,9 @@ class UserController extends HomeController{
 	function doregist(Request $req,$id){
 		$email = $_POST['email'];
 		$password = 123123;
-		$num = User::findOne('select count(*) from users where email=?',[$email]);
+		$num = User::findOneFirst('select count(*) from users where email=?',[$email]);
+		// dd($num);
+		
 		if($num){
 			
 			return message('该账号已注册',1,'/user/login');
@@ -67,7 +69,7 @@ class UserController extends HomeController{
 			var_dump($user);
 			$_SESSION['email'] = $user['email'];
 			$_SESSION['name'] = $user['name'];
-			$_SESSION['id'] = $user['id'];
+			$_SESSION['user_id'] = $user['id'];
 			message('登录成功！', 2, '/');
 		}else{
 			message('账号或密码错误，请重新登陆',1,'/user/login');

@@ -16,10 +16,15 @@ Route::post('/user/login','app/controllers/UserController@dologin');
 // blog
 Route::get('/blog/display/{id}','app/controllers/BlogController@increase')->name('display');
 Route::get('/blog/{id}','app/controllers/BlogController@get');
-// 写博客
+// 写
 Route::get('/blog/create','app/controllers/BlogController@create')->name('blog.create');
 Route::post('/blog/create','app/controllers/BlogController@store')->name('blog.store');
-// 个人空间
+// 删
+Route::post('/blog/del','app/controllers/BlogController@del')->name('blog.del');
+// 改
+Route::get('/blog/edit/{id}','app/controllers/BlogController@edit')->name('blog.edit');
+Route::post('/blog/edit','app/controllers/BlogController@doedit')->name('blog.doedit');
+// 博客空间
 Route::get('/blog/index','app/controllers/BlogController@index')->name('blog.index');
 
 

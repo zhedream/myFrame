@@ -99,7 +99,7 @@ class Route{
 
         }
 
-        // view("error");
+        view("error");
 
         die('页面不见了');
         a:;

@@ -41,11 +41,11 @@ class RD{
      * 2.过期时间（秒）
      * 3.值 匿名函数 return 数据
      */
-    public static function chache(string $key,int $minutes, callable $call){
+    public static function chache(string $key,int $minutes, callable $call ,$cover = false){
 
             // 返回 1 0
         $key = "String:".$key;
-        if( self::$redis->exists($key)){
+        if( !$cover && self::$redis->exists($key)){
             return json_decode( self::$redis->get($key),true); // 存在键 则返回
         }
         $str = json_encode( $call());

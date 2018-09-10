@@ -10,7 +10,7 @@ class BlogController extends HomeController{
 	function index(){
 		if($_SESSION['email']){
 			$article = new Article;
-			$blogs = $article->allUserBlog($_SESSION['id']);
+			$blogs = $article->allUserBlog($_SESSION['user_id']);
 			view('blog.index',[
 				'blogs'=>$blogs
 			]);
@@ -48,9 +48,40 @@ class BlogController extends HomeController{
 	
 	function store(){
 		$article = new Article;
+		// jj($_POST);
 
-		// var_dump($_POST);
-		jj($_POST);
+		if($article->store()){
+
+
+			message('发布成功',1,Route('blog.index'));
+
+		}
+		
+	}
+
+	function del(){
+
+		$article = new Article;
+		$user_id = $_SESSION['user_id'];
+		$id = $_POST['id'];
+		// jj($_POST);
+		$re = DB::findOneFirst('select Count(*) from articles where user_id=? and id=?',[$user_id,$id]);
+		// dd($re);
+		// jj($re);
+		if($re){
+			
+			$a = $article->del($id);
+			$article->allUserBlog($_SESSION['user_id'],true);
+			message('删除成功:'.$a,1,Route('blog.index'));
+
+		}
+
+	}
+
+	function edit(Request $req,$id){
+
+		$article = new Article;
+		$blog = Article::findOne('select * from articles where user_id=? and id=?',[$_SESSION['user_id'],$id]);
 
 	}
 

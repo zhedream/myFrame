@@ -3,6 +3,7 @@
 namespace app\Models;
 use Core\Model;
 use core\RD;
+use core\DB;
 
 class Article extends Model{
 
@@ -26,13 +27,40 @@ class Article extends Model{
         }
         return false;
     }
-    function allUserBlog($id){
 
-        return RD::chache('Articles_user:'.$id,60,function()use($id){
-            return self::findAll("select * from articles where user_id=?",[$id]);
-        });
+    /**
+     * 读取/刷新 用户空间 文章
+     * 1. 用户 user_id
+     * 2. 覆盖刷新
+     * return blogs
+     */
+    function allUserBlog($user_id,$cover = false){
+
+        return RD::chache('Articles_user:'.$user_id,60,function()use($user_id){
+            return self::findAll("select * from articles where user_id=?",[$user_id]);
+        },$cover);
 
     }
 
-    
+    function store(){
+
+        $title = $_POST['title'];
+        $description = getChar( rand(20,100) ) ;
+        $content = $_POST['content'];
+        $display = rand(10,500);
+
+        $accessable = $_POST['accessable'];
+        $type = rand(1,11);
+        $date = rand(1233333399,1535592288);
+        $date = date('Y-m-d H:i:s');
+        $user_id = $_SESSION['user_id'];
+
+        return DB::exec("INSERT INTO articles (title,`description`,content,display,accessable,type,created_at,user_id) VALUES(?,?,?,?,?,?,?,? )"
+                ,[$title,$description,$content,$display,$accessable,$type,$date,$user_id]);
+    }
+
+    function del($id){
+        // DELETE FROM 表名称 WHERE 列名称 = 值
+        return DB::exec("DELETE FROM articles WHERE id = ?",[$id]);
+    }
 }

@@ -200,8 +200,16 @@ function jj($data,$option = true){
     $callinfo = debug_backtrace()[0];
     $file = $callinfo['file'];
     $line = $callinfo['line'];
-    $data['callinfo'] = ['file'=>$file,'line'=>$line];
+    // var_dump($callinfo);
     // array_unshift($data,$aa);
+    // var_dump($data, gettype($data));
+    // die;
+    if(gettype($data) =='boolean')
+        die('boolean:'.$data."\r\n<br>file:{$file},<br>line:{$line}");
+    if(gettype($data) =='string ')
+        die('string :'.$data."\r\n<br>file:{$file},<br>line:{$line}");
+
+    $data['callinfo'] = ['file'=>$file,'line'=>$line];
 
     if($option)
         echo json_encode($data,true);
