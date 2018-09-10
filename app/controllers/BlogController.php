@@ -80,8 +80,37 @@ class BlogController extends HomeController{
 
 	function edit(Request $req,$id){
 
+		if(isset($_SESSION['email'])){
+			$article = new Article;
+			$blog = Article::findOne('select * from articles where user_id=? and id=?',[$_SESSION['user_id'],$id]);
+			// jj($blog);
+			if($blog){
+				view('blog.edit',['blog'=>$blog]);
+				return;
+			}
+			else
+			echo json_encode([
+				'err'=>007,
+				'msg'=>'this is BlogController edit',
+			]);
+		}
+		
+		echo json_encode([
+			'err'=>007,
+			'msg'=>'登陆信息过期,请重新登陆'
+		]);
+		die;
+
+		
+
+	}
+	function doedit(Request $req,$id){
+
 		$article = new Article;
 		$blog = Article::findOne('select * from articles where user_id=? and id=?',[$_SESSION['user_id'],$id]);
+		if($blog){
+			jj($req);
+		}
 
 	}
 

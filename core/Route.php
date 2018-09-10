@@ -117,7 +117,7 @@ class Route{
 
         foreach (self::$gets as $key => $value)
             if($value['url']==$url)
-                throwE("GET路由地址( {$url} )已存在");
+                throwE("GET路由地址( {$url} )已存在",'get');
                 
         list($controller,$action) = explode('@', $path);
         $controller = str_replace('/', '\\', $controller);
@@ -173,7 +173,7 @@ class Route{
         $self = self::new();
         foreach (self::$posts as $key => $value)
             if($value['url']==$url)
-                throwE("POST路由地址( {$url} )已存在");
+                throwE("POST路由地址( {$url} )已存在",'get');
         list($controller,$action) = explode('@', $path);
         $controller = str_replace('/', '\\', $controller);
 
@@ -249,7 +249,7 @@ class Route{
         
         // extract($data);
         if(!isset(self::$map[$name])){
-            throwE('不存在路由名称'.$name);
+            throwE('不存在路由名称'.$name,'name');
         }
         // var_dump( self::$map[$name]);
         $url =  self::$map[$name]['url'];
@@ -261,7 +261,7 @@ class Route{
         }
 
         if(preg_match('/\{.*\}/', $url, $matches)){
-            throwE('请检查路由参数');
+            throwE('请检查路由参数','Route');
         }
 
         if($full){

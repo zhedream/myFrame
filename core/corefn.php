@@ -16,6 +16,7 @@ function view($viewFileName, $data = [])
     $path = str_replace('.', '/', $viewFileName) . '.html';
     // 加载视图
     require(ROOT . 'views/' . $path);
+    // die;
 }
 
 
@@ -179,18 +180,38 @@ function csrf_field()
 
 /**
  * 抛出 异常
+ * 1. 异常信息
+ * 2. 抛出异常的函数名
  */
-function throwE($str){
+function throwE($str,$fn = null){
     ob_clean();
-    $callinfo = debug_backtrace()[0];
-    $file = $callinfo['file'];
-    $line = $callinfo['line'];
+    // 所有调用点
+    $AllCall = debug_backtrace();
+    // jj($AllCall);
+    $LocationCall = []; // 定位的异常点
+    foreach ($AllCall as $key => $value) {
+        if($value['function']==$fn){
+            $LocationCall['file'] = $value['file'];
+            $LocationCall['line'] = $value['line'];
+        }
+    }
+    // jj($LocationCall);
+    if(!$file){
+        // jj($AllCall);
+    }
+
+    // 抛出的异常点
+    $ThrowCall = [];
+    $ThrowCall['file'] = $AllCall[0]['file'];
+    $ThrowCall['line'] = $AllCall[0]['line'];
+    // jj($ThrowCall);
     try{
         throw new \Exception($str,0); // 处理错误信息 的 对象
     }catch(\Exception $e){
-        echo "<hr>出错文件:&nbsp".$file."<hr>";
-        echo "错误信息:&nbsp".$e->getMessage()."<hr>";
-        echo "错误行号:&nbsp".$line."<hr>";
+        // echo "<hr>出错文件:&nbsp".$file."<hr>";
+        // echo "错误信息:&nbsp".$e->getMessage()."<hr>";
+        // echo "错误行号:&nbsp".$line."<hr>";
+        view('exception',['Message'=>$e->getMessage(),'AllCall'=>$AllCall,'ThrowCall'=>$ThrowCall,'LocationCall'=>$LocationCall]);
         die;
     }
 }
@@ -209,7 +230,7 @@ function jj($data,$option = true){
     if(gettype($data) =='string ')
         die('string :'.$data."\r\n<br>file:{$file},<br>line:{$line}");
 
-    $data['callinfo'] = ['file'=>$file,'line'=>$line];
+    $data['jj-callinfo'] = ['file'=>$file,'line'=>$line];
 
     if($option)
         echo json_encode($data,true);

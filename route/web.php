@@ -23,7 +23,7 @@ Route::post('/blog/create','app/controllers/BlogController@store')->name('blog.s
 Route::post('/blog/del','app/controllers/BlogController@del')->name('blog.del');
 // 改
 Route::get('/blog/edit/{id}','app/controllers/BlogController@edit')->name('blog.edit');
-Route::post('/blog/edit','app/controllers/BlogController@doedit')->name('blog.doedit');
+Route::post('/blog/edit/{id}','app/controllers/BlogController@doedit')->name('blog.doedit');
 // 博客空间
 Route::get('/blog/index','app/controllers/BlogController@index')->name('blog.index');
 
