@@ -11,7 +11,7 @@ Route::get('/user/active','app/controllers/UserController@active')->name('user.a
 // 登陆
 Route::get('/user/login','app/controllers/UserController@login')->name('user.login');
 Route::get('/user/logout','app/controllers/UserController@logout')->name('user.logout');
-Route::get('/user/loging','app/controllers/UserController@loging');
+Route::get('/user/loging','app/controllers/UserController@loging')->name('user.loging');
 Route::post('/user/login','app/controllers/UserController@dologin');
 // blog
 Route::get('/blog/display/{id}','app/controllers/BlogController@increase')->name('display');

@@ -42,7 +42,11 @@ body{
             <a href="<?=Route('blog.create')?>">发表日志</a>
             <a href="<?=Route('user.logout')?>">退出</a>
             <?php endif; ?>
-        <?php } ?>
+        <?php }else{ ?>
+            <a href="/">首页</a>
+            <a href="<?=Route('user.regist') ?>">注册</a>
+            <a href="<?=Route('user.login')?>">登录</a>
+        <?php }?>
     </div>
 
 

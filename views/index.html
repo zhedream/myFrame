@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>首页</title>
 </head>
+
 <body style="display:none;">
     <?php view('common.nav',['_static'=>isset($_static)?$_static:'']) ?>
     <h1>最新发表的日志</h1>
     <ul>
         <?php foreach($blogs as $v): ?>
 
-            <li>
-                <a target="_blank" href="content/<?=$v['id']?>.html">
-                    <?=$v['title']?>
-                </a>
-            </li>
+        <li>
+            <a target="_blank" href="content/<?=$v['id']?>.html">
+                <?=$v['title']?>
+            </a>
+        </li>
 
         <?php endforeach; ?>
     </ul>
@@ -24,50 +26,60 @@
 
 <script>
 
-$(function(){
+    $(function () {
 
-    var memu = document.getElementById('memu_static');
-    console.log(memu);
-    if(memu){
-        console.log('true,这是静态页');
+        var memu = document.getElementById('memu_static');
+        console.log(memu);
+        if (memu) {
+            console.log('true,这是静态页');
 
-        $.ajax({
-            type:"GET",
-            url:'/user/loging',
-            dataType:'json',  // 声明服务器返回的是JSON（解析JSON）
-            success:function(data)
-            {
+            $.ajax({
+                type: "GET",
+                url: "<?=Route('user.loging')?>",
+                dataType: 'json',  // 声明服务器返回的是JSON（解析JSON）
+                success: function (data) {
 
-                var html = '<a href="/">首页</a>';
-                // 判断登录
-                if(data.email == '' || data.email==null)
-                {
-                    // js 中定义多行字符串时要使用 ` （反引号 1左边的键子）
-                    html += ` <a href="<?=Route('user.regist')?>">注册</a> 
+                    var html = '<a href="/">首页</a>';
+                    // 判断登录
+                    if (data.email == '' || data.email == null) {
+                        console.log('未登录');
+
+                        // js 中定义多行字符串时要使用 ` （反引号 1左边的键子）
+                        html += ` <a href="<?=Route('user.regist')?>">注册</a> 
                             <a href="<?=Route('user.login')?>">登录</a>`;
-                }
-                else
-                {
-                    html += data.email + 
+                    }
+                    else {
+                        console.log('已登录');
+                        html += data.email +
                             ` <a href="<?=Route('blog.index')?>">日志列表</a> 
                             <a href="<?=Route('blog.create')?>">发表日志</a> 
                             <a href="<?=Route('user.logout')?>">退出</a>`;
+                    }
+
+                    // 获取id=menu的div 并把按钮放进去
+                    $(memu).html(html);
+                },
+                error: function () {
+
+                    var html = '<a href="/">首页</a>';
+                    html += data.email +
+                        ` <a href="<?=Route('blog.index')?>">日志列表</a> 
+                            <a href="<?=Route('blog.create')?>">发表日志</a> 
+                            <a href="<?=Route('user.logout')?>">退出</a>`;
+                    $(memu).html(html);
+
                 }
+            });
 
-                // 获取id=menu的div 并把按钮放进去
-                $(memu).html(html);
-            }
-        });
-        
-    }
-    else{
-        
-        console.log('false,这是动态页');
-    }
-           
+        }
+        else {
+
+            console.log('false,这是动态页');
+        }
 
 
-})
+
+    })
 
 </script>
 

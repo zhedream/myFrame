@@ -9,7 +9,7 @@ class StaticController extends Controller{
 
     function index(){
         $blogs = RD::chache('index',60,function(){
-            return Test::findAll('select * from mbg_articles limit 20');
+            return DB::findAll('select * from mbg_articles limit 20');
         });
         ob_start();
         view('index',['blogs'=>$blogs,'_static'=>'_static']);
