@@ -182,12 +182,15 @@ function csrf_field()
  */
 function Exception($str){
 
+    $callinfo = debug_backtrace()[0];
+    $file = $callinfo['file'];
+    $line = $callinfo['line'];
     try{
         throw new \Exception($str,0); // 处理错误信息 的 对象
     }catch(\Exception $e){
-        echo "<hr>出错文件:&nbsp".$e->getFile()."<hr>";
+        echo "<hr>出错文件:&nbsp".$file."<hr>";
         echo "错误信息:&nbsp".$e->getMessage()."<hr>";
-        echo "错误行号:&nbsp".$e->getLine()."<hr>";
+        echo "错误行号:&nbsp".$line."<hr>";
         die;
     }
 }
