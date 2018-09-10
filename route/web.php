@@ -16,6 +16,14 @@ Route::post('/user/login','app/controllers/UserController@dologin');
 Route::post('/blog/display/{id}','app/controllers/BlogController@increase')->name('display');
 Route::get('/blog/{id}','app/controllers/BlogController@get');
 
+//alipay
+
+// 支付
+Route::get('/alipay/pay','app/controllers/AlipayController@pay');
+// 回跳
+Route::get('/alipay/return','app/controllers/AlipayController@return');
+// 通知
+Route::post('/alipay/notify','app/controllers/AlipayController@notify');
 
 
 

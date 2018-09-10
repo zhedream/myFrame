@@ -75,6 +75,16 @@ class UserController extends HomeController{
 		]);
 	}
 
+	// 充值
+	function recharge(){
+		echo 'UserController this is Recharge 充值';
+	}
+
+	// 支付
+	function payment(){
+		echo 'UserController this is payment 支付';
+	}
+
 }
 
  ?>
