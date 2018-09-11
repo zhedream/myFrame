@@ -12,7 +12,7 @@ class Route{
             self::$self = new self;
         return self::$self;
     }
-    static $csrfPass = []; //csrf 白名单
+    static $csrfPass = ['/alipay/notify']; //csrf 白名单
     static $method; // 请求方式
     static $pathinfo; // 请求路径
     static $map = []; // 名称映射
@@ -58,8 +58,8 @@ class Route{
             }
         }
         else if(self::$method == 'POST'){
-            // print_r($_POST);
-            if(true || !in_array('',self::$csrfPass)){
+            // var_dump(self::$pathinfo);die;
+            if(!in_array(self::$pathinfo,self::$csrfPass)){
                 if(!isset($_POST['_token'])){
                     echo json_encode( [
                             'err'=>007,

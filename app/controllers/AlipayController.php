@@ -7,6 +7,7 @@ use libs\Log;
 class AlipayController
 {
     // 配置
+    // nrxcae3004@sandbox.com
     public $config = [
         'app_id' => '2016091200490918',
         // 支付宝公钥
