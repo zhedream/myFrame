@@ -4,7 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
     "content-hash": "a5444c70251adc00245d70f36b3f6976",
+=======
+    "content-hash": "4a896c92feb4dc906a207b40a5113bb7",
+>>>>>>> blog
     "packages": [
         {
             "name": "doctrine/lexer",
@@ -118,6 +122,7 @@
             "time": "2018-04-10T10:11:19+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "guzzlehttp/guzzle",
             "version": "6.3.3",
             "source": {
@@ -214,10 +219,39 @@
                 },
                 "files": [
                     "src/functions_include.php"
+=======
+            "name": "ezyang/htmlpurifier",
+            "version": "v4.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ezyang/htmlpurifier.git",
+                "reference": "d85d39da4576a6934b72480be6978fb10c860021"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/d85d39da4576a6934b72480be6978fb10c860021",
+                "reference": "d85d39da4576a6934b72480be6978fb10c860021",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2"
+            },
+            "require-dev": {
+                "simpletest/simpletest": "^1.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "HTMLPurifier": "library/"
+                },
+                "files": [
+                    "library/HTMLPurifier.composer.php"
+>>>>>>> blog
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
+<<<<<<< HEAD
                 "MIT"
             ],
             "authors": [
@@ -375,6 +409,23 @@
                 "psr-3"
             ],
             "time": "2017-06-19T01:22:40+00:00"
+=======
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Edward Z. Yang",
+                    "email": "admin@htmlpurifier.org",
+                    "homepage": "http://ezyang.com"
+                }
+            ],
+            "description": "Standards compliant HTML filter written in PHP",
+            "homepage": "http://htmlpurifier.org/",
+            "keywords": [
+                "html"
+            ],
+            "time": "2018-02-23T01:58:20+00:00"
+>>>>>>> blog
         },
         {
             "name": "predis/predis",

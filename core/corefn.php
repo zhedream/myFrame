@@ -16,6 +16,7 @@ function view($viewFileName, $data = [])
     $path = str_replace('.', '/', $viewFileName) . '.html';
     // 加载视图
     require(ROOT . 'views/' . $path);
+    // die;
 }
 
 
@@ -128,20 +129,130 @@ function Route($name,$data = [],$full = false){
 }
 
 /**
- * 抛出 异常
+ * 过滤XSS（在线编辑器填写的内容不能使用该函数过滤）
+ * 1. 过滤内容
  */
-function Exception($str){
+function e($content)
+{
+    return htmlspecialchars($content);
+}
 
+/**
+ *  使用 htmlpurifer 选择过滤(性能慢只用于富文本)
+ * 1. 过滤内容
+ */
+function hpe($content)
+{
+    // 一直保存在内存中(直到脚本执行结束)
+    static $purifier = null;
+    if($purifier === null)
+    {
+        $config = \HTMLPurifier_Config::createDefault();
+        $config->set('Core.Encoding', 'utf-8');
+        $config->set('HTML.Doctype', 'HTML 4.01 Transitional');
+        $config->set('Cache.SerializerPath', ROOT.'cache');
+        $config->set('HTML.Allowed', 'div,b,strong,i,em,a[href|title],ul,ol,ol[start],li,p[style],br,span[style],img[width|height|alt|src],*[style|class],pre,hr,code,h2,h3,h4,h5,h6,blockquote,del,table,thead,tbody,tr,th,td');
+        $config->set('CSS.AllowedProperties', 'font,font-size,font-weight,font-style,margin,width,height,font-family,text-decoration,padding-left,color,background-color,text-align');
+        $config->set('AutoFormat.AutoParagraph', TRUE);
+        $config->set('AutoFormat.RemoveEmpty', TRUE);
+        $purifier = new \HTMLPurifier($config);
+    }
+    return $purifier->purify($content);
+}
+
+function csrf()
+{
+    if(!isset($_SESSION['_token']))
+    {
+        // 生成一个随机的字符串
+        $_token = md5( rand(1,99999) . microtime() );
+        $_SESSION['_token'] = $_token;
+    }
+    return $_SESSION['_token'];
+}
+
+// 生成令牌隐藏域
+function csrf_field()
+{
+    $csrf = isset($_SESSION['_token']) ? $_SESSION['_token'] : csrf();
+    echo "<input type='hidden' name='_token' value='{$csrf}'>";
+}
+
+/**
+ * 抛出 异常
+ * 1. 异常信息
+ * 2. 抛出异常的函数名
+ */
+function throwE($str,$fn = null){
+    ob_clean();
+    // 所有调用点
+    $AllCall = debug_backtrace();
+    // jj($AllCall);
+    $LocationCall = []; // 定位的异常点
+    foreach ($AllCall as $key => $value) {
+        if($value['function']==$fn){
+            $LocationCall['file'] = $value['file'];
+            $LocationCall['line'] = $value['line'];
+        }
+    }
+    // jj($LocationCall);
+    if(!$file){
+        // jj($AllCall);
+    }
+
+    // 抛出的异常点
+    $ThrowCall = [];
+    $ThrowCall['file'] = $AllCall[0]['file'];
+    $ThrowCall['line'] = $AllCall[0]['line'];
+    // jj($ThrowCall);
     try{
         throw new \Exception($str,0); // 处理错误信息 的 对象
     }catch(\Exception $e){
-        echo "<hr>出错文件:&nbsp".$e->getFile()."<hr>";
-        echo "错误信息:&nbsp".$e->getMessage()."<hr>";
-        echo "错误行号:&nbsp".$e->getLine()."<hr>";
+        // echo "<hr>出错文件:&nbsp".$file."<hr>";
+        // echo "错误信息:&nbsp".$e->getMessage()."<hr>";
+        // echo "错误行号:&nbsp".$line."<hr>";
+        view('exception',['Message'=>$e->getMessage(),'AllCall'=>$AllCall,'ThrowCall'=>$ThrowCall,'LocationCall'=>$LocationCall]);
         die;
     }
 }
 
+function jj($data,$option = true){
+    ob_clean();
+    $callinfo = debug_backtrace()[0];
+    $file = $callinfo['file'];
+    $line = $callinfo['line'];
+    // var_dump($callinfo);
+    // array_unshift($data,$aa);
+    // var_dump($data, gettype($data));
+    // throwE('','');
+    // die;
+    if(gettype($data) =='boolean')
+        die('boolean:'.$data."\r\n<br>file:{$file},<br>line:{$line}");
+    if(gettype($data) =='string ')
+        die('string :'.$data."\r\n<br>file:{$file},<br>line:{$line}");
+
+    $data['jj-callinfo'] = ['file'=>$file,'line'=>$line];
+
+    if($option)
+        echo json_encode($data,true);
+    else
+        echo json_encode($data);
+    
+    die;
+
+}
+
+
+function dd($data,$option = true){
+    $AllCall = debug_backtrace();
+    $ThrowCall = [];
+    $ThrowCall['file'] = $AllCall[0]['file'];
+    $ThrowCall['line'] = $AllCall[0]['line'];
+    ob_clean();
+    var_dump($data,$ThrowCall);
+    die;
+
+}
 
 
 

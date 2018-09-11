@@ -9,6 +9,7 @@
     <h1>登陆</h1>
 
     <form action="/user/login" method="post">
+        <?php csrf_field();?>
         <div>
             Email：
             <input type="text" name="email">

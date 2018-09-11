@@ -9,6 +9,7 @@
     <h1>注册</h1>
 
     <form action="/user/regist" method="post">
+        <?php csrf_field();?>
         <div>
             Email：
             <input type="text" name="email">

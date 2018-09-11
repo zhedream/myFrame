@@ -22,7 +22,7 @@ $(function(){
     var url = "/blog/display/" + id;
     // 请求这个地址
     $.ajax({
-        type:"POST",
+        type:"GET",
         url:url,
         dataType: "json",
         success:function(data)

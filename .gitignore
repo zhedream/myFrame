@@ -13,5 +13,6 @@ npm-debug.log
 yarn-error.log
 .env
 /views_c
-composer.lock
 /logs/
+composer.lock
+*.lock

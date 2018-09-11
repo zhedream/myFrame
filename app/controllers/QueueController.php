@@ -17,8 +17,8 @@ class QueueController{
             list($email,$password,$code) = $message;
             $content = "
             点击以下链接进行激活：<br> 点击激活：
-            <a href='http://www.my.com/user/active?code={$code}'>
-            http://www.my.com/user/active?code={$code}</a><p>
+            <a href='http://lhz.tunnel.echomod.cn/user/active?code={$code}'>
+            http://lhz.tunnel.echomod.cn/user/active?code={$code}</a><p>
             如果按钮不能点击，请复制上面链接地址，在浏览器中访问来激活账号！</p>";
 
             $state = $mailer->send('注册激活',$content,$email);

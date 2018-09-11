@@ -19,7 +19,9 @@ class UserController extends HomeController{
 	function doregist(Request $req,$id){
 		$email = $_POST['email'];
 		$password = 123123;
-		$num = User::findOne('select count(*) from mbg_authors where email=?',[$email]);
+		$num = User::findOneFirst('select count(*) from users where email=?',[$email]);
+		// dd($num);
+		
 		if($num){
 			
 			return message('该账号已注册',1,'/user/login');
@@ -51,16 +53,23 @@ class UserController extends HomeController{
 		view('user.login');
 	}
 
+	function logout(){
+
+		$_SESSION['email'] = null;
+		message('退出成功',1,Route('user.login'));
+	}
+
 	function dologin(Request $req,$id){
 
 		$email = $_POST['email'];
 		$password = md5($_POST['password']);
 
-		$user = User::findOne('select * from mbg_authors where email=? and password=?',[$email,$password]);
+		$user = User::findOne('select * from users where email=? and password=?',[$email,$password]);
 		if($user){
 			var_dump($user);
 			$_SESSION['email'] = $user['email'];
 			$_SESSION['name'] = $user['name'];
+			$_SESSION['user_id'] = $user['id'];
 			message('登录成功！', 2, '/');
 		}else{
 			message('账号或密码错误，请重新登陆',1,'/user/login');

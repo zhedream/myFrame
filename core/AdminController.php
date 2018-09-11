@@ -2,7 +2,7 @@
 
 namespace Core;
 
-class AdminController extends BaseController{
+class AdminController extends Controller{
 
 
 
