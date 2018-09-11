@@ -105,11 +105,24 @@ class BlogController extends HomeController{
 
 	}
 	function doedit(Request $req,$id){
-
+		$data = $req->all();
 		$article = new Article;
 		$blog = Article::findOne('select * from articles where user_id=? and id=?',[$_SESSION['user_id'],$id]);
 		if($blog){
-			jj($req);
+			// jj($blog);
+
+			// dd($req);
+			// dd();
+			if( $article->update($id,$data)){
+				message('文章修改成功',1,Route('blog.index'));
+				$article->allUserBlog($_SESSION['user_id'],true); // 强制读取
+			}
+		}else{
+			// echo json_encode([
+			// 	'err'=>007,
+			// 	'msg'=>'请重新登陆'
+			// ]);
+			message('请重新登陆',1,Route('blog.index'));
 		}
 
 	}

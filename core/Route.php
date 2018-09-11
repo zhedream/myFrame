@@ -71,7 +71,7 @@ class Route{
                 if($_POST['_token']!=$_SESSION['_token']){
                     // var_dump($_SESSION['_token']);
                     echo json_encode( [
-                            'a'=>$_SESSION['_token'],
+                            'session'=>$_SESSION,
                             'err'=>007,
                             'msg'=>'请求超时,令牌过期'
                         ]);

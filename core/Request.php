@@ -1,6 +1,6 @@
 <?php
 namespace core;
-
+use core\Route;
 class Request{
 
 
@@ -24,6 +24,16 @@ class Request{
         
     }
 
+    function all(){
+        // dd(Route::$method);
+        if(Route::$method=='POST'){
+            $data = $this->posts;
+            unset($data['_token']);
+            return($data);
+        }
+        else if(Route::$method=='GET')
+            return($this->gets);
+    }
 
     
 }

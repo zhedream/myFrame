@@ -224,6 +224,7 @@ function jj($data,$option = true){
     // var_dump($callinfo);
     // array_unshift($data,$aa);
     // var_dump($data, gettype($data));
+    // throwE('','');
     // die;
     if(gettype($data) =='boolean')
         die('boolean:'.$data."\r\n<br>file:{$file},<br>line:{$line}");
@@ -243,8 +244,12 @@ function jj($data,$option = true){
 
 
 function dd($data,$option = true){
+    $AllCall = debug_backtrace();
+    $ThrowCall = [];
+    $ThrowCall['file'] = $AllCall[0]['file'];
+    $ThrowCall['line'] = $AllCall[0]['line'];
     ob_clean();
-    var_dump($data);
+    var_dump($data,$ThrowCall);
     die;
 
 }

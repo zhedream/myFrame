@@ -55,12 +55,33 @@ class Article extends Model{
         $date = date('Y-m-d H:i:s');
         $user_id = $_SESSION['user_id'];
 
-        return DB::exec("INSERT INTO articles (title,`description`,content,display,accessable,type,created_at,user_id) VALUES(?,?,?,?,?,?,?,? )"
+        return DB::exec("INSERT INTO `articles` (`title`,`description`,`content`,`display`,`accessable`,`type`,`created_at`,`user_id`) VALUES(?,?,?,?,?,?,?,? )"
                 ,[$title,$description,$content,$display,$accessable,$type,$date,$user_id]);
     }
 
     function del($id){
         // DELETE FROM 表名称 WHERE 列名称 = 值
-        return DB::exec("DELETE FROM articles WHERE id = ?",[$id]);
+        return DB::exec("DELETE FROM `articles` WHERE `id` = ?",[$id]);
+    }
+
+    /**
+     * 更新数据
+     * 1. id
+     * 2. 数据
+     */
+    function update($id,$data){
+        // dd($data);
+        $blog = Article::findOne(" select * from ".$this->table()." where user_id=? and id=? ",[$_SESSION['user_id'],$id]);
+
+		if($blog){
+            // dd($_POST);
+            foreach ($data as $key => $value) {
+                $blog[$key] = $value;
+            }
+            return( Article::exec_update($blog,['id'=>$id]));
+        }
+
+        return false;
+        // var_dump($blog);die;
     }
 }

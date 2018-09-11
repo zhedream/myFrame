@@ -55,6 +55,10 @@ class DB{
         }
             return false;
     }
+
+    /**
+     * 查询一个字段的 值
+     */
     static function findOneFirst($sql,$data=[]){
         $stmt = self::$pdo->prepare($sql);
         if($stmt->execute($data)){
@@ -64,19 +68,41 @@ class DB{
         }
         return false;
     }
+
+    /**
+     * 查询表信息
+     * 1. 表名
+     */
+    function desctable($table){
+        return self::findAll('desc '.$table);
+    }
+
+    /**
+     * 查询建表语句
+     * 1. 表名
+     */
+    function showcreatetable($table){
+        return self::findAll('show create table '.$table);
+    }
+
+    /**
+     * 执行非查询sql
+     * 1. 预处理 sql
+     * 2. 数据
+     */
     static function exec($sql,$data=[]){
         $stmt = self::$pdo->prepare($sql);
         return $stmt->execute($data);
     }
 
-        /**
-         * 事务 SQL   注意 InnoDB 才支持 事务
-         * 1.传入 [
-         * [$sql1,$data1],
-         * [$sql2,$data2],
-         * ...
-         * ]
-         */
+    /**
+     * 事务 SQL   注意 InnoDB 才支持 事务
+     * 1.传入 [
+     * [$sql1,$data1],
+     * [$sql2,$data2],
+     * ...
+     * ]
+     */
     static function Transaction($Action){
 
         self::$pdo->beginTransaction();
@@ -88,9 +114,10 @@ class DB{
         }
         self::$pdo->commit();//提交(确认)
     }
-        /**
-         * 开启了事务不提交 可测试 Sql 语句,不会插入 数据库
-         */
+
+    /**
+     * 开启了事务不提交 可测试 Sql 语句,不会插入 数据库
+     */
     static function testSql($Action){
         
         if (self::$pdo === NULL){ self::client(); echo '修复连接';}

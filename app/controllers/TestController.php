@@ -127,6 +127,18 @@ class TestController extends HomeController{
 
     }
 
+    function testSql(){
+        $blog = Test::testSql([
+                [" select * from ".$this->table()." where user_id=? and id=? ",[$_SESSION['user_id'],$id]],
+            ]);
+    }
+
+    function showtable(){
+
+        var_dump( DB::findAll('desc articles'));
+        // jj( DB::findAll('show create table articles'));
+    }
+
 }
 
  ?>

@@ -41,6 +41,10 @@ Route::get('/test/makeUrl/{id}','app/controllers/TestController@makeUrl')->name(
 Route::get('/test/csrf','app/controllers/TestController@getcsrf')->name('csrf'); // csrf
 // 静态化
 Route::get('/test/content2html','app/controllers/TestController@content2html');
+Route::get('/test/showtable','app/controllers/TestController@showtable');
+
+
+
 // var_dump(Route::$map);
 // var_dump(Route::$gets);
 // var_dump(Route::$posts);
