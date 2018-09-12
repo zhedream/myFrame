@@ -36,6 +36,14 @@ Route::get('/alipay/return','app/controllers/AlipayController@return');
 // 通知
 Route::post('/alipay/notify','app/controllers/AlipayController@notify');
 
+// Wxpay
+// 支付
+Route::get('/wxpay/pay','app/controllers/WxpayController@pay');
+// 回跳
+Route::get('/wxpay/return','app/controllers/WxpayController@return');
+// 通知
+Route::post('/wxpay/notify','app/controllers/WxpayController@notify');
+
 
 
 

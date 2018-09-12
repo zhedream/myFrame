@@ -12,7 +12,7 @@ class Route{
             self::$self = new self;
         return self::$self;
     }
-    static $csrfPass = ['/alipay/notify']; //csrf 白名单
+    static $csrfPass = ['/alipay/notify','/wxpay/notify']; //csrf 白名单
     static $method; // 请求方式
     static $pathinfo; // 请求路径
     static $map = []; // 名称映射
