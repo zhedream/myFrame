@@ -37,15 +37,17 @@ $(function(){
                 // 判断登录
                 if(data.email == '' || data.email==null)
                 {
-                    html += ` <a href="/user/regist">注册</a> 
-                            <a href="/user/login">登录</a>`;
+                    html += ` <a href="<?=Route('user.regist')?>">注册</a> 
+                            <a href="<?=Route('user.login')?>">登录</a>`;
                 }
                 else
                 {
                     html += data.email + 
-                            ` <a href="/blog/index">日志列表</a> 
-                            <a href="/blog/create">发表日志</a> 
-                            <a href="/user/logout">退出</a>`;
+                            `
+                            <a href="<?=Route('user.recharge')?>">充值</a> 
+                            <a href="<?=Route('blog.index')?>">日志列表</a> 
+                            <a href="<?=Route('blog.create')?>">发表日志</a> 
+                            <a href="<?=Route('user.logout')?>">退出</a>`;
                 }
                 $(memu).html(html);
                 

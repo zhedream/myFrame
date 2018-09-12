@@ -5,6 +5,7 @@ use core\Request;
 use Core\DB;
 use Core\RD;
 use app\Models\User;
+use app\Models\Order;
 class UserController extends HomeController{
 
 	function regist(Request $req,$id){
@@ -21,7 +22,6 @@ class UserController extends HomeController{
 		$password = 123123;
 		$num = User::findOneFirst('select count(*) from users where email=?',[$email]);
 		// dd($num);
-		
 		if($num){
 			
 			return message('该账号已注册',1,'/user/login');
@@ -86,7 +86,14 @@ class UserController extends HomeController{
 
 	// 充值
 	function recharge(){
-		echo 'UserController this is Recharge 充值';
+		view('user.recharge');
+	}
+	function dorecharge(Request $req,$id){
+
+		$order = new Order;
+		// dd($req->all());
+		$order->insert($req->all());
+		message('成功提交订单',1,Route(''));
 	}
 
 	// 支付

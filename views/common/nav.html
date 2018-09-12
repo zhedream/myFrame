@@ -38,6 +38,7 @@ body{
             <a href="<?=Route('user.login')?>">登录</a>
             <?php else: ?>
             <?=$_SESSION['email']?>
+            <a href="<?=Route('user.recharge')?>">充值</a>
             <a href="<?=Route('blog.index')?>">日志列表</a>
             <a href="<?=Route('blog.create')?>">发表日志</a>
             <a href="<?=Route('user.logout')?>">退出</a>

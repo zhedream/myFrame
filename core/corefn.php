@@ -196,9 +196,6 @@ function throwE($str,$fn = null){
         }
     }
     // jj($LocationCall);
-    if(!$file){
-        // jj($AllCall);
-    }
 
     // 抛出的异常点
     $ThrowCall = [];

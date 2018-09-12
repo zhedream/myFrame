@@ -24,7 +24,9 @@ class Snowflake
         //机器ID范围判断  
         $maxWorkerId = -1 ^ (-1 << self::workerIdBits);  
         if($workId > $maxWorkerId || $workId< 0){  
-            throw new Exception("workerId can't be greater than ".$maxWorkerId." or less than 0");  
+            // throw new \Exception("workerId can't be greater than ".$maxWorkerId." or less than 0");  
+            throwE("workerId can't be greater than ".$maxWorkerId." or less than 0",'__construct');
+            
         }  
         //赋值  
         $this->workId = $workId;  

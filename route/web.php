@@ -13,6 +13,13 @@ Route::get('/user/login','app/controllers/UserController@login')->name('user.log
 Route::get('/user/logout','app/controllers/UserController@logout')->name('user.logout');
 Route::get('/user/loging','app/controllers/UserController@loging')->name('user.loging');
 Route::post('/user/login','app/controllers/UserController@dologin');
+// 充值
+Route::get('/user/recharge','app/controllers/UserController@recharge')->name('user.recharge');
+Route::post('/user/recharge','app/controllers/UserController@dorecharge')->name('user.dorecharge');
+
+// 订单
+Route::get('/order/list','app/controllers/OrderController@list')->name('order.list');
+
 // blog
 Route::get('/blog/display/{id}','app/controllers/BlogController@increase')->name('display');
 Route::get('/blog/{id}','app/controllers/BlogController@get');

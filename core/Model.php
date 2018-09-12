@@ -122,7 +122,47 @@ class Model{
         $table = $this->table(2);
         $table = "`$table`";
         $sql = "UPDATE {$table} SET {$set} WHERE {$where}";
-        // echo $sql;
+        return self::exec($sql,$data);
+    }
+
+    /**
+     * insert 语句
+     * 0. 表名 = 类名+s;
+     * 1. 更改的字段 与 值 ['name'=>'名字']
+     */
+    function exec_insert(array $data){
+
+        $keys = array_keys($data); // 插入设置的 字段
+        $vals = array_values($data);// 插入设置的 字段值
+        // var_dump($keys,$vals);die;
+
+
+        $fillkeys = '';
+        foreach ($keys as $key => $value) {
+            if($value==end($keys))
+                $fillkeys .= "`$value` ";
+            else
+                $fillkeys .= "`$value`, ";
+            // echo $value."->";
+        }
+
+        $fillarea = '';
+        foreach ($keys as $key => $value) {
+            if($value==end($keys))
+                $fillarea .= "? ";
+            else
+                $fillarea .= "?, ";
+        }
+
+        $data = [];
+        foreach ($vals as $key => $value) {
+            // array_unshift($data,$value);
+            $data[] = $value;
+        }
+
+        $table = $this->table(2);
+        $table = "`$table`";
+        $sql = "INSERT INTO {$table} ({$fillkeys}) VALUES ({$fillarea})";
         // var_dump($sql,$data);die;
         // dd($sql);
         return self::exec($sql,$data);
