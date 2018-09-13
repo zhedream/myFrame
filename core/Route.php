@@ -249,7 +249,7 @@ class Route{
         
         // extract($data);
         if(!isset(self::$map[$name])){
-            throwE('不存在路由名称'.$name,'name');
+            throwE('不存在路由名称'.$name,'Route'); // name -> Route  
         }
         // var_dump( self::$map[$name]);
         $url =  self::$map[$name]['url'];

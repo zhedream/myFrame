@@ -56,6 +56,7 @@ class UserController extends HomeController{
 	function logout(){
 
 		$_SESSION['email'] = null;
+		$_SESSION['user_id'] = null;
 		message('退出成功',1,Route('user.login'));
 	}
 
@@ -93,12 +94,17 @@ class UserController extends HomeController{
 		$order = new Order;
 		// dd($req->all());
 		$order->insert($req->all());
-		message('成功提交订单',1,Route(''));
+		message('成功提交订单',1,Route('order.list'));
 	}
 
 	// 支付
 	function payment(){
 		echo 'UserController this is payment 支付';
+	}
+
+	function update(){
+
+		
 	}
 
 }

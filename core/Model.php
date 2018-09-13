@@ -8,10 +8,15 @@ class Model{
 
     static $pdo = null;
     static $redis = null;
+    var $table = null;
 
 	function __construct(){
         self::db();
         self::rd();
+        // self::$table = $this->table() ;
+        
+        
+        $this->table = $this->table() ;
     }
     
     static function ModelRun(){
@@ -19,10 +24,12 @@ class Model{
         self::rd();
     }
 
-    public function table($option = 1){
+     function table($option = 1){
         //$config;
         // dd(debug_backtrace()[1]['class']);
-        $class = debug_backtrace()[$option]['class'];
+        // $class = debug_backtrace()[$option]['class'];
+        $class = get_called_class();
+        // echo $class."<br>";
         $class =  end(explode('\\',$class));
         $class = strtolower($class).'s';
         $config = $GLOBALS['config'];
@@ -119,7 +126,8 @@ class Model{
             // array_unshift($data,$value);
             $data[] = $value;
         }
-        $table = $this->table(2);
+        $table = $this->table();
+        // dd($table);
         $table = "`$table`";
         $sql = "UPDATE {$table} SET {$set} WHERE {$where}";
         return self::exec($sql,$data);

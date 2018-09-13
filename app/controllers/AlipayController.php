@@ -3,6 +3,10 @@ namespace app\controllers;
 
 use Yansongda\Pay\Pay;
 use libs\Log;
+use core\Request;
+use app\Models\Order;
+use app\Models\User;
+use libs\Snowflake;
 
 class AlipayController
 {
@@ -25,19 +29,22 @@ class AlipayController
     ];
 
     // 跳转到支付宝
-    public function pay()
+    public function pay(Request $req,$id)
     {
-        // die('pay');
-        // 先在本地的数据库中生成一个订单（支付的金额、支付状态等信息、订单号）
-        // 模拟一个假的订单
-        $order = [
-            'out_trade_no' => time(),    // 本地订单ID
-            'total_amount' => '0.01',    // 支付金额（单位：元）
-            'subject' => 'test subject', // 支付标题
+        // $money = $req->all()['money'];
+        $order = new Order;
+        // dd($order->get($req->all()['sn']));
+        $o =  $order->findBysn($req->all()['sn']);
+        // dd($o);
+
+        $menu = [
+            'out_trade_no' => $o['sn'],    // 本地 购物订单 ID
+            'total_amount' => $o['money'],    // 支付金额（单位：元）
+            'subject' => 'MyFrame 充值：'.$o['money'].'元', // 支付标题
         ];
 
         // 跳转到支付宝
-        $alipay = Pay::alipay($this->config)->web($order);
+        $alipay = Pay::alipay($this->config)->web($menu);
         $alipay->send();
     }
     // 支付完成跳回
@@ -53,26 +60,53 @@ class AlipayController
 
     }
     // 接收支付完成的通知
-    public function notify()
-    {   
+    public function notify(){
+
         $loger = new Log('alipay_notify');
-        
+
         $alipay = Pay::alipay($this->config);
         try{
+
             $data = $alipay->verify(); // 是的，验签就这么简单！
             // 这里需要对 trade_status 进行判断及其它逻辑进行判断，在支付宝的业务通知中，只有交易通知状态为 TRADE_SUCCESS 或 TRADE_FINISHED 时，支付宝才会认定为买家付款成功。
             // 1、商户需要验证该通知数据中的out_trade_no是否为商户系统中创建的订单号；
             // 2、判断total_amount是否确实为该订单的实际金额（即商户订单创建时的金额）；
-            
+
+            if($data->trade_status=='TRADE_SUCCESS' || $data->trade_status=='TRADE_FINISHED'){
+                $user =  new User;
+                $order = new Order;
+                ob_start();
+                Order::$pdo->beginTransaction();
+
+                $o =  $order->findBysn($data->out_trade_no);
+                $u = User::findOne("select * from users where id=?",[$o['user_id']]);
+
+                $o['state'] = 1;
+                $u['money'] = $u['money']+(int)$o['money'];
+
+                $res1 = $order->exec_update($o,['id'=>$o['id']]); // 更新订单状态
+                $res2 = $user->exec_update($u,['id'=>$o['user_id']]); // 更新余额
+
+                if($res1 && $res2){
+                    Order::$pdo->commit();
+                }
+
+                $str = ob_get_contents();
+                file_put_contents(ROOT.'/logs/log'.'.html', $str);
+                ob_clean();
+            }
+
             $a = '订单ID：'.$data->out_trade_no ."\r\n";
             $a .= '支付总金额：'.$data->total_amount ."\r\n";
             $a .= '支付状态：'.$data->trade_status ."\r\n";
             $a .= '商户ID：'.$data->seller_id ."\r\n";
             $a .= 'app_id：'.$data->app_id ."\r\n";
             $loger->log($a);
+
+            
+
         } catch (\Exception $e) {
-            $loger->log('支付请求异常');
-            var_dump($e->getMessage()) ;
+            $loger->log('支付请求异常'.$e->getMessage());
         }
 
         // 回应支付宝服务器（如何不回应，支付宝会一直重复给你通知）
@@ -80,34 +114,45 @@ class AlipayController
     }
 
     // 退款
-    public function refund()
+    public function refund(Request $req,$id)
     {
         // 生成唯一退款订单号（以后使用这个订单号，可以到支付宝中查看退款的流程）
-        $refundNo = md5( rand(1,99999) . microtime() );
+        $flaker = new Snowflake(1023);
+        $refundNo =  $flaker->nextId();
+
+        $sn =  $req->all()['sn'];
+        
+        $loger = new Log('alipay_notify');
+        $order = new Order; 
+        $o = $order->findBysn($sn);
 
         try{
-            $order = [
-                'out_trade_no' => '1536291256',    // 退款的本地订单号
-                'refund_amount' => 0.01,              // 退款金额，单位元
+            $menu = [
+                'out_trade_no' =>$o['sn'] ,    // 退款的本地订单号
+                'refund_amount' => $o['money'],           // 退款金额，单位元
                 'out_request_no' => $refundNo,     // 生成 的退款订单号
             ];
 
             // 退款
-            $ret = Pay::alipay($this->config)->refund($order);
+            $ret = Pay::alipay($this->config)->refund($menu);
 
             if($ret->code == 10000)
             {
-                echo '退款成功！';
+                $o['state'] = 2;
+                $order->exec_update($o,['id'=>$o['id']]);
+                $loger->log('申请退款成功！,退款单号：'.$refundNo);
+                echo '申请退款成功！';
             }
             else
             {
-                echo '失败' ;
+                $loger->log('申请退款失败,msg:'.$ret.'退款单号：'.$refundNo);
                 var_dump($ret);
             }
         }
         catch(\Exception $e)
         {
             var_dump( $e->getMessage() );
+            $loger->log('申请退款错误,msg:'.json_encode($ret).'退款单号：'.$refundNo);
         }
     }
 }

@@ -15,7 +15,8 @@ class Order extends Model{
         $order = [
             'sn'=>$sn,
             'money'=>$data['money'],
-            'user_id'=>$_SESSION['user_id']
+            'user_id'=>$_SESSION['user_id'],
+            'created_at'=>date('Y-m-d g:i:s'),
         ];
         // dd($order);
         // dd(self::exec_insert($order));
@@ -24,5 +25,26 @@ class Order extends Model{
         }
         return false;
 
+    }
+
+    function get_list(){
+        $table = $this->table();
+        if(isset($_SESSION['user_id']))
+            return Order::findAll("select * from ".$table." where user_id=".$_SESSION['user_id']);
+        return false;
+    }
+
+    /**
+     * BY sn
+     */
+    function findBysn($sn){
+        $table = $this->table();
+        // dd('select * from '.$table.'where `sn`=?');
+        return self::findOne('select * from '.$table.' where `sn`=?',[$sn]);
+    }
+
+    function update($order,$condition){
+        
+        return $this->exec_update($order,$condition);
     }
 }

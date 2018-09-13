@@ -37,7 +37,9 @@ Route::get('/blog/index','app/controllers/BlogController@index')->name('blog.ind
 //alipay
 
 // 支付
-Route::get('/alipay/pay','app/controllers/AlipayController@pay');
+Route::post('/alipay/pay','app/controllers/AlipayController@pay')->name('pay.ali');
+// 退款
+Route::post('/alipay/refund','app/controllers/AlipayController@refund')->name('refund.ali');
 // 回跳
 Route::get('/alipay/return','app/controllers/AlipayController@return');
 // 通知
