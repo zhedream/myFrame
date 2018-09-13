@@ -30,26 +30,16 @@ class App {
     public static function initDir() {
         //目录斜线
         define("DS", DIRECTORY_SEPARATOR);
-        //根目录
-        // define("ROOT",getcwd() . DS);
         //主程序目录
         define("APP_PATH", ROOT . "app" . DS);
-        //Home目录
-        define("Home_PATH", APP_PATH . "Home" . DS);
-        //Admin目录
-        define("Admin_PATH", APP_PATH . "Admin" . DS);
-        //Model目录
-        define("Model_PATH", APP_PATH . "Model" . DS);
         //PUBLIC目录
-        define("PUBLIC_PATH", ROOT . "Public" . DS);
+        define("PUBLIC_PATH", ROOT . "public" . DS);
         //UPLOAD目录
-        define("UPLOAD_PATH", ROOT . "Upload" . DS);
-        //VENdOR目录
-        define("VENDOR_PATH", ROOT . "Vendor" . DS);
+        define("UPLOAD_PATH", ROOT . "/uploads" . DS);
         //配置目录
         define("CONFIG_PATH", ROOT . "Config" . DS);
 
-        $GLOBALS['config'] = include CONFIG_PATH . "config.php";
+        $GLOBALS['config'] = include CONFIG_PATH . "/config.php";
 
     }
 

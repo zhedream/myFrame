@@ -8,8 +8,11 @@ use Core\DB;
 use Core\RD;
 use libs\Mail;
 use app\Models\TestModel;
+use libs\Uploader;
+
 
 class TestController extends HomeController {
+
 
     function redis() {
         echo 'this is TestController';
@@ -140,6 +143,14 @@ class TestController extends HomeController {
 
         var_dump(DB::findAll('desc articles'));
         // jj( DB::findAll('show create table articles'));
+    }
+
+    function upload() {
+        $upload = Uploader::new();
+//        var_dump($upload);
+        var_dump($upload->getExt());
+//        echo '123';
+        return ;
     }
 
 }

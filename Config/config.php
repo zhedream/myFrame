@@ -44,8 +44,8 @@ return array(
     ),
     'pageSize' => array(
 
-        'admin_pagesize' => 2, /* 前台 */
-        'home_pagesize' => 2 /* 后台 */
+        'admin_pageSize' => 2, /* 前台 */
+        'home_pageSize' => 2 /* 后台 */
 
 
     )
