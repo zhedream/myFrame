@@ -1,13 +1,14 @@
 <?php
 
 namespace app\Models;
+
 use Core\Model;
 
-class Test extends Model{
+class Test extends Model {
 
-    function get(){
+    function get() {
         return [
-            'name'=>'者之梦'
+            'name' => '者之梦'
         ];
     }
 }
