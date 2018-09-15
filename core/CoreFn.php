@@ -232,5 +232,15 @@ function dd($data, $option = true) {
 
 }
 
+function env($key,$val='') {
+
+    $conf = include ROOT . "/env.php";
+    $keys = array_keys($conf);
+    if(in_array($key,$keys)){
+        return $conf[$key];
+    }
+    return $val;
+}
+
 
 ?>

@@ -59,6 +59,7 @@
     composer.json       -> 使用的包
     .gitignore          -> git 忽略文件
     artisna.php         -> 命令行指令文件
+    env.php             -> 开发配置
 
 ## Exception 异常 与 捕获定位
 

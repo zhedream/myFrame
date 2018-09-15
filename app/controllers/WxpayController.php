@@ -13,7 +13,7 @@ class WxpayController {
         'key' => '8934e7d15453e97507ef794cf7b0519d',
 
         // 通知的地址
-        'notify_url' => 'http://lhz.tunnel.echomod.cn/wxpay/notify',
+        'notify_url' => APP_URL.'/wxpay/notify',
     ];
 
     // 调用微信接口进行支付

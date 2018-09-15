@@ -13,7 +13,7 @@
 
 return array(
     //    key    value
-    'APP_URL' => 'http://www.my.com',
+    'APP_URL' => env('APP_URL','http://lhz.ngrok.xiaomiqiu.cn'),
     'db' => array(
         'type' => "mysql",
         'host' => '127.0.0.1',    //数据服务器主机名（IP、域名）,localhost 本机的特殊的域名

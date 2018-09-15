@@ -28,6 +28,7 @@ class App {
     }
 
     public static function initDir() {
+
         //目录斜线
         define("DS", DIRECTORY_SEPARATOR);
         //主程序目录
@@ -40,6 +41,9 @@ class App {
         define("CONFIG_PATH", ROOT . "Config" . DS);
 
         $GLOBALS['config'] = include CONFIG_PATH . "/config.php";
+        $conf = $GLOBALS['config'];
+        // 网站网址
+        define("APP_URL", $conf['APP_URL']);
 
     }
 
