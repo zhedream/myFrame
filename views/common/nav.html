@@ -38,6 +38,7 @@ body{
             <a href="<?=Route('user.login')?>">登录</a>
             <?php else: ?>
             <?=$_SESSION['email']?>
+            <img src="<?=$_SESSION['avatar']?>" width="60" alt="">
             <a href="<?=Route('user.recharge')?>">充值</a>
             <a href="<?=Route('blog.index')?>">日志列表</a>
             <a href="<?=Route('blog.create')?>">发表日志</a>
@@ -48,6 +49,12 @@ body{
             <a href="<?=Route('user.regist') ?>">注册</a>
             <a href="<?=Route('user.login') ?>">登录</a>
         <?php }?>
+
+        <?php if(config('mode')=='dev'): ?>
+            <select id="alluser">
+                <option value="">选择账号</option>
+            </select>
+        <?php endif; ?>
     </div>
 
 
@@ -61,6 +68,50 @@ body{
 
     //     }
     // })
+
+
+
+<?php if(config('mode') == 'dev'): ?>
+
+    $.ajax({
+    type:"GET",
+    url:"/dev/users",
+    dataType:"json",
+    success:function(data)
+    {   
+        console.log(data);
+        
+        if(data.err == 1)
+        {
+            var html = '';
+            for(var i=0;i<data.data.length;i++)
+            {
+                html += '<option value="'+data.data[i].email+'">'+data.data[i].email+'</option>';
+            }
+            $("#alluser").append(html)
+        }
+    }
+});
+
+$("#alluser").change(function(){
+    // 获取选中的值
+    var email = $(this).val()
+    if(email != '')
+    {
+        $.ajax({
+            type:"GET",
+            url:"/dev/login?email="+email,
+            success:function(data)
+            {
+                // 刷新页面
+                location.reload();
+            }
+        })
+    }
+});
+
+<?php endif; ?>
+    
 </script>
 
 

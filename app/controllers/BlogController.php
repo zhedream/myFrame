@@ -2,13 +2,14 @@
 
 namespace app\controllers;
 
-use Core\HomeController;
+use core\Controller;
 use core\Request;
 use Core\DB;
-use app\Models\Test;
 use app\Models\Article;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-class BlogController extends HomeController {
+class BlogController extends Controller {
 
     function index() {
         if ($_SESSION['email']) {
@@ -17,13 +18,11 @@ class BlogController extends HomeController {
             view('blog.index', [
                 'blogs' => $blogs
             ]);
-            // echo 'this is BLog index';
+            echo 'this is BLog index';
 
         } else {
             message('未登录', 1, Route('user.login'));
         }
-
-
     }
 
 
@@ -37,12 +36,9 @@ class BlogController extends HomeController {
         echo json_encode([
             'display' => $article->increase($id),
             'email' => $_SESSION['email'],
+            'avatar' => $_SESSION['avatar'],
         ]);
 
-    }
-
-    function jump() {
-        $this->success_jump("home", "index", "index");
     }
 
     function create() {
@@ -126,6 +122,52 @@ class BlogController extends HomeController {
             // ]);
             message('请重新登陆', 1, Route('blog.index'));
         }
+
+    }
+
+    // 获取最新的10个日志
+    public function makeExcel() {
+        // 获取当前标签页
+        $spreadsheet = new Spreadsheet();
+        // 获取当前工作
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // 设置第1行内容
+        $sheet->setCellValue('A1', '标题');
+        $sheet->setCellValue('B1', '内容');
+        $sheet->setCellValue('C1', '发表时间');
+        $sheet->setCellValue('D1', '是发公开');
+
+        // 取出数据库中的日志
+        $model = new Article;
+        // 获取最新的20个日志
+        $blogs = $model->allUserBlog($_SESSION['user_id']);
+        // dd($blogs);
+
+        $i = 2; // 第几行
+        foreach ($blogs as $v) {
+            $sheet->setCellValue('A' . $i, $v['title']);
+            $sheet->setCellValue('B' . $i, $v['content']);
+            $sheet->setCellValue('C' . $i, $v['created_at']);
+            $sheet->setCellValue('D' . $i, $v['accessable']);
+            $i++;
+        }
+
+        $date = date('Ymd');
+
+        // 生成 excel 文件
+        $writer = new Xlsx($spreadsheet);
+        $writer->save(ROOT . 'temp/' . $date . '.xlsx');
+
+        // 调用 header 函数设置协议头，告诉浏览器开始下载文件
+
+        // 下载文件路径
+        $file = ROOT . 'excel/' . $date . '.xlsx';
+        // 下载时文件名
+        $fileName = '最新的20条日志-' . $date . '.xlsx';
+
+        return response()->download($file,$fileName);
+
 
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-
+use core\Response;
 /**
  *  加载视图
  *  参数一、加载的视图的文件名
@@ -220,7 +220,6 @@ function jj($data, $option = true) {
 
 }
 
-
 function dd($data, $option = true) {
     $AllCall = debug_backtrace();
     $ThrowCall = [];
@@ -236,10 +235,34 @@ function env($key,$val='') {
 
     $conf = include ROOT . "/env.php";
     $keys = array_keys($conf);
-    if(in_array($key,$keys)){
+    if(in_array($key,$keys))
         return $conf[$key];
-    }
     return $val;
+}
+
+function config($name){
+
+    return $GLOBALS['config'][$name];
+}
+
+function includeCss($path,$tag = true){
+    // $path = str_replace('.', '/', $path) . '.css';
+    $str = file_get_contents( ROOT."public/".$path);
+    if($tag)
+        return "<style>{$str}</style>";
+    return $str;
+}
+
+function includeJs($path,$tag = true){
+    // $path = str_replace('.', '/', $path) . '.js';
+    $str = file_get_contents( ROOT."public/".$path);
+    if($tag)
+        return "<script>{$str}</script>";
+    return $str;
+}
+
+function response(){
+    return Response::new();
 }
 
 

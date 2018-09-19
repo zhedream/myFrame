@@ -7,3 +7,10 @@
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^(.*)$ index.php/$1 [QSA,PT,L]
 </IfModule>
+
+# Image and Flash content Caching for One Month
+#<FilesMatch ".(flv|gif|jpg|jpeg|png|ico|swf)$">
+
+#<FilesMatch ".(jpg|jpeg|png|ico|swf)$">
+#Header set Cache-Control "max-age=2592000"
+#</FilesMatch>

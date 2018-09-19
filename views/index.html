@@ -50,14 +50,15 @@
                     }
                     else {
                         console.log('已登录');
-                        html += data.email +
+                        html += data.email + 
                             ` 
+                            <img src="`+data.avatar+`" alt="">
                             <a href="<?=Route('user.recharge')?>">充值</a> 
                             <a href="<?=Route('blog.index')?>">日志列表</a> 
                             <a href="<?=Route('blog.create')?>">发表日志</a> 
                             <a href="<?=Route('user.logout')?>">退出</a>`;
                     }
-
+    
                     // 获取id=menu的div 并把按钮放进去
                     $(memu).html(html);
                 },

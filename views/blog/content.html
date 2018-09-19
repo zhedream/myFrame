@@ -44,10 +44,11 @@ $(function(){
                 {
                     html += data.email + 
                             `
-                            <a href="<?=Route('user.recharge')?>">充值</a> 
-                            <a href="<?=Route('blog.index')?>">日志列表</a> 
-                            <a href="<?=Route('blog.create')?>">发表日志</a> 
-                            <a href="<?=Route('user.logout')?>">退出</a>`;
+                            <img src="`+data.avatar+`" alt="">
+                            <a href="<?=Route('user.recharge') ?>">充值</a> 
+                            <a href="<?=Route('blog.index') ?>">日志列表</a> 
+                            <a href="<?=Route('blog.create') ?>">发表日志</a> 
+                            <a href="<?=Route('user.logout') ?>">退出</a>`;
                 }
                 $(memu).html(html);
                 

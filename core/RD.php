@@ -9,7 +9,8 @@ RD::getRD();
 
 class RD {
 
-    private static $redis = null;
+    private static $_redis = null;
+    private static $_instance = null;
 
     private function __construct() {
         self::client();
@@ -19,34 +20,42 @@ class RD {
     }
 
     private static function client() {
-        if (self::$redis === NULL) {
+        if (self::$_redis === NULL) {
             // echo '<br>client<br>';
-            // $conf = (include ROOT."Config/config.php")['redis'];
+            // $conf = (include ROOT."Config/config.php")['_redis'];
             $conf = $GLOBALS['config']['redis'];
 
             try {
-                return self::$redis = new redis([
+                return self::$_redis = new redis([
                     'scheme' => $conf['scheme'],
                     'host' => $conf['host'],
                     'port' => $conf['port'],
                 ]);
             } catch (PDOException $e) {
-                echo "Redis连接失败！" . $e->getMessage();
+                echo "_redis连接失败！" . $e->getMessage();
             }
         }
     }
 
     /**
-     * 获取redis对象
+     * 获取_redis对象
      */
     public static function getRD() {
-        if (self::$redis === NULL)
+        if (self::$_redis === NULL)
             self::client();
-        return self::$redis;
+        return self::$_redis;
+    }
+
+    public static function new(){
+        if (self::$_instance === NULL){
+            self::$_instance = new self;
+            return self::$_instance;
+        }
+        return self::$_instance;
     }
 
     /**
-     * redis 缓存
+     * _redis 缓存
      * 1.键
      * 2.过期时间（秒）
      * 3.值 匿名函数 return 数据
@@ -55,12 +64,12 @@ class RD {
 
         // 返回 1 0
         $key = "String:" . $key;
-        if (!$cover && self::$redis->exists($key)) {
-            return json_decode(self::$redis->get($key), true); // 存在键 则返回
+        if (!$cover && self::$_redis->exists($key)) {
+            return json_decode(self::$_redis->get($key), true); // 存在键 则返回
         }
         $str = json_encode($call());
-        self::$redis->setex($key, $minutes, $str);
-        return json_decode(self::$redis->get($key), true);
+        self::$_redis->setex($key, $minutes, $str);
+        return json_decode(self::$_redis->get($key), true);
     }
 
     /**
@@ -77,10 +86,10 @@ class RD {
         $message = json_encode($message);
         $key = "String:timeout:" . $type . ":" . ($key);
 
-        if (self::$redis->exists($key)) {
+        if (self::$_redis->exists($key)) {
             return false;
         }
-        return self::$redis->setex($key, $minutes, $message);
+        return self::$_redis->setex($key, $minutes, $message);
     }
 
     /**
@@ -95,7 +104,7 @@ class RD {
         $message = json_encode($message);
         $key = "String:timeout:" . $type . ":" . ($key);
 
-        return self::$redis->setex($key, $minutes, $message);
+        return self::$_redis->setex($key, $minutes, $message);
 
     }
 
@@ -109,10 +118,10 @@ class RD {
 
         // $message = json_encode( $message);
         $key = "String:timeout:" . $type . ":" . ($key);
-        if (self::$redis->exists($key)) {
-            $data = self::$redis->get($key);
+        if (self::$_redis->exists($key)) {
+            $data = self::$_redis->get($key);
             if ($pop)
-                self::$redis->del($key);
+                self::$_redis->del($key);
             return json_decode($data, true);
         }
         return false;
@@ -127,11 +136,11 @@ class RD {
      */
     public static function delTimeOut(string $type, string $key, bool $pop = false) {
         $key = "String:timeout:" . $type . ":" . ($key);
-        return self::$redis->del($key);
+        return self::$_redis->del($key);
     }
 
     /**
-     * 加入redis List 消息队列
+     * 加入_redis List 消息队列
      * 1. 键:队列名称
      * 2. 消息
      * 3. 过期时间 int -1
@@ -139,7 +148,7 @@ class RD {
      */
     public static function iqueue(string $key, $message, int $minutes = -1) {
         $key = "List:" . $key;
-        return self::$redis->lpush($key, json_encode($message));
+        return self::$_redis->lpush($key, json_encode($message));
     }
 
     /**
@@ -149,7 +158,7 @@ class RD {
      */
     public static function oqueue(string $key) {
         $key = "List:" . $key;
-        return json_decode(self::$redis->rpop($key), true);
+        return json_decode(self::$_redis->rpop($key), true);
 
     }
 
@@ -160,7 +169,20 @@ class RD {
      */
     public static function boqueue(string $key) {
         $key = "List:" . $key;
-        return json_decode(self::$redis->brpop($key, 0)[1], true);
+        return json_decode(self::$_redis->brpop($key, 0)[1], true);
+    }
+
+    public static function setHash($type,$key,$val){
+
+        $hash = "Hash:" . $type;
+        return self::$_redis->hset($hash,$key,$val);
+
+    }
+    public static function getHash($type,$key){
+
+        $hash = "Hash:" . $type;
+        return self::$_redis->hget ($hash,$key);
+
     }
 
 }

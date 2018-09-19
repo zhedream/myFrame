@@ -26,5 +26,9 @@ class User extends Model {
         self::exec("insert into users (email,name,password) values(?,?,?)", [$user[0], getChar(2), md5($user[1])]);
     }
 
+    function getAllUsers(){
+        return self::findAll('select * from '.$this->table());
+    }
+
 
 }

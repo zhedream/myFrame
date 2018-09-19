@@ -19,8 +19,8 @@ class Route {
             self::$self = new self;
         return self::$self;
     }
-
-    static $csrfPass = ['/alipay/notify', '/wxpay/notify']; //csrf 白名单
+    
+    static $csrfPass = ['alipay.notify', 'wxpay.notify','user.doavatar']; //csrf 白名单
     static $method; // 请求方式
     static $pathinfo; // 请求路径
     static $map = []; // 名称映射
@@ -66,25 +66,7 @@ class Route {
             }
         } else if (self::$method == 'POST') {
             // var_dump(self::$pathinfo);die;
-            if (!in_array(self::$pathinfo, self::$csrfPass)) {
-                if (!isset($_POST['_token'])) {
-                    echo json_encode([
-                        'err' => 007,
-                        'msg' => '请求无效,无令牌'
-                    ]);
-                    return;
-                }
-
-                if ($_POST['_token'] != $_SESSION['_token']) {
-                    // var_dump($_SESSION['_token']);
-                    echo json_encode([
-                        'session' => $_SESSION,
-                        'err' => 007,
-                        'msg' => '请求超时,令牌过期'
-                    ]);
-                    return;
-                }
-            }
+            
 
             foreach (self::$posts as $key => $value) {
 
@@ -94,7 +76,29 @@ class Route {
                 // var_dump($matches);
                 if ($isMatched) {
                     self::$routeName = isset($value['name']) ? $value['name'] : null;
-                    // echo "<hr>".self::$pathinfo."该路由为POST注册路由,控制器{$value['controller']},方法{$value['action']}, 正则{$value['patt']} <hr>";
+                    // echo "<hr>".self::$pathinfo."该路由为POST注册路由,控制器{$value['controller']},方法{$value['action']}, 正则{$value['patt']} ,路由名称 {$value['name']} <hr>";
+                    // die;
+
+                    if (!in_array(self::$routeName, self::$csrfPass)) {
+                        if (!isset($_POST['_token'])) {
+                            echo json_encode([
+                                'err' => 007,
+                                'msg' => '请求无效,无令牌'
+                            ]);
+                            return;
+                        }
+        
+                        if ($_POST['_token'] != $_SESSION['_token']) {
+                            // var_dump($_SESSION['_token']);
+                            echo json_encode([
+                                'session' => $_SESSION,
+                                'err' => 007,
+                                'msg' => '请求超时,令牌过期'
+                            ]);
+                            return;
+                        }
+                    }
+                    
                     $controller = new $value['controller'];
                     $ac = $value['action'];
                     // $controller->$ac(isset($matches[1])?$matches[1]:null,new Request($value,$matches));
@@ -273,6 +277,13 @@ class Route {
         }
         return ($url);
 
+    }
+
+    /**
+     * 获取当前路由的名称  五路由返回false
+     */
+    function getRouteName(){
+        var_dump(self::$map);
     }
 
 

@@ -1,5 +1,7 @@
 <?php
 ini_set('date.timezone', 'PRC');
+ini_set('session.gc_maxlifetime', "1800"); // 秒
+// ini_set("session.cookie_lifetime","3600"); // 秒
 ini_set('session.save_handler', 'redis');
 ini_set('session.save_path', 'tcp://127.0.0.1:6379?database=3');
 session_start();

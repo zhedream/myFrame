@@ -34,7 +34,9 @@ class Model {
         // $class = debug_backtrace()[$option]['class'];
         $class = get_called_class();
         // echo $class."<br>";
-        $class = end(explode('\\', $class));
+        // $class = end(explode('\\', $class)); // 存在异常
+        $class = explode('\\', $class);
+        $class = end($class);
         $class = strtolower($class) . 's';
         $config = $GLOBALS['config'];
         //拼接表名
@@ -104,7 +106,7 @@ class Model {
         // var_dump($keys,$vals,end($keys));die;
         $wherekeys = array_keys($condition); // 条件字段
         $wherevals = array_values($condition); // 条件值
-
+//        dd($condition);
         $set = '';
         foreach ($keys as $key => $value) {
             if ($value == end($keys))
@@ -138,6 +140,7 @@ class Model {
         // dd($table);
         $table = "`$table`";
         $sql = "UPDATE {$table} SET {$set} WHERE {$where}";
+//        dd($sql);
         return self::exec($sql, $data);
     }
 

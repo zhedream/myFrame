@@ -4,6 +4,7 @@
 /storage/*.key
 /vendor
 /public/content/
+/public/uploads/
 /.idea
 /.vscode
 /.vagrant
@@ -14,6 +15,7 @@ yarn-error.log
 .env
 /views_c
 /logs/
+/temp/
 composer.lock
 *.lock
 env.php

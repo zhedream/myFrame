@@ -36,7 +36,7 @@ class App {
         //PUBLIC目录
         define("PUBLIC_PATH", ROOT . "public" . DS);
         //UPLOAD目录
-        define("UPLOAD_PATH", ROOT . "/uploads" . DS);
+        define("UPLOAD_PATH", ROOT . "uploads" . DS);
         //配置目录
         define("CONFIG_PATH", ROOT . "Config" . DS);
 

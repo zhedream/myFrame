@@ -8,6 +8,7 @@ use Core\DB;
 use Core\RD;
 use libs\Mail;
 use app\Models\TestModel;
+use app\Models\User;
 use libs\Uploader;
 
 
@@ -147,10 +148,52 @@ class TestController extends HomeController {
 
     function upload() {
         $upload = Uploader::new();
-//        var_dump($upload);
+       var_dump($upload);
         var_dump($upload->getExt());
 //        echo '123';
         return ;
+    }
+
+    function md5(){
+
+        // echo md5_file('D:\deepin-15.6-amd64.iso');
+        view('md5');
+    }
+
+    function users(){
+
+        $U = new User;
+
+        // jj($U->getAllUsers());
+        echo json_encode([
+            'err'=>1,
+            'data'=>$U->getAllUsers(),
+
+        ]);
+
+
+    }
+
+    function login(){
+        unset($_SESSION['email']);
+        unset($_SESSION['user_id']);
+        unset($_SESSION['avatar']);
+
+        $email = $_GET['email'];
+        $password = md5(123123);
+
+        $user = User::findOne('select * from users where email=? and password=?', [$email, $password]);
+        if ($user) {
+            var_dump($user);
+            $_SESSION['email'] = $user['email'];
+            $_SESSION['name'] = $user['name'];
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['avatar'] = $user['avatar'];
+            message('登录成功！', 2, Route('blog.index'));
+        } else {
+            message('账号或密码错误，请重新登陆', 1, '/user/login');
+
+        }
     }
 
 }

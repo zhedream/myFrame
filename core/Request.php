@@ -32,8 +32,10 @@ class Request {
         if (Route::$method == 'POST') {
             $data = $this->posts;
             unset($data['_token']);
+            // extract($data);
             return ($data);
         } else if (Route::$method == 'GET')
+            // extract($this->gets);
             return ($this->gets);
     }
 
