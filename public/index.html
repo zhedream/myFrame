@@ -26,6 +26,10 @@ body{
                     <a href="/">首页</a>
             <a href="/user/regist">注册</a>
             <a href="/user/login">登录</a>
+        
+                    <select id="alluser">
+                <option value="">选择账号</option>
+            </select>
             </div>
 
 
@@ -39,6 +43,48 @@ body{
 
     //     }
     // })
+
+
+
+
+    $.ajax({
+    type:"GET",
+    url:"/dev/users",
+    dataType:"json",
+    success:function(data)
+    {   
+        console.log(data);
+        
+        if(data.err == 1)
+        {
+            var html = '';
+            for(var i=0;i<data.data.length;i++)
+            {
+                html += '<option value="'+data.data[i].email+'">'+data.data[i].email+'</option>';
+            }
+            $("#alluser").append(html)
+        }
+    }
+});
+
+$("#alluser").change(function(){
+    // 获取选中的值
+    var email = $(this).val()
+    if(email != '')
+    {
+        $.ajax({
+            type:"GET",
+            url:"/dev/login?email="+email,
+            success:function(data)
+            {
+                // 刷新页面
+                location.reload();
+            }
+        })
+    }
+});
+
+    
 </script>
 
 

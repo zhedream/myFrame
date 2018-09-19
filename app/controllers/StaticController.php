@@ -28,6 +28,8 @@ class StaticController extends Controller {
             return DB::findAll('select * from articles');
         });
         ob_start();
+        $dir = ROOT . '/public/content/';
+        is_dir($dir) OR mkdir($dir, 0777, true);
         foreach ($blogs as $key => $value) {
             view('blog.content', ['blog' => $value, '_static' => '_static']);
             $str = ob_get_contents();
