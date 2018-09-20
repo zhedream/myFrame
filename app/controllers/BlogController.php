@@ -7,6 +7,7 @@ use core\Request;
 use Core\DB;
 use Core\RD;
 use app\Models\Article;
+use app\Models\Heart;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -32,13 +33,39 @@ class BlogController extends Controller {
 
     }
 
+    /**
+     * @param Request $req
+     * @param $id
+     */
     function increase(Request $req, $id) {
         $article = new Article;
-        echo json_encode([
-            'display' => $article->increase($id),
-            'email' => $_SESSION['email'],
-            'avatar' => $_SESSION['avatar'],
-        ]);
+        $readKey = 'readRecord';
+        $c = json_decode($_COOKIE[$readKey], true);
+        if (!$c || !in_array($id, $c)) {
+            echo json_encode([
+                'display' => $article->increase('display', $id),
+                'heart' => $article->getIncrease('heart', $id),
+                'email' => $_SESSION['email'],
+                'avatar' => $_SESSION['avatar'],
+            ]);
+
+            if (!$c) {
+                $c = [];
+                array_push($c, $id);
+            }
+
+            array_push($c, $id);
+            $c = json_encode($c, true);
+            return response()->WithCookie($readKey, $c, 60*5, '/blog/content/');
+
+        } else {
+            echo json_encode([
+                'display' => $article->getIncrease('display', $id),
+                'heart' => $article->getIncrease('heart', $id),
+                'email' => $_SESSION['email'],
+                'avatar' => $_SESSION['avatar'],
+            ]);
+        }
 
     }
 
@@ -167,12 +194,12 @@ class BlogController extends Controller {
         // 下载时文件名
         $fileName = '最新的20条日志-' . $date . '.xlsx';
 
-        return response()->download($file,$fileName);
+        return response()->download($file, $fileName);
 
 
     }
 
-    function content(Request $req, $id){
+    function content(Request $req, $id) {
         // $A = new Article;
 //        dd($id);
         // $user = Article::findOneFirst('select `user_id` from `articles` where `id`=? and `user_id`=?',[$id,$_SESSION['user_id']]);
@@ -180,21 +207,64 @@ class BlogController extends Controller {
         //     view('error');
         //     return;
         // }
-        $blog = RD::chache("content_{$_SESSION['user_id']}:".$id, 3600, function () use($id) {
-            return Article::findOne('select * from articles where id=? and user_id=?',[$id,$_SESSION['user_id']]);
+
+        $blog = RD::chache("content_{$_SESSION['user_id']}:" . $id, 3600, function () use ($id) {
+            return Article::findOne('select * from articles where id=? and user_id=?', [$id, $_SESSION['user_id']]);
         });
 
-        if($blog){
+        // $blog = RD::chache("test_content_{$_SESSION['user_id']}:" . $id, 100, function () use ($id) {
+        //     return Article::findOne('select * from articles where id=? ', [$id]);
+        // });
 
-            return view('blog.content',[
-                'blog'=>$blog                
+        $article = new Article;
+        // dd($blog);
+
+        if ($blog) {
+
+            $blog['heart'] = $article->getIncrease('heart', $id);
+
+            return view('blog.content', [
+                'blog' => $blog
             ]);
         }
+        // return back();
 
         view('error');
 //       dd($blog);
 
     }
+
+    /**
+     * 点赞
+     *
+     */
+    function HeartToggle(Request $req, $id) {
+
+        $user_id =  $_SESSION['user_id'];
+        
+
+        if(!$user_id){
+
+            echo json_encode([
+                'err'=>7,
+                'msg'=>'未登录',
+            ]);
+            return ;
+        }
+        $H = new Heart;
+        $count = $H->UheartA($user_id,$id);
+
+        echo json_encode([
+            'err'=>7,
+            'msg'=>'登陆ing',
+            'count'=>$count
+        ]);
+
+
+
+    }
+
+    
 
 }
 

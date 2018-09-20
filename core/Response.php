@@ -7,8 +7,11 @@ class Response {
 
     private static $_instance = null; // 实例化单例 对象
 
-    private function __construct() {}
-    private function __clone() {}
+    private function __construct() {
+    }
+
+    private function __clone() {
+    }
 
     public static function new() {
         if (self::$_instance == null) {
@@ -18,7 +21,11 @@ class Response {
         return self::$_instance;
     }
 
-    function download($filePath,$fileName) {
+    /**
+     * @param $filePath
+     * @param $fileName
+     */
+    function download($filePath, $fileName) {
         // 告诉浏览器这是一个二进程文件流
         Header("Content-Type: application/octet-stream");
         // 请求范围的度量单位
@@ -30,6 +37,18 @@ class Response {
 
         // 读取服务器上的一个文件并以文件流的形式输出给浏览器
         readfile($filePath);
+        return $this;
+    }
+
+    /**
+     * @param $name
+     * @param $value
+     * @param int $expire
+     */
+    function WithCookie($name, $value, $expire = 60, $path = '/') {
+        $conf = config('cookie');
+//        dd($conf);
+        return setcookie($name, $value, time() + $expire, $conf['path'], $conf['domain'], $conf['secure']);
     }
 
 

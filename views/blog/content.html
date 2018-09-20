@@ -3,20 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <title><?=$blog['title']?></title>
-    
+
 </head>
 <body style="display:none;">
     <?php view('common.nav',['_static'=>isset($_static)?$_static:'']) ?>
-        
-        阅读量: <span id="display"><?=$blog['display']?></span> <br>
+
+        阅读量: <span id="display"><?=$blog['display']?></span>
+        点赞量：<span id="heart"><?=$blog['heart']?></span> <button type="button" onclick="agree()">赞一下</button> <hr>
         <?=hpe($blog['content'])?>
-        
     <?php view('common.footer') ?>
 </body>
 </html>
 
 <script>
+        function agree(){
+
+            var fromdata = new FormData;
+            fromdata.append('_token',"<?=csrf()?>")
+
+            var url = "<?=Route('blog.agree',['id'=>$blog['id']])?>"
+                $.ajax({
+                    type:"post",
+                    url:url,
+                    data:fromdata,
+                    dataType: "json",
+                    processData: false,
+                    contentType: false,
+                    success:function(data){
+                        console.log(data);
+                        $("#heart").html(data.count);
+
+                    }
+                })
+        }
+
+
 $(function(){
+
+
+
     var id = "<?=$blog['id']?>";
     // 定义接口地址
     var url = "/blog/display/" + id;
@@ -37,12 +62,12 @@ $(function(){
                 // 判断登录
                 if(data.email == '' || data.email==null)
                 {
-                    html += ` <a href="<?=Route('user.regist')?>">注册</a> 
+                    html += ` <a href="<?=Route('user.regist')?>">注册</a>
                             <a href="<?=Route('user.login')?>">登录</a>`;
                 }
                 else
                 {
-                    html += data.email + 
+                    html += data.email +
                             `
                             <img src="`+data.avatar+`" alt="">
                             <a href="<?=Route('user.recharge') ?>">充值</a> 
@@ -51,19 +76,21 @@ $(function(){
                             <a href="<?=Route('user.logout') ?>">退出</a>`;
                 }
                 $(memu).html(html);
-                
+
             }
             else{
                 console.log('false,这是动态页');
-                   
+
             }
         },
         error:function(){
             console.log('格式错误');
-            
+
         }
     });
 
 })
+
+
 
 </script>

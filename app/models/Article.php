@@ -15,18 +15,49 @@ class Article extends Model {
         });
     }
 
-    function increase($id) {
+    /**
+     * 对文章 表 一个字段 的 自增
+     * 
+     * 1. 字段
+     * 2. 文章 id
+     * return 自增后的 值
+     */
+    function increase(string $field,int $id) {
         ob_clean(); // 清空缓存区
-        if (self::$redis->hexists('Hash:Aricles:display', $id))
-            return self::$redis->hincrby('Hash:Aricles:display', $id, 1);
+        if (self::$redis->hexists('Hash:Aricles:'.$field, $id))
+            return self::$redis->hincrby('Hash:Aricles:'.$field, $id, 1);
 
-        $num = self::findOneFirst('select display from articles where id=?', [$id]);
+        $num = self::findOneFirst('select '.$field.' from articles where id=?', [$id]);
         if ($num !== null) {
 
-            self::$redis->hset('Hash:Aricles:display', $id, (int)$num);
-            return self::$redis->hincrby('Hash:Aricles:display', $id, 1);
+            self::$redis->hset('Hash:Aricles:'.$field, $id, (int)$num);
+            return self::$redis->hincrby('Hash:Aricles:'.$field, $id, 1);
         }
         return false;
+    }
+
+    /**
+     * 主要 获取 display heart
+     * 1. 字段
+     * 2. id
+     */
+    function getIncrease(string $field,int $id) {
+        $redis = self::$redis;
+        $hash = 'Hash:Aricles:'.$field;
+        if ($redis->hexists($hash, $id)){
+            return $redis->hget($hash,$id);
+        }else{
+
+            $num = self::findOneFirst('select '.$field.' from articles where id=?', [$id]);
+            if ($num !== null) {
+
+                self::$redis->hset('Hash:Aricles:'.$field, $id, (int)$num);
+                return $this->getIncrease( $field, $id);
+            }
+
+            return false;
+        }
+        
     }
 
     /**

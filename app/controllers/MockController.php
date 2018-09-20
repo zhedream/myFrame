@@ -6,6 +6,7 @@ use Core\Controller;
 use core\Request;
 use Core\DB;
 use app\Models\Test;
+use app\Models\Heart;
 
 class MockController extends Controller {
 
@@ -42,6 +43,24 @@ class MockController extends Controller {
                 , [$title, $description, $content, $display, $accessable, $type, $date, $user_id]);
 
         }
+    }
+
+    public function hearts(){
+
+        $H = new Heart;
+
+        $pdo = Heart::$pdo;
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
+
+        for ($i=0; $i <  400; $i++) { 
+            $data = [
+                'article_id'=>rand(1,20),
+                'user_id'=>rand(1,20),
+            ];
+            $H->exec_insert($data);
+        }
+
+
     }
 
 }

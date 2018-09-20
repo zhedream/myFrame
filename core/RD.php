@@ -201,6 +201,15 @@ class RD {
 
     }
 
+    public static function delMatch($key){
+
+        $data = self::$_redis->keys($key);
+
+        foreach ($data as $key => $value) {
+            self::$_redis->del($value);
+        }
+    }
+
 }
 
 

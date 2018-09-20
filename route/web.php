@@ -42,6 +42,8 @@ Route::post('/blog/edit/{id}', 'app/controllers/BlogController@doedit')->name('b
 // 博客空间
 Route::get('/blog/index', 'app/controllers/BlogController@index')->name('blog.index');
 Route::get('/blog/content/{id}', 'app/controllers/BlogController@content')->name('blog.content');
+// 赞
+Route::post('/blog/agree/{id}', 'app/controllers/BlogController@HeartToggle')->name('blog.agree');
 
 //alipay
 
@@ -70,6 +72,7 @@ Route::get('/dev/login', 'app/controllers/TestController@login');
 
 
 // test
+Route::get('/test/test', 'app/controllers/TestController@test');
 Route::get('/test/redis', 'app/controllers/TestController@redis');
 Route::get('/test/mail', 'app/controllers/TestController@mail');
 Route::get('/test/mysql', 'app/controllers/TestController@mysql');
@@ -79,6 +82,7 @@ Route::get('/test/makeUrl/{id}', 'app/controllers/TestController@makeUrl')->name
 Route::get('/test/csrf', 'app/controllers/TestController@getcsrf')->name('csrf'); // csrf
 Route::get('/test/upload', 'app/controllers/TestController@upload'); // 上传类
 Route::get('/test/md5', 'app/controllers/TestController@md5'); // 文件的 MD5
+Route::get('/test/cookie', 'app/controllers/TestController@testCookie'); // cookie
 // 静态化
 Route::get('/test/content2html', 'app/controllers/TestController@content2html');
 Route::get('/test/showtable', 'app/controllers/TestController@showtable');

@@ -9,7 +9,9 @@ use Core\RD;
 use libs\Mail;
 use app\Models\TestModel;
 use app\Models\User;
+use app\Models\Heart;
 use libs\Uploader;
+
 
 
 class TestController extends HomeController {
@@ -194,6 +196,22 @@ class TestController extends HomeController {
             message('账号或密码错误，请重新登陆', 1, '/user/login');
 
         }
+    }
+
+
+    function testCookie(){
+//        die('cookie');
+//        var_dump($_COOKIE);
+//        setcookie("key:asd",'afsafas',time()+120,'/test/cookie');
+         response()->WithCookie('test','12344',60);
+    }
+
+    function test() {
+        $H = new Heart;
+        $data = $H->readHeart();
+        // $data = $H->writeHeart();
+        // $data = $H->getHeartCount(125);
+        dd($data);
     }
 
 }

@@ -49,6 +49,11 @@ return array(
         'home_pageSize' => 2 /* 后台 */
 
 
+    ),
+    'cookie'=> array(
+        'path'=> '/',
+        'secure'=> false,
+        'domain'=> 'www.my.com',
     )
 );
 
