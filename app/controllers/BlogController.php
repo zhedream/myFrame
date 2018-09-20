@@ -5,6 +5,7 @@ namespace app\controllers;
 use core\Controller;
 use core\Request;
 use Core\DB;
+use Core\RD;
 use app\Models\Article;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -125,7 +126,7 @@ class BlogController extends Controller {
 
     }
 
-    // 获取最新的10个日志
+    // 导出 表格
     public function makeExcel() {
         // 获取当前标签页
         $spreadsheet = new Spreadsheet();
@@ -168,6 +169,30 @@ class BlogController extends Controller {
 
         return response()->download($file,$fileName);
 
+
+    }
+
+    function content(Request $req, $id){
+        // $A = new Article;
+//        dd($id);
+        // $user = Article::findOneFirst('select `user_id` from `articles` where `id`=? and `user_id`=?',[$id,$_SESSION['user_id']]);
+        // if($user!=$_SESSION['user_id']){
+        //     view('error');
+        //     return;
+        // }
+        $blog = RD::chache("content_{$_SESSION['user_id']}:".$id, 3600, function () use($id) {
+            return Article::findOne('select * from articles where id=? and user_id=?',[$id,$_SESSION['user_id']]);
+        });
+
+        if($blog){
+
+            return view('blog.content',[
+                'blog'=>$blog                
+            ]);
+        }
+
+        view('error');
+//       dd($blog);
 
     }
 

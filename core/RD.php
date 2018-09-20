@@ -55,7 +55,7 @@ class RD {
     }
 
     /**
-     * _redis 缓存
+     * _redis String 缓存
      * 1.键
      * 2.过期时间（秒）
      * 3.值 匿名函数 return 数据
@@ -67,9 +67,13 @@ class RD {
         if (!$cover && self::$_redis->exists($key)) {
             return json_decode(self::$_redis->get($key), true); // 存在键 则返回
         }
-        $str = json_encode($call());
-        self::$_redis->setex($key, $minutes, $str);
-        return json_decode(self::$_redis->get($key), true);
+        $data = $call();
+        if($data){
+            $str = json_encode($data);
+            self::$_redis->setex($key, $minutes, $str);
+            return json_decode(self::$_redis->get($key), true);
+        }
+        return false;
     }
 
     /**
@@ -172,13 +176,25 @@ class RD {
         return json_decode(self::$_redis->brpop($key, 0)[1], true);
     }
 
-    public static function setHash($type,$key,$val){
+    /**
+     * @param $type
+     * @param $key
+     * @param $val
+     * @return mixed
+     */
+    public static function setHash($type, $key, $val){
 
         $hash = "Hash:" . $type;
         return self::$_redis->hset($hash,$key,$val);
 
     }
-    public static function getHash($type,$key){
+
+    /**
+     * @param $type
+     * @param $key
+     * @return mixed
+     */
+    public static function getHash($type, $key){
 
         $hash = "Hash:" . $type;
         return self::$_redis->hget ($hash,$key);

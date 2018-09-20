@@ -9,7 +9,7 @@
     <?php view('common.nav',['_static'=>isset($_static)?$_static:'']) ?>
         
         阅读量: <span id="display"><?=$blog['display']?></span> <br>
-        <?=$blog['content']?>
+        <?=hpe($blog['content'])?>
         
     <?php view('common.footer') ?>
 </body>

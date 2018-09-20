@@ -16,7 +16,7 @@ class IndexController extends HomeController {
     function index() {
         echo "Index.php<br>";
         $blogs = RD::chache('index', 3600, function () {
-            return Test::findAll('select * from articles limit 20');
+            return Test::findAll('select * from articles where accessable="public" limit 20');
         });
 
         view('index', ['blogs' => $blogs]);

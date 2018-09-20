@@ -41,6 +41,7 @@ Route::get('/blog/edit/{id}', 'app/controllers/BlogController@edit')->name('blog
 Route::post('/blog/edit/{id}', 'app/controllers/BlogController@doedit')->name('blog.doedit');
 // 博客空间
 Route::get('/blog/index', 'app/controllers/BlogController@index')->name('blog.index');
+Route::get('/blog/content/{id}', 'app/controllers/BlogController@content')->name('blog.content');
 
 //alipay
 
