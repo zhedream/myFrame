@@ -220,12 +220,13 @@ function jj($data, $option = true) {
 
 }
 
-function dd($data, $option = true) {
+function dd($data, $clean = true) {
     $AllCall = debug_backtrace();
     $ThrowCall = [];
     $ThrowCall['file'] = $AllCall[0]['file'];
     $ThrowCall['line'] = $AllCall[0]['line'];
-    ob_clean();
+    if($clean)
+        ob_clean();
     var_dump($data, $ThrowCall);
     die;
 

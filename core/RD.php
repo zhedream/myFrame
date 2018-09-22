@@ -67,6 +67,7 @@ class RD {
         if (!$cover && self::$_redis->exists($key)) {
             return json_decode(self::$_redis->get($key), true); // 存在键 则返回
         }
+//        dd($key);
         $data = $call();
         if($data){
             $str = json_encode($data);

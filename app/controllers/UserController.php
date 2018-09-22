@@ -60,8 +60,10 @@ class UserController extends HomeController {
     function logout() {
 
         $_SESSION['email'] = null;
+        $_SESSION['name'] = null;
         $_SESSION['user_id'] = null;
         $_SESSION['avatar'] = null;
+        $_SESSION['_token'] = null;
         message('退出成功', 1, Route('user.login'));
     }
 
@@ -72,11 +74,12 @@ class UserController extends HomeController {
 
         $user = User::findOne('select * from users where email=? and password=?', [$email, $password]);
         if ($user) {
-            var_dump($user);
+            // var_dump($user);
             $_SESSION['email'] = $user['email'];
             $_SESSION['name'] = $user['name'];
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['avatar'] = $user['avatar'];
+            $_SESSION['_token'] = csrf();
             message('登录成功！', 2, Route('blog.index'));
         } else {
             message('账号或密码错误，请重新登陆', 1, '/user/login');
@@ -101,7 +104,6 @@ class UserController extends HomeController {
     function dorecharge(Request $req, $id) {
 
         $order = new Order;
-        // dd($req->all());
         $order->insert($req->all());
         message('成功提交订单', 1, Route('order.list'));
     }

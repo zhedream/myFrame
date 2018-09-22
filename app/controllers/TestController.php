@@ -178,8 +178,10 @@ class TestController extends HomeController {
 
     function login(){
         unset($_SESSION['email']);
+        unset($_SESSION['name']);
         unset($_SESSION['user_id']);
         unset($_SESSION['avatar']);
+        unset($_SESSION['_token']);
 
         $email = $_GET['email'];
         $password = md5(123123);
@@ -191,6 +193,7 @@ class TestController extends HomeController {
             $_SESSION['name'] = $user['name'];
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['avatar'] = $user['avatar'];
+            $_SESSION['_token'] = csrf();
             message('登录成功！', 2, Route('blog.index'));
         } else {
             message('账号或密码错误，请重新登陆', 1, '/user/login');
@@ -208,7 +211,7 @@ class TestController extends HomeController {
 
     function test() {
         $H = new Heart;
-        $data = $H->readHeart();
+        $data = $H->readHeartU(21);
         // $data = $H->writeHeart();
         // $data = $H->getHeartCount(125);
         dd($data);

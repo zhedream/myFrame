@@ -47,6 +47,7 @@ class BlogController extends Controller {
                 'heart' => $article->getIncrease('heart', $id),
                 'email' => $_SESSION['email'],
                 'avatar' => $_SESSION['avatar'],
+                'token' => $_SESSION['_token'],
             ]);
 
             if (!$c) {
@@ -64,6 +65,7 @@ class BlogController extends Controller {
                 'heart' => $article->getIncrease('heart', $id),
                 'email' => $_SESSION['email'],
                 'avatar' => $_SESSION['avatar'],
+                'token' => $_SESSION['_token'],
             ]);
         }
 
@@ -207,7 +209,7 @@ class BlogController extends Controller {
         //     view('error');
         //     return;
         // }
-
+        
         $blog = RD::chache("content_{$_SESSION['user_id']}:" . $id, 3600, function () use ($id) {
             return Article::findOne('select * from articles where id=? and user_id=?', [$id, $_SESSION['user_id']]);
         });
@@ -216,21 +218,16 @@ class BlogController extends Controller {
         //     return Article::findOne('select * from articles where id=? ', [$id]);
         // });
 
-        $article = new Article;
-        // dd($blog);
-
         if ($blog) {
-
+                
+            $article = new Article;
             $blog['heart'] = $article->getIncrease('heart', $id);
 
             return view('blog.content', [
                 'blog' => $blog
             ]);
         }
-        // return back();
-
         view('error');
-//       dd($blog);
 
     }
 

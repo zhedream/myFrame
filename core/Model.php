@@ -187,6 +187,34 @@ class Model {
         return self::exec($sql, $data);
     }
 
+    function exec_delete(array $condition){
+
+        $wherekeys = array_keys($condition); // 条件字段
+        $wherevals = array_values($condition); // 条件值
+//        dd($condition);
+        $where = '';
+        foreach ($wherekeys as $key => $value) {
+            if ($key == end($wherekeys))
+                $where .= "`$value`=? ";
+            else
+                $where .= "`$value`=?, ";
+        }
+        // dd($where);
+        $data = [];
+        foreach ($wherevals as $key => $value) {
+                    // array_unshift($data,$value);
+                    $data[] = $value;
+        }
+
+        $table = $this->table();
+        // dd($table);
+        $table = "`$table`";
+        $sql = "DELETE FROM {$table} WHERE {$where}";
+        // dd($sql);
+        // dd($data);
+        return self::exec($sql, $data);
+    }
+
     /**
      * 事务 SQL   注意 InnoDB 才支持 事务
      * 1.传入 [
@@ -205,6 +233,17 @@ class Model {
             }
         }
         self::$pdo->commit();//提交(确认)
+    }
+
+    static function TransactionCall(callable $Action) {
+        self::$pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING); // 报错模式 非严格
+        self::$pdo->beginTransaction();
+        
+        if($Action()){
+            
+             self::$pdo->commit();//提交(确认)
+             return true;
+        }
     }
 
     /**

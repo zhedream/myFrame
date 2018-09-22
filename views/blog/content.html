@@ -16,26 +16,31 @@
 </html>
 
 <script>
-        function agree(){
 
-            var fromdata = new FormData;
-            fromdata.append('_token',"<?=csrf()?>")
+    var token = "";
 
-            var url = "<?=Route('blog.agree',['id'=>$blog['id']])?>"
-                $.ajax({
-                    type:"post",
-                    url:url,
-                    data:fromdata,
-                    dataType: "json",
-                    processData: false,
-                    contentType: false,
-                    success:function(data){
-                        console.log(data);
-                        $("#heart").html(data.count);
+    function agree(){
+        console.log('_token',token); 
+        // return;
+        
+        var fromdata = new FormData;
+        fromdata.append('_token',token)
 
-                    }
-                })
-        }
+        var url = "<?=Route('blog.agree',['id'=>$blog['id']])?>"
+            $.ajax({
+                type:"post",
+                url:url,
+                data:fromdata,
+                dataType: "json",
+                processData: false,
+                contentType: false,
+                success:function(data){
+                    console.log(data);
+                    $("#heart").html(data.count);
+
+                }
+            })
+    }
 
 
 $(function(){
@@ -52,8 +57,12 @@ $(function(){
         dataType: "json",
         success:function(data)
         {
+            console.log('increat:',data);
+            
             // 把返回的浏览量放到页面
             $("#display").html(data.display);
+            $("#heart").html(data.heart);
+            token = data.token;
             var memu = document.getElementById('memu_static');
             console.log(memu);
             if(memu){
