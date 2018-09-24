@@ -7,6 +7,7 @@ use core\Request;
 use Core\DB;
 use Core\RD;
 use app\Models\Article;
+use app\Models\Comment;
 use app\Models\Heart;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -39,7 +40,9 @@ class BlogController extends Controller {
      */
     function increase(Request $req, $id) {
         $article = new Article;
+        $heart = new Heart;
         $readKey = 'readRecord';
+        $heartTop = $heart->getHeartTop($id);
         $c = json_decode($_COOKIE[$readKey], true);
         if (!$c || !in_array($id, $c)) {
             echo json_encode([
@@ -48,6 +51,7 @@ class BlogController extends Controller {
                 'email' => $_SESSION['email'],
                 'avatar' => $_SESSION['avatar'],
                 'token' => $_SESSION['_token'],
+                'heartTop'=>$heartTop,
             ]);
 
             if (!$c) {
@@ -66,6 +70,7 @@ class BlogController extends Controller {
                 'email' => $_SESSION['email'],
                 'avatar' => $_SESSION['avatar'],
                 'token' => $_SESSION['_token'],
+                'heartTop'=>$heartTop,
             ]);
         }
 
@@ -221,14 +226,34 @@ class BlogController extends Controller {
         if ($blog) {
                 
             $article = new Article;
-            $blog['heart'] = $article->getIncrease('heart', $id);
-
+            $H = new Heart;
+            $blog['heart'] = $article->getIncrease('heart', $id); // 更新 heart 
+            $heartTop = $H->getHeartTop($id);
+            // dd($heartTop);
             return view('blog.content', [
-                'blog' => $blog
+                'blog' => $blog,
+                'heartTop'=>$heartTop,
             ]);
         }
         view('error');
 
+    }
+
+    function comment(Request $req, $id){
+
+        $com = new Comment;
+
+        $data = $com->get($id);
+
+        echo $data;
+        
+    }
+    function docomment(Request $req, $id){
+
+        $com = new Comment;
+
+        $com->insert();
+        
     }
 
     /**
@@ -252,7 +277,7 @@ class BlogController extends Controller {
         $count = $H->UheartA($user_id,$id);
 
         echo json_encode([
-            'err'=>7,
+            'err'=>1,
             'msg'=>'登陆ing',
             'count'=>$count
         ]);

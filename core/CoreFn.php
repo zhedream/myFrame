@@ -7,6 +7,7 @@ use core\Response;
  *  参数二、向视图中传的数据
  */
 function view($viewFileName, $data = []) {
+    // dd($data);
     // 解压数组成变量
     // ob_clean();
     extract($data);
@@ -246,6 +247,11 @@ function config($name){
     return $GLOBALS['config'][$name];
 }
 
+/**
+ * 引入CSS
+ * 1. 路径 css/XX.css
+ * 2. 是否包含 标签
+ */
 function includeCss($path,$tag = true){
     // $path = str_replace('.', '/', $path) . '.css';
     $str = file_get_contents( ROOT."public/".$path);
@@ -254,6 +260,9 @@ function includeCss($path,$tag = true){
     return $str;
 }
 
+/**
+ * 注意 引入 的 js 不会执行 php 代码块
+ */
 function includeJs($path,$tag = true){
     // $path = str_replace('.', '/', $path) . '.js';
     $str = file_get_contents( ROOT."public/".$path);

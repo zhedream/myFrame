@@ -44,6 +44,9 @@ Route::get('/blog/index', 'app/controllers/BlogController@index')->name('blog.in
 Route::get('/blog/content/{id}', 'app/controllers/BlogController@content')->name('blog.content');
 // 赞
 Route::post('/blog/agree/{id}', 'app/controllers/BlogController@HeartToggle')->name('blog.agree');
+// 获取文章 评论
+Route::get('/blog/comment/{id}', 'app/controllers/BlogController@comment')->name('blog.comment');
+Route::post('/blog/comment/{id}', 'app/controllers/BlogController@docomment')->name('blog.docomment');
 
 //alipay
 

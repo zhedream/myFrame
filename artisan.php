@@ -28,5 +28,16 @@ if ($argv[1] == 'q') {
 
 }
 
+if ($argv[1] == 'mock') {
+    if ($argv[2] == 'comments')
+        exec("php public/index.php mock comments", $data);
+
+    if ($argv[2] == 'other')
+        exec("php public/index.php mock sendmail", $data);
+
+}
+
+
+
 
 ?>

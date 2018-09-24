@@ -7,6 +7,7 @@ use core\Request;
 use Core\DB;
 use app\Models\Test;
 use app\Models\Heart;
+use app\Models\Comment;
 
 class MockController extends Controller {
 
@@ -49,18 +50,49 @@ class MockController extends Controller {
 
         $H = new Heart;
 
-        $pdo = Heart::$pdo;
-        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
 
-        for ($i=0; $i <  400; $i++) { 
+        $pdo = Heart::$pdo;
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING); //ERRMODE_SILENT
+
+        for ($i=0; $i <  400; $i++) {
+            $date = rand(1233333399,1535592288);
+            $date = date('Y-m-d H:i:s', $date);
+
             $data = [
                 'article_id'=>rand(1,20),
                 'user_id'=>rand(1,20),
+                'created_at'=>$date
             ];
             $H->exec_insert($data);
         }
+    }
+
+    function comments() {
+        $comment = new Comment;
 
 
+        $pdo = Comment::$pdo;
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING); //ERRMODE_SILENT
+
+        for ($i=1; $i <=  200; $i++) {
+            
+            $time = rand(1, 5); // 随机 评论数
+            for ($j=1; $j <= $time; $j++) {
+                $date = rand(1233333399,1535592288);
+                $date = date('Y-m-d H:i:s', $date);
+
+                $content = getChar(rand(100, 600));
+                $data = [
+                    'article_id'=>$i,
+                    'user_id'=>rand(1,20),
+                    'content'=>$content,
+                    'created_at'=>$date
+                ];
+                $comment->exec_insert($data);
+
+            }
+            
+        }
     }
 
 }

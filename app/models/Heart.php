@@ -26,6 +26,7 @@ class Heart extends Model {
             
             $redis->srem($set,$article_id); // 移出 用户 喜欢
             $redis->srem($set2,$user_id); // 移出 user from article
+            $this->delHeartTop($article_id,$user_id); // 移出 点赞 TOP 10
             $count = $redis->scard($set2);
             RD::setHash('Aricles:heart',$article_id,$count);
             // dd($count);
@@ -45,6 +46,8 @@ class Heart extends Model {
             $redis->sadd($set,$article_id); // 添加 用户 喜欢
             $redis->sadd($set2,$user_id); // 添加 user to article
             $count = $redis->scard($set2);
+            if($count<10)
+                $this->setHeartTop($article_id,$user_id,$count); // 设置 点赞 TOP 10
             RD::setHash('Aricles:heart',$article_id,$count);
             // dd($count);
             return $count; // 返回 文章的赞
@@ -114,7 +117,7 @@ class Heart extends Model {
     }
 
     /**
-     * 回写到 MySQL
+     * 回写 点赞 到 MySQL 
      * 
      * 
      */
@@ -154,4 +157,82 @@ class Heart extends Model {
         }
 
     }
+
+    /**
+     * 获取 文章 前十 的点赞
+     */
+    function getHeartTop($article_id){
+        // $sql  = "SELECT `avatar`,`email`,`name` FROM hearts LEFT JOIN users ON hearts.user_id = users.id WHERE hearts.article_id = ? ORDER BY hearts.created_at LIMIT 10;";
+        $users = RD::chache('getHeartTop:'.$article_id,60,function()use($article_id){
+            $set = "ZSet:Artilce:Heart:".$article_id;
+            $data = self::$redis->zrange($set,0,-1);
+            $da = [];
+            foreach ($data as $key => $id)
+                $da[] =  self::findOne('SELECT * FROM users WHERE id=?',[$id]);
+            return $da;
+        });
+
+        return $users;
+    }
+    /**
+     * 移出 文章 前十 的点赞
+     * 1. 文章 ID
+     * 2. 用户 ID
+     */
+    function delHeartTop($article_id,$user_id){
+        $set = "ZSet:Artilce:Heart:".$article_id;
+        self::$redis->zrem($set,$user_id);
+        $this->readHeartTop($article_id);
+        return true;
+    }
+    /**
+     * 设置 文章 前十 点赞  for redis  只会 在 点赞 前 10 个 启用
+     * 1. 文章 ID
+     * 2. 用户 ID
+     */
+    function setHeartTop($article_id,$user_id,$count){
+        $redis = self::$redis;
+        $set = "ZSet:Artilce:Heart:".$article_id;
+        // $count = $redis->zcard($set);
+        $ex = $redis->exists($set);
+        // dd($ex);
+        if(!$ex){
+            $this->readHeartTop($article_id);
+            // $count = $redis->zcard($set);
+        }
+        if($count<10){
+            // zset 重新排序  设置 最后个 index   
+            RD::sortZSet($set);
+            $redis->zadd($set,$count,$user_id); //覆盖排序 
+        }
+        return true;
+    }
+
+    /**
+     * 读 heartTOP from mysql  定时
+     * 1. 文章 ID
+     */
+    function readHeartTop($article_id) {
+        $set = "ZSet:Artilce:Heart:".$article_id;
+        $sql  = "SELECT `hearts`.`user_id` FROM `hearts` WHERE `hearts`.`article_id` = ? ORDER BY `hearts`.`created_at` LIMIT 10;";
+
+        $data = RD::chache('readHeartTop:'.$article_id,3600,function()use($sql,$article_id) {
+            return self::findOneFirsts($sql,[$article_id]);
+        });
+
+        if($data){
+            foreach ($data as $key => $user_id) {
+                // dd($user);
+                self::$redis->zadd($set,$key,$user_id);
+            }
+        }
+    }
+
+
+
+
+
+
+
+
 }

@@ -59,20 +59,27 @@ class RD {
      * 1.键
      * 2.过期时间（秒）
      * 3.值 匿名函数 return 数据
+     * 4. 覆盖 返回
+     * 5. json 输出
      */
-    public static function chache(string $key, int $minutes, callable $call, $cover = false) {
+    public static function chache(string $key, int $minutes, callable $call, $cover = false ,$json = false) {
 
         // 返回 1 0
         $key = "String:" . $key;
         if (!$cover && self::$_redis->exists($key)) {
-            return json_decode(self::$_redis->get($key), true); // 存在键 则返回
+            if(!$json)
+                return json_decode(self::$_redis->get($key), true); // 存在键 则返回
+            return self::$_redis->get($key); // 存在键 则返回
+
         }
 //        dd($key);
         $data = $call();
         if($data){
             $str = json_encode($data);
             self::$_redis->setex($key, $minutes, $str);
-            return json_decode(self::$_redis->get($key), true);
+            if(!$json)
+                return json_decode(self::$_redis->get($key), true);
+            return self::$_redis->get($key);
         }
         return false;
     }
@@ -200,6 +207,14 @@ class RD {
         $hash = "Hash:" . $type;
         return self::$_redis->hget ($hash,$key);
 
+    }
+
+    public static function sortZSet($set){
+        $data = self::$_redis->zrange($set,0,-1);
+        // dd($data);
+        foreach ($data as $key => $value) {
+            self::$_redis->zadd($set,$key,$value);
+        }
     }
 
     public static function delMatch($key){

@@ -29,18 +29,21 @@ class Model {
     }
 
     function table($option = 1) {
-        //$config;
-        // dd(debug_backtrace()[1]['class']);
-        // $class = debug_backtrace()[$option]['class'];
+
         $class = get_called_class();
         // echo $class."<br>";
         // $class = end(explode('\\', $class)); // 存在异常
         $class = explode('\\', $class);
         $class = end($class);
-        $class = strtolower($class) . 's';
-        $config = $GLOBALS['config'];
+
+        $class = lcfirst($class) . 's';
+        $class = preg_replace_callback('/([A-Z])+/',function($matches){
+            return "_".strtolower($matches[1]);
+        },$class);
+        
+        $prefix = $GLOBALS['config']['db']['prefix'];
         //拼接表名
-        return $config['db']['prefix'] . $class;
+        return $prefix. $class;
 
     }
 
@@ -59,7 +62,7 @@ class Model {
     static function findAll($sql, $data = []) {
         $stmt = self::$pdo->prepare($sql);
         if ($stmt->execute($data)) {
-            $stmt->setFetchMode(PDO::FETCH_ASSOC);//PDO::FETCH_ASSOC
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);// PDO::FETCH_ASSOC  //  PDO::FETCH_NUM
             $arr = $stmt->fetchAll();
             return $arr;
         }
@@ -83,6 +86,23 @@ class Model {
             $stmt->setFetchMode();//PDO::FETCH_ASSOC
             $arr = $stmt->fetch();
             return $arr[0];
+        }
+        return false;
+    }
+
+    /**
+     * 返回 所有数据的第一个字段  一维数组
+     */
+    static function findOneFirsts($sql, $data = []) {
+        $stmt = self::$pdo->prepare($sql);
+        if ($stmt->execute($data)) {
+            $stmt->setFetchMode(PDO::FETCH_NUM);//PDO::FETCH_ASSOC
+            $arr = $stmt->fetchAll();
+            $data = [];
+            foreach ($arr as $key => $value) {
+                $data[] = $value[0];
+            }
+            return $data;
         }
         return false;
     }

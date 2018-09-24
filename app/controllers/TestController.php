@@ -10,6 +10,7 @@ use libs\Mail;
 use app\Models\TestModel;
 use app\Models\User;
 use app\Models\Heart;
+use app\Models\CommentHeart;
 use libs\Uploader;
 
 
@@ -210,8 +211,9 @@ class TestController extends HomeController {
     }
 
     function test() {
-        $H = new Heart;
-        $data = $H->readHeartU(21);
+        $H = new CommentHeart;
+        $data = $H->insert(12);
+        // $data = $H->delHeartTop(20,12);
         // $data = $H->writeHeart();
         // $data = $H->getHeartCount(125);
         dd($data);
