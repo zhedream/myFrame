@@ -1,16 +1,5 @@
 <?php
 
-
-// return array(
-//     "type"=>"mysql",
-//     "host"=>"localhost",
-//     "port"=>"3306",
-//     "charset"=>"utf8",
-//     "dbname"=>"myframe",
-//     "user"=>"root",
-//     "pwd"=>"123qwe"
-// );
-
 return array(
     //    key    value
     'mode'=> env('mode','dev'),
@@ -21,7 +10,7 @@ return array(
         'port' => 3306,           //Web端口默认为 80  MySQL服务器的默认端口 3306
         'user' => "root",         //数据库用户名
         'pwd' => '',          //数据密码
-        'dbname' => 'blog',  //数据库名称
+        'dbname' => '',  //数据库名称
         'charset' => 'utf8',      //数据库的默认编码
         'prefix' => ''        //数据表前缀
     ),
@@ -33,9 +22,9 @@ return array(
     'email' => array(
         'host' => 'smtp.163.com', // 服务器地址
         'port' => 25, // 端口
-        'name' => '者之梦(管理员)', // nick name
-        'username' => 'l19517863@163.com', // 邮箱账户
-        'password' => 'l18396315377', // 账户密码 或 授权码
+        'name' => 'master', // nick name
+        'username' => 'XXX@163.com', // 邮箱账户
+        'password' => 'password', // 账户密码 或 授权码
     ),
     'upload' => array(
         //设置文件上传允许的后缀1
@@ -53,7 +42,7 @@ return array(
     'cookie'=> array(
         'path'=> '/',
         'secure'=> false,
-        'domain'=> 'www.my.com',
+        'domain'=> 'www.myFrame.com',
     )
 );
 

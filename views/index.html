@@ -1,88 +1,12 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>首页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MyFrame</title>
 </head>
-
-<body style="display:none;">
-<?php view('common.nav',['_static'=>isset($_static)?$_static:'']) ?>
-<h1>最新发表的日志</h1>
-<ul>
-    <?php foreach($blogs as $v): ?>
-
-    <li>
-        <a target="_blank" href="content/<?=$v['id']?>.html">
-            <?=$v['title']?>
-        </a>
-    </li>
-
-    <?php endforeach; ?>
-</ul>
-<?php view('common.footer') ?>
+<body>
+    <h1><?=$info?></h1>
 </body>
-
-
-<script>
-
-    $(function () {
-
-        var memu = document.getElementById('memu_static');
-        console.log(memu);
-        if (memu) {
-            console.log('true,这是静态页');
-
-            $.ajax({
-                type: "GET",
-                url: "<?=Route('user.loging')?>",
-                dataType: 'json',  // 声明服务器返回的是JSON（解析JSON）
-                success: function (data) {
-
-                    var html = '<a href="/">首页</a>';
-                    // 判断登录
-                    if (data.email == '' || data.email == null) {
-                        console.log('未登录');
-
-                        // js 中定义多行字符串时要使用 ` （反引号 1左边的键子）
-                        html += ` <a href="<?=Route('user.regist')?>">注册</a> 
-                            <a href="<?=Route('user.login')?>">登录</a>`;
-                    }
-                    else {
-                        console.log('已登录');
-                        html += data.email + 
-                            ` 
-                            <img src="`+data.avatar+`" alt="">
-                            <a href="<?=Route('user.recharge')?>">充值</a> 
-                            <a href="<?=Route('blog.index')?>">日志列表</a> 
-                            <a href="<?=Route('blog.create')?>">发表日志</a> 
-                            <a href="<?=Route('user.logout')?>">退出</a>`;
-                    }
-    
-                    // 获取id=menu的div 并把按钮放进去
-                    $(memu).html(html);
-                },
-                error: function () {
-
-                    var html = '<a href="/">首页</a>';
-                    html += data.email +
-                        ` <a href="<?=Route('blog.index')?>">日志列表</a> 
-                            <a href="<?=Route('blog.create')?>">发表日志</a> 
-                            <a href="<?=Route('user.logout')?>">退出</a>`;
-                    $(memu).html(html);
-
-                }
-            });
-
-        }
-        else {
-
-            console.log('false,这是动态页');
-        }
-
-
-    })
-
-</script>
-
 </html>

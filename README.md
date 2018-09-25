@@ -20,11 +20,12 @@
     app/
         controllers/ -> 存放控制器
             --核心控制器
+            Controller.php              -> 被 所有控制器 继承
             TempController.php      -> 控制器模板
-            MockController.php      -> 用于模拟数据
-            QueueController.php     -> 处理消息队列
-            StaticController.php    -> 处理静态化
+            
         models/ 存放模型
+            --核心控制器
+            Model.php              -> 被 所有模型 继承
             Temp.php    -> 模型模板
     Config/
         config.php      -> 配置文件
@@ -37,10 +38,13 @@
         Model.php       -> 核心模型
         RD.php          -> redis类 队列/缓存
         Request.php     -> 处理请求类  待完善 目前没卵用
+        Response.php    -> 相应类 待完善 目前 没什么用
         Route.php       -> 路由
     libs/ 拓展类
         Log.php         -> 日志类
         Mail.php        -> 邮件类
+        Snowflake.php   -> 生成雪花编号
+        Upload.php      -> 上传类
     logs/ 日志文件夹
     public/ 
         入口文件&前端页面&资源
@@ -49,9 +53,14 @@
         js/             -> JS文件
         index.php       -> 入口文件
         .htaccess       -> 路由重写文件
-    route/ 
+    route/
         web.php         -> 注册路由
-    tests/ 存放一些PHP测试文件
+    tests/ 存放一些PHP测试文件 与 实例 代码
+        MockController.php      -> 用于模拟数据
+        QueueController.php     -> 处理消息队列
+        StaticController.php    -> 处理静态化
+        AlipayController.php    -> 支付宝支付
+        ... 
     uploads/ 用户上传资源
     verdor/ composer
     views/ 视图资源
@@ -69,7 +78,7 @@
 ## 框架优化 
 1. 路由优化 注册路由
 
-
+## 
 
 
 
