@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50723
 File Encoding         : 65001
 
-Date: 2018-09-19 22:13:53
+Date: 2018-09-25 10:25:22
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -20,6 +20,28 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `articles`;
 CREATE TABLE `articles` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '文章标题',
+  `description` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '文章描述',
+  `content` longtext COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '文章内容',
+  `cover` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '文章封面',
+  `tags` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '文章标签',
+  `display` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '文章阅读数',
+  `heart` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '文章喜欢数',
+  `accessable` enum('public','private') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'public',
+  `type` int(10) unsigned NOT NULL COMMENT '文章分类',
+  `user_id` int(10) unsigned NOT NULL COMMENT '文章作者',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `istop` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '是否置顶',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=659 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Table structure for articles_copy
+-- ----------------------------
+DROP TABLE IF EXISTS `articles_copy`;
+CREATE TABLE `articles_copy` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '文章标题',
   `description` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '文章描述',
@@ -70,6 +92,20 @@ CREATE TABLE `blogs` (
 ) ENGINE=InnoDB AUTO_INCREMENT=360 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
+-- Table structure for comments
+-- ----------------------------
+DROP TABLE IF EXISTS `comments`;
+CREATE TABLE `comments` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `article_id` int(11) unsigned NOT NULL,
+  `user_id` int(11) unsigned NOT NULL,
+  `content` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `文章ID` (`article_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=320 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
 -- Table structure for file_maps
 -- ----------------------------
 DROP TABLE IF EXISTS `file_maps`;
@@ -79,6 +115,17 @@ CREATE TABLE `file_maps` (
   `path` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Table structure for hearts
+-- ----------------------------
+DROP TABLE IF EXISTS `hearts`;
+CREATE TABLE `hearts` (
+  `article_id` int(10) unsigned NOT NULL,
+  `user_id` int(10) unsigned NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY `heart` (`article_id`,`user_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
