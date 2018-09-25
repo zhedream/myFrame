@@ -1,23 +1,21 @@
-<?php
 
-namespace app\controllers;
-
+namespace <?=$namespace?>;
+<?= ($namespace =='app\controllers') ? "\r\n" :  'use app\\controllers\\Controller;'."\r\n" ?>
 use core\Request;
-use app\models\Index;
+<?= (isset($this->group))? "use ".$this->mspace."\\$fileName;"."\r\n" : "" ?>
 
-class IndexController extends Controller {
+class <?=$fileName?>Controller extends Controller {
 
     // 显示列表
     function index() {
-        $index = new Index;
-        $info = $index->welcome();
-        view('index.index',['info'=>$info]);
+
+        view('<?=$name?>.index');
     }
 
     // 显示 添加页
     function add(){
 
-        view('index.create');
+        view('<?=$name?>.create');
     }
 
     // 添加
@@ -35,7 +33,7 @@ class IndexController extends Controller {
     // 显示 修改页
     function mod(){
         
-        view('index.edit');
+        view('<?=$name?>.edit');
     }
 
     // 修改

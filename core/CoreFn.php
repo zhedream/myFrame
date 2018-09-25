@@ -1,18 +1,17 @@
 <?php
 
 use core\Response;
+
 /**
  *  加载视图
  *  参数一、加载的视图的文件名
  *  参数二、向视图中传的数据
  */
 function view($viewFileName, $data = []) {
-    // dd($data);
+
     // 解压数组成变量
     // ob_clean();
     extract($data);
-    // var_dump($blogs);
-    // var_dump($_static);
     $path = str_replace('.', '/', $viewFileName) . '.html';
     // 加载视图
     require(ROOT . 'views/' . $path);

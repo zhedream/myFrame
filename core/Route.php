@@ -239,6 +239,10 @@ class Route {
      * 1. 名称
      */
     function name($name) {
+        
+        if(in_array($name,array_keys(self::$map))){
+            throwE('路由名称重复','name');
+        }
 
         self::$map[$name] = self::$lastUrl;
 
@@ -246,8 +250,7 @@ class Route {
             self::$gets[count(self::$gets) - 1]['name'] = $name;
         else
             self::$posts[count(self::$posts) - 1]['name'] = $name;
-
-    }
+    }   
 
     /**
      * 生产路由 URL

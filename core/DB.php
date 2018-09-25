@@ -4,44 +4,60 @@ namespace Core;
 
 use \PDO;
 
-DB::client();
+DB::getDB();
 
+/**
+ * DB 类 封装了 PDO
+ */
 class DB {
 
-    static $pdo = null;
+    private static $_pdo = null;
+    private static $_instance = null;
 
-    function __construct() {
+    private function __construct() {
 
         self::client();
     }
 
-    static function getDB() {
-        if (self::$pdo === NULL) {
-            // echo '2<br>';
-            self::client();
-            return self::$pdo;
-        } else {
-            // echo '3<br>';
-            return self::$pdo;
-        }
-    }
-
-    static function client() {
-        if (self::$pdo == NULL) {
+    private static function client() {
+        if (self::$_pdo == NULL) {
             $conf = $GLOBALS['config']['db'];
             $dsn = "mysql:host=" . $conf['host'] . ";dbname=" . $conf['dbname'];
             try {
-                self::$pdo = new PDO($dsn, $conf['user'], $conf['pwd']);
-                self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // 设置报错提示
-                self::$pdo->exec("set names utf8");
+                self::$_pdo = new PDO($dsn, $conf['user'], $conf['pwd']);
+                self::$_pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // 设置报错提示
+                self::$_pdo->exec("set names utf8");
             } catch (PDOException $e) {
                 echo "数据库连接失败！" . $e->getMessage();
             }
         }
     }
 
+    /**
+     * 返回 底层 $PDO
+     */
+    static function getDB() {
+        if (self::$_pdo === NULL) {
+            self::client();
+            return self::$_pdo;
+        } else {
+            return self::$_pdo;
+        }
+    }
+
+    // 获取 类DB的 实例化
+    public static function new(){
+        if (self::$_instance === NULL){
+            self::$_instance = new self;
+            return self::$_instance;
+        }
+        return self::$_instance;
+    }
+
+
+
     static function findAll($sql, $data = []) {
-        $stmt = self::$pdo->prepare($sql);
+        $stmt = self::$_pdo->prepare($sql);
         if ($stmt->execute($data)) {
             $stmt->setFetchMode(PDO::FETCH_ASSOC);//PDO::FETCH_ASSOC
             $arr = $stmt->fetchAll();
@@ -51,7 +67,7 @@ class DB {
     }
 
     static function findOne($sql, $data = []) {
-        $stmt = self::$pdo->prepare($sql);
+        $stmt = self::$_pdo->prepare($sql);
         if ($stmt->execute($data)) {
             $stmt->setFetchMode(PDO::FETCH_ASSOC);//PDO::FETCH_ASSOC
             $arr = $stmt->fetch();
@@ -64,7 +80,7 @@ class DB {
      * 查询一个字段的 值
      */
     static function findOneFirst($sql, $data = []) {
-        $stmt = self::$pdo->prepare($sql);
+        $stmt = self::$_pdo->prepare($sql);
         if ($stmt->execute($data)) {
             $stmt->setFetchMode();//PDO::FETCH_ASSOC
             $arr = $stmt->fetch();
@@ -95,7 +111,7 @@ class DB {
      * 2. 数据
      */
     static function exec($sql, $data = []) {
-        $stmt = self::$pdo->prepare($sql);
+        $stmt = self::$_pdo->prepare($sql);
         return $stmt->execute($data);
     }
 
@@ -109,14 +125,14 @@ class DB {
      */
     static function Transaction($Action) {
 
-        self::$pdo->beginTransaction();
+        self::$_pdo->beginTransaction();
         foreach ($Action as $v) {
             if (!self::exec($v[0], $v[1])) {
-                self::$pdo->rollBack();//事务回滚 ， 貌似  可以 不添加
+                self::$_pdo->rollBack();//事务回滚 ， 貌似  可以 不添加
                 return false;
             }
         }
-        self::$pdo->commit();//提交(确认)
+        self::$_pdo->commit();//提交(确认)
     }
 
     /**
@@ -124,15 +140,15 @@ class DB {
      */
     static function testSql($Action) {
 
-        if (self::$pdo === NULL) {
+        if (self::$_pdo === NULL) {
             self::client();
             echo '修复连接';
         }
-        self::$pdo->beginTransaction();
+        self::$_pdo->beginTransaction();
         foreach ($Action as $v)
             if (!self::exec($v[0], $v[1]))
                 return false;
-        self::$pdo->rollBack();
+        self::$_pdo->rollBack();
     }
 
 }

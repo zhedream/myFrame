@@ -6,18 +6,18 @@ return array(
     'APP_URL' => env('APP_URL','http://lhz.ngrok.xiaomiqiu.cn'),
     'db' => array(
         'type' => "mysql",
-        'host' => '127.0.0.1',    //数据服务器主机名（IP、域名）,localhost 本机的特殊的域名
-        'port' => 3306,           //Web端口默认为 80  MySQL服务器的默认端口 3306
-        'user' => "root",         //数据库用户名
-        'pwd' => '',          //数据密码
-        'dbname' => 'shop',  //数据库名称
+        'host' => env('db.host','127.0.0.1'),    //数据服务器主机名（IP、域名）,localhost 本机的特殊的域名
+        'port' => env('db.port','3306'),           //Web端口默认为 80  MySQL服务器的默认端口 3306
+        'user' => env('db.user','root'),         //数据库用户名
+        'pwd' => env('db.pwd','pwd'),          //数据密码
+        'dbname' => env('db.dbname','project-shop'),  //数据库名称
         'charset' => 'utf8',      //数据库的默认编码
         'prefix' => ''        //数据表前缀
     ),
     'redis' => array(
         'scheme' => 'tcp',
         'host' => '127.0.0.1',
-        'port' => 6379,
+        'port' => env('redis.port',6379),
     ),
     'email' => array(
         'host' => 'smtp.163.com', // 服务器地址

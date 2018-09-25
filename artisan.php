@@ -1,4 +1,7 @@
 <?php
+define('ROOT', dirname(__FILE__) . '/'); // 根目录
+// var_dump(ROOT);die;
+require_once ROOT . "Core/Loader.php";
 
 if (php_sapi_name() != 'cli')
     die('使用错误');
@@ -34,6 +37,28 @@ if ($argv[1] == 'mock') {
 
     if ($argv[2] == 'other')
         exec("php public/index.php mock sendmail", $data);
+
+}
+
+use libs\Make;
+if($argv[1] == 'make'){
+    $make = new Make;
+    // var_dump($make);die;;
+    if ($argv[2] == 'C'){
+        
+        $make->controller($argv[3]);
+        echo $make->cdir;
+    }
+    if ($argv[2] == 'M'){
+        
+        $make->model($argv[3]);
+        echo $make->mdir;
+    }
+    if($argv[2] == 'G'){
+        
+        $make->group($argv[3]);
+
+    }
 
 }
 
