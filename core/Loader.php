@@ -1,7 +1,7 @@
 <?php
 require_once ROOT . "vendor/autoload.php";
 
-Loader::$myclassDir = "Vendor/myclass/";
+Loader::$myclassDir = ROOT . "libs/myClass/";
 Loader::$is_debug = 0;
 spl_autoload_register('Loader::autoload');
 spl_autoload_register("Loader::ForClass");
