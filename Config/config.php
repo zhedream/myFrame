@@ -10,7 +10,7 @@ return array(
         'port' => 3306,           //Web端口默认为 80  MySQL服务器的默认端口 3306
         'user' => "root",         //数据库用户名
         'pwd' => '',          //数据密码
-        'dbname' => '',  //数据库名称
+        'dbname' => 'shop',  //数据库名称
         'charset' => 'utf8',      //数据库的默认编码
         'prefix' => ''        //数据表前缀
     ),
