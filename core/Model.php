@@ -16,7 +16,14 @@ class Model {
     protected $fillable = null;
 
     var $select = "SELECT * ";
-    var $from = " FROM ";
+    var $from;
+    var $where;
+    var $whereVals;
+    var $leftJoin;
+    var $groupBy;
+    var $having;
+    var $orderBy;
+    var $limit;
 
     function __construct() {
         self::db();
@@ -33,7 +40,9 @@ class Model {
     }
 
     function table($option = 1) {
-
+        if($this->table){
+            return $this->table;
+        }
         $class = get_called_class();
         // echo $class."<br>";
         // $class = end(explode('\\', $class)); // 存在异常
@@ -47,7 +56,6 @@ class Model {
         
         $prefix = $GLOBALS['config']['db']['prefix'];
         //拼接表名
-        $this->from .= $prefix.$class;
         return $prefix. $class;
 
     }
@@ -182,6 +190,8 @@ class Model {
 
 
         $fillkeys = '';
+        // $fillkeys = implode(',',$keys);
+        // dd($fillkeys);
         foreach ($keys as $key => $value) {
             if ($value == end($keys))
                 $fillkeys .= "`$value` ";
@@ -207,8 +217,8 @@ class Model {
         $table = $this->table(2);
         $table = "`$table`";
         $sql = "INSERT INTO {$table} ({$fillkeys}) VALUES ({$fillarea})";
-        // var_dump($sql,$data);die;
-        // dd($sql);
+        var_dump($sql,$data);die;
+        dd($sql);
         return self::exec($sql, $data);
     }
 
@@ -243,6 +253,313 @@ class Model {
     function exec_select() {
 
 
+    }
+
+    final function select($data){
+        $this->select = 'SELECT *';
+
+        return $this;
+    }
+
+    final function from () {
+        if(!$this->from)
+            $this->from =" FROM "."`".$this->table()."` "; 
+
+        return $this;
+    }
+
+    // --------------   WHERE 
+    final function where(){
+
+        $args = func_get_args();
+        // dd($args);
+        $num = func_num_args(); 
+        return call_user_func_array( [__NAMESPACE__.'\Model',"where".$num], $args ); 
+    }
+
+    final function where1 ($condition) {
+        $wherekeys = array_keys($condition); // 条件字段
+        $wherevals = array_values($condition); // 条件值
+        // dd($condition);
+        $where = '';
+        // 第一次 where 为空
+        if(!$this->where){
+            
+            foreach ($condition as $key => $value) {
+                if ($key == end($wherekeys))
+                    $where .= " AND `$key`=$value ";
+                else
+                    $where .= " AND `$key`=$value ";
+            }
+            $this->where = "WHERE 1 ". $where;
+
+        }else{
+
+            foreach ($condition as $key => $value) {
+                if ($key == end($wherekeys))
+                    $where .= " AND `$key`=$value ";
+                else
+                    $where .= " AND `$key`=$value  ";
+            }
+
+            $this->where .=  $where;
+
+        }
+
+        // 储存 条件值
+        if(!$this->whereVals){
+            $this->whereVals = [];
+        }
+        foreach ($condition as $key => $value) {
+            $this->whereVals[] = $value;
+        }
+        return $this;
+    } 
+    final function where2 ($key, $val) {
+
+        $where .= " AND `$key`=$val ";
+
+        // 储存 条件值
+        if(!$this->whereVals)
+            $this->whereVals = [];
+        $this->whereVals[] = $val;
+
+        if(!$this->where){
+            $this->where = "WHERE 1 ". $where;
+        }else{
+            $this->where .=  $where;
+        }
+
+        return $this;
+    } 
+    final function where3 ( $key ,$sign,$val) {
+
+        $where .= " AND `$key` $sign $val ";
+        // 储存 条件值
+        if(!$this->whereVals)
+            $this->whereVals = [];
+        $this->whereVals[] = $val; // add val
+
+        if(!$this->where){
+            $this->where = "WHERE 1 ". $where;
+        }else{
+            $this->where .=  $where;
+        }
+
+        return $this;
+        echo( '三个啦' ); 
+    } 
+
+    // -------------  OR WHERE   
+    final function orWhere(){
+
+        $args = func_get_args();
+        // dd($args);
+        $num = func_num_args(); 
+        return call_user_func_array( [__NAMESPACE__.'\Model',"orWhere".$num], $args ); 
+        
+    }
+    function orWhere1($condition){
+
+        $wherekeys = array_keys($condition); // 条件字段
+        $wherevals = array_values($condition); // 条件值
+        // dd($condition);
+        $where = $this->where;
+        foreach ($condition as $key => $value) {
+            if ($key == end($wherekeys))
+                $where .= "OR `$key`=$value ";
+            else
+                $where .= "OR `$key`=$value ";
+        }
+
+        // 储存 条件值
+        if(!$this->whereVals){
+            $this->whereVals = [];
+        }
+        foreach ($condition as $key => $value) {
+            $this->whereVals[] = $value;
+        }
+        
+        $this->where = $where;
+        // dd($where);
+        return $this;
+    }
+    function orWhere2($key,$val){
+
+        $where .= " OR `$key`=$val ";
+        // 储存 条件值
+        if(!$this->whereVals)
+            $this->whereVals = [];
+        $this->whereVals[] = $val;
+
+        if(!$this->where){
+            $this->where = "WHERE 1 ". $where;
+        }else{
+            $this->where .=  $where;
+        }
+
+        return $this;
+    }
+    function orWhere3( $key ,$sign,$val){
+        $where .= " OR `$key` $sign $val ";
+        // 储存 条件值
+        if(!$this->whereVals)
+            $this->whereVals = [];
+        $this->whereVals[] = $val; // add val
+        
+        if(!$this->where){
+            $this->where = "WHERE 1 ". $where;
+        }else{
+            $this->where .=  $where;
+        }
+        
+        return $this;
+    }
+    // ---------------  WHERE IN
+    final function whereIn () {
+
+        $args = func_get_args();
+        // dd($args);
+        if(is_array($args[1])){
+            return call_user_func_array( [__NAMESPACE__.'\Model',"whereInArr"], $args ); // 数组 数据
+        }
+        if(is_callable($args[1])){
+            // $args[1] = 123;
+            // var_export($args[1]);
+            // die;
+            return call_user_func_array( [__NAMESPACE__.'\Model',"whereInCall"], $args ); // 回调 数据/对象
+        }
+        if(is_string($args[1])){
+            return call_user_func_array( [__NAMESPACE__.'\Model',"whereInSql"], $args ); // 回调 数据/对象
+        }
+
+        die;
+        $num = func_num_args(); 
+
+    }
+
+    function whereInArr($k,$arr,$not=false){
+
+        $keys = array_keys($arr); // 获取 索引
+        if(!$this->whereVals)
+            $this->whereVals = [];
+        
+        $val = "(";
+        foreach ($arr as $key => $value) {
+            if ($key == end($keys))
+                $val .= "$value";
+            else
+                $val .= "$value,";
+
+            $this->whereVals[] = $value; // add val
+        }
+        $val .= ")";
+        
+        if($not)
+            $where .= " AND `$k` NOT IN $val ";
+        else
+            $where .= " AND `$k` IN $val ";
+        $this->where .=  $where; // link sql
+
+        return $this;
+        
+    }
+    function whereInCall($k,$call,$not=false){
+        // var_dump($call);die;
+        $model = get_called_class();
+        $m = new $model;
+        $call($m);
+        $sql = $m->toSql();
+        $data = $m->whereVals;
+        // dd($sql);
+
+        if($not)
+            $where .= " AND `$k` NOT IN ($sql) ";
+        else
+            $where .= " AND `$k` IN $val ($sql) ";
+
+        $this->where .= $where;
+
+        $this->whereVals = array_merge($this->whereVals,$m->whereVals);
+        // $
+
+        // var_dump($m);
+        // dd($this,false);
+        // 获取 当前 查询 模型 的    sql  与 变量
+        return $this;
+    }
+    function whereInSql($k,$sql,$not=false){}
+    
+    final function orWhereIn ($k,$arr,$not=false) {
+        $keys = array_keys($arr); // 获取 索引
+        if(!$this->whereVals)
+            $this->whereVals = [];
+        
+        $val = "(";
+        foreach ($arr as $key => $value) {
+            if ($key == end($keys))
+                $val .= "$value";
+            else
+                $val .= "$value,";
+
+            $this->whereVals[] = $value; // add val
+        }
+        $val .= ")";
+        
+        if($not)
+            $where .= " OR `$k` NOT IN $val ";
+        else
+            $where .= " OR `$k` IN $val ";
+
+        $this->where .=  $where; // link sql
+
+        return $this;
+    }
+
+    function orWhereInArr(){}
+    function orWhereInSql(){}
+    function orWhereInCall(){}
+    
+    final function like () {}
+    final function orLike () {}
+        // 大括号
+    final function group () {}
+    final function orGroup () {}
+    final function leftJoin(){ return $this;}
+    final function groupBy(){ return $this;}
+    final function having(){ return $this;}
+    final function orderBy(){ return $this;}
+    final function limit(){ return $this;}
+
+    function toSql($fill=false){
+        $sql = $this->select
+                .$this->from
+                .$this->where
+                .$this->leftJoin
+                .$this->groupBy
+                .$this->having
+                .$this->orderBy
+                .$this->limit;
+        
+        if($fill){
+            // 如果为真 把 ？ 替换 成 data
+        }
+        // dd($sql);
+        return $sql;
+    }
+    final function get() {
+        $this->from();
+        $sql = $this->select
+                .$this->from
+                .$this->where
+                .$this->leftJoin
+                .$this->groupBy
+                .$this->having
+                .$this->orderBy
+                .$this->limit;
+        var_dump($this->whereVals);
+        dd($sql,false);
+        return $this->findAll($sql,$data);           
     }
 
     /**
