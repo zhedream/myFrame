@@ -14,6 +14,21 @@ class IndexController extends Controller {
         view('index.index',['info'=>$info]);
     }
 
+    function top () {
+
+        view('index.top');
+    }
+
+    function menu () {
+
+        view('index.menu');
+    }
+
+    function main () {
+
+        view('index.main');
+    }
+
     // 显示 添加页
     function add(){
 

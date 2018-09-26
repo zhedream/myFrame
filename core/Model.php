@@ -12,7 +12,11 @@ class Model {
 
     static $pdo = null;
     static $redis = null;
-    var $table = null;
+    protected $table = null;
+    protected $fillable = null;
+
+    var $select = "SELECT * ";
+    var $from = " FROM ";
 
     function __construct() {
         self::db();
@@ -43,6 +47,7 @@ class Model {
         
         $prefix = $GLOBALS['config']['db']['prefix'];
         //拼接表名
+        $this->from .= $prefix.$class;
         return $prefix. $class;
 
     }
@@ -233,6 +238,11 @@ class Model {
         // dd($sql);
         // dd($data);
         return self::exec($sql, $data);
+    }
+
+    function exec_select() {
+
+
     }
 
     /**
