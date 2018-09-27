@@ -317,7 +317,7 @@ class Model {
     } 
     final function where2 ($key, $val) {
 
-        $where .= " AND `$key`=$val ";
+        $where = " AND `$key`=$val ";
 
         // 储存 条件值
         if(!$this->whereVals)
@@ -334,7 +334,7 @@ class Model {
     } 
     final function where3 ( $key ,$sign,$val) {
 
-        $where .= " AND `$key` $sign $val ";
+        $where = " AND `$key` $sign $val ";
         // 储存 条件值
         if(!$this->whereVals)
             $this->whereVals = [];
@@ -386,7 +386,7 @@ class Model {
     }
     function orWhere2($key,$val){
 
-        $where .= " OR `$key`=$val ";
+        $where = " OR `$key`=$val ";
         // 储存 条件值
         if(!$this->whereVals)
             $this->whereVals = [];
@@ -401,7 +401,7 @@ class Model {
         return $this;
     }
     function orWhere3( $key ,$sign,$val){
-        $where .= " OR `$key` $sign $val ";
+        $where = " OR `$key` $sign $val ";
         // 储存 条件值
         if(!$this->whereVals)
             $this->whereVals = [];
@@ -456,9 +456,9 @@ class Model {
         $val .= ")";
         
         if($not)
-            $where .= " AND `$k` NOT IN $val ";
+            $where = " AND `$k` NOT IN $val ";
         else
-            $where .= " AND `$k` IN $val ";
+            $where = " AND `$k` IN $val ";
         $this->where .=  $where; // link sql
 
         return $this;
@@ -474,9 +474,9 @@ class Model {
         // dd($sql);
 
         if($not)
-            $where .= " AND `$k` NOT IN ($sql) ";
+            $where = " AND `$k` NOT IN ($sql) ";
         else
-            $where .= " AND `$k` IN $val ($sql) ";
+            $where = " AND `$k` IN ($sql) ";
 
         $this->where .= $where;
 
@@ -489,7 +489,7 @@ class Model {
         return $this;
     }
     function whereInSql($k,$sql,$not=false){}
-    
+    // -------------- OR WHERE IN
     final function orWhereIn ($k,$arr,$not=false) {
         $keys = array_keys($arr); // 获取 索引
         if(!$this->whereVals)
@@ -507,9 +507,9 @@ class Model {
         $val .= ")";
         
         if($not)
-            $where .= " OR `$k` NOT IN $val ";
+            $where = " OR `$k` NOT IN $val ";
         else
-            $where .= " OR `$k` IN $val ";
+            $where = " OR `$k` IN $val ";
 
         $this->where .=  $where; // link sql
 
