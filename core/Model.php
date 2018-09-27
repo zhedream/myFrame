@@ -121,9 +121,10 @@ class Model {
     }
 
     static function exec($sql, $data = []) {
-        // dd($data);
+        
         $stmt = self::$pdo->prepare($sql);
-        return @$stmt->execute($data);
+        // return @$stmt->execute($data);
+        return $stmt->execute($data);
     }
 
     /**

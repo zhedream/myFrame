@@ -5,7 +5,8 @@ use core\RD; // redis 类
 use core\DB; // DB 类
 
 class <?=$fileName?> extends Model {
-
+    // protected $table = '<?=$name?>s';
+    // protected $fillable = [];
     function insert($data) {
         
         $data = [
@@ -14,7 +15,7 @@ class <?=$fileName?> extends Model {
         
         $data = self::exec_insert($data);
         if ($data) {
-            return true;;
+            return true;
 
         }else{
             return false;

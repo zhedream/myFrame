@@ -9,15 +9,19 @@
 </head>
 <body>
     <h1>
-        <span class="action-span"><a href="/<?=$tableName?>/index">数据列表</a></span>
+        <span class="action-span"><a href="/<?=$name?>/index">数据列表</a></span>
         <span class="action-span1"><a href="__GROUP__">管理中心</a></span>
         <span id="search_id" class="action-span1"> - 添加新记录 </span>
         <div style="clear:both"></div>
     </h1>
     <div class="main-div">
-        <form action="/<?=$tableName?>/insert" method="post" enctype="multipart/form-data">
+        <?php
+            $putRoute = "<?=Route('$name.insert')?>";
+        ?>
+
+        <form action="<?=$putRoute ?>" method="post" enctype="multipart/form-data">
             <table width="100%" id="general-table">
-                <?php foreach($fields as $v): 
+                <?php foreach($this->fields as $v): 
                     if($v['Field'] == 'id' || $v['Field'] == 'created_at')
                         continue ;
                 ?>
@@ -43,6 +47,6 @@
             </div>
         </form>
     </div>
-    <?="<?=view('common/footer')?>";?>
+    <?="<?=view('common.footer')?>";?>
 </body>
 </html>

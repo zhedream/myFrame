@@ -13,7 +13,10 @@ function view($viewFileName, $data = []) {
     // ob_clean();
     extract($data);
     $path = str_replace('.', '/', $viewFileName) . '.html';
-    // 加载视图
+    // 
+    
+    if(!file_exists(ROOT . 'views/' . $path))
+        throwE('view()引入的视图文件不存在','view');
     require(ROOT . 'views/' . $path);
     // die;
 }
