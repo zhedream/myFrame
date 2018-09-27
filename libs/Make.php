@@ -14,6 +14,8 @@ class Make {
     public $cspace = null; // 控制器 命名空间
     public $mspace = null; // 模型 命名空间
 
+    public $table = null; // 表名
+    
     public $cname = null; // 控制器名 小写
     public $mname = null; // 模型名 小写
     public $cFname = null; // 控制器名 大写
@@ -77,6 +79,14 @@ Route::post('/$name/update','app/controllers/{$fileName}Controller@update')->nam
         $name = strtolower($fileName);
         $this->mname = $name; // 小写
         $this->mFname = $fileName; // 大写
+        
+        $last = substr($this->mname,-1);
+        
+        if($last == 's')
+            $this->table = $this->mname;
+        else
+            $this->table = $this->mname.'s';
+
 
         $dir = ROOT.$namespace;
         is_dir($dir) OR mkdir($dir, 0777, true);
@@ -99,6 +109,20 @@ Route::post('/$name/update','app/controllers/{$fileName}Controller@update')->nam
 
     function view($name) {
 
+
+        $sql = "SHOW FULL FIELDS FROM ".$this->table;
+        // 取出表信息
+        $fields = \core\DB::findAll($sql);
+        $this->fields = $fields;
+
+        $putRoute_index = "<?=Route('$name.index')?>";
+        $putRoute_add = "<?=Route('$name.add')?>";
+        $putRoute_insert = "<?=Route('$name.insert')?>";
+        $putRoute_del = "<?=Route('$name.del')?>";
+        $putRoute_mod = "<?=Route('$name.mod')?>";
+        $putRoute_update = "<?=Route('$name.update')?>";
+        $putRoute_search = "<?=Route('$name.search')?>";
+        
         is_dir(ROOT . 'views/'.$name) OR mkdir(ROOT . 'views/'.$name, 0777);
         // create.html
         ob_start();

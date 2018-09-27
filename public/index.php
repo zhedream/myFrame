@@ -12,4 +12,4 @@ require_once ROOT . "/Core/App.php"; // 核心APP 入口
 require_once ROOT . "/Core/CoreFn.php"; // 核心辅助全局函数
 require_once ROOT . "/route/web.php"; // 引入路由
 //var_dump(ROOT . "/route/web.php");die();
-app::run(isset($argv) ? $argv : []);
+core\App::run(isset($argv) ? $argv : []);

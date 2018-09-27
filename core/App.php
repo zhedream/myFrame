@@ -1,4 +1,5 @@
 <?php
+namespace core;
 if (!defined("ACCESS")) {
     echo "未经过 主入口<br>";
     header("location:../index.php");
