@@ -5,6 +5,7 @@ namespace app\controllers;
 use core\Request;
 use app\models\Index;
 use app\models\User;
+use app\models\GoodsAttribute;
 
 class IndexController extends Controller {
 
@@ -22,6 +23,12 @@ class IndexController extends Controller {
 
     function test() {
         $index = new User;
+        $G = new GoodsAttribute;
+
+        $data = $G->whereIn('goods_id',[1])
+            ->toSql();
+            // ->get();
+        dd($data);
         $data = [
             'asd'=>123,
         ];

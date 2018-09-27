@@ -80,13 +80,21 @@ Route::post('/$name/update','app/controllers/{$fileName}Controller@update')->nam
         $this->mname = $name; // 小写
         $this->mFname = $fileName; // 大写
         
-        $last = substr($this->mname,-1);
         
-        if($last == 's')
-            $this->table = $this->mname;
-        else
-            $this->table = $this->mname.'s';
-
+            $class = $fileName;
+            $last = substr($class,-1);
+            if($last == 's')
+                $class = $class;
+            else
+                $class = $class.'s';
+    
+            $class = lcfirst($class);
+            $class = preg_replace_callback('/([A-Z])+/',function($matches){
+                return "_".strtolower($matches[1]);
+            },$class);
+            $prefix = $GLOBALS['config']['db']['prefix'];
+            $table = $prefix. $class;
+            $this->table = $table;
 
         $dir = ROOT.$namespace;
         is_dir($dir) OR mkdir($dir, 0777, true);
@@ -122,6 +130,8 @@ Route::post('/$name/update','app/controllers/{$fileName}Controller@update')->nam
         $putRoute_mod = "<?=Route('$name.mod')?>";
         $putRoute_update = "<?=Route('$name.update')?>";
         $putRoute_search = "<?=Route('$name.search')?>";
+        $csrf_field = "<?=csrf_field()?>";
+        $csrf = "<?=csrf()?>";
         
         is_dir(ROOT . 'views/'.$name) OR mkdir(ROOT . 'views/'.$name, 0777);
         // create.html

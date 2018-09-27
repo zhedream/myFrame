@@ -15,7 +15,8 @@
 </h1>
 <div class="main-div">
     
-    <form action="<?=$putRoute_insert ?>"; ?>" method="post" enctype="multipart/form-data">
+    <form action="<?=$putRoute_insert ?>" method="post" enctype="multipart/form-data">
+        <?=$csrf_field?>
         <table width="100%" id="general-table">
             <?php foreach($this->fields as $v): 
                 if($v['Field'] == 'id' || $v['Field'] == 'created_at')

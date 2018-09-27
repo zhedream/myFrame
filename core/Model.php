@@ -15,15 +15,17 @@ class Model {
     protected $table = null;
     protected $fillable = null;
 
-    var $select = "SELECT * ";
-    var $from;
-    var $where;
-    var $whereVals;
-    var $leftJoin;
-    var $groupBy;
-    var $having;
-    var $orderBy;
-    var $limit;
+    protected $select = "SELECT * ";
+    protected $from;
+    protected $where;
+    protected $whereVals;
+    protected $leftJoin;
+    protected $groupBy;
+    protected $having;
+    protected $orderBy;
+    protected $limit;
+
+    protected $fillData; // 填充的数据
 
     function __construct() {
         self::db();
@@ -49,7 +51,13 @@ class Model {
         $class = explode('\\', $class);
         $class = end($class);
 
-        $class = lcfirst($class) . 's';
+        $last = substr($class,-1);
+        if($last == 's')
+            $class = $class;
+        else
+            $class = $class.'s';
+
+        $class = lcfirst($class);
         $class = preg_replace_callback('/([A-Z])+/',function($matches){
             return "_".strtolower($matches[1]);
         },$class);
@@ -218,8 +226,8 @@ class Model {
         $table = $this->table(2);
         $table = "`$table`";
         $sql = "INSERT INTO {$table} ({$fillkeys}) VALUES ({$fillarea})";
-        var_dump($sql,$data);die;
-        dd($sql);
+        // var_dump($sql,$data);die;
+        // dd($sql);
         return self::exec($sql, $data);
     }
 
@@ -460,7 +468,12 @@ class Model {
             $where = " AND `$k` NOT IN $val ";
         else
             $where = " AND `$k` IN $val ";
-        $this->where .=  $where; // link sql
+        // $this->where .=  $where; // link sql
+        if(!$this->where){
+            $this->where = "WHERE 1 ". $where;
+        }else{
+            $this->where .=  $where;
+        }
 
         return $this;
         
@@ -479,7 +492,12 @@ class Model {
         else
             $where = " AND `$k` IN ($sql) ";
 
-        $this->where .= $where;
+        // $this->where .= $where;
+        if(!$this->where){
+            $this->where = "WHERE 1 ". $where;
+        }else{
+            $this->where .=  $where;
+        }
 
         $this->whereVals = array_merge($this->whereVals,$m->whereVals);
         // $
@@ -558,8 +576,8 @@ class Model {
                 .$this->having
                 .$this->orderBy
                 .$this->limit;
-        var_dump($this->whereVals);
-        dd($sql,false);
+        // var_dump($this->whereVals);
+        // dd($sql,false);
         return $this->findAll($sql,$data);           
     }
 

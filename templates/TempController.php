@@ -8,18 +8,23 @@ class <?=$fileName?>Controller extends Controller {
 
     // 显示列表
     function index() {
-
-        view('<?=$name?>.index');
+        $<?=$name?> = new <?=$fileName?>;
+        $data = $<?=$name?>->get();
+        view('<?=$name?>.index',['data'=>$data]);
     }
 
     // 显示 添加页
     function add(){
-
+        
         view('<?=$name?>.create');
     }
 
     // 添加
     function insert(Request $req,$id) {
+        $data = $req->all();
+        $<?=$name?> = new <?=$fileName?>;
+        $<?=$name?>->exec_insert($data);
+        redirect(Route('<?=$name?>.add'));
     }
 
     // 删除
