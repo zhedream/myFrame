@@ -37,7 +37,8 @@ class Make {
         is_dir($dir) OR mkdir($dir, 0777, true);
         
         if(file_exists(ROOT.$namespace.'/'.$fileName.'Controller.php')){
-            echo '存在'.$fileName.'Controller.php';
+            echo '存在 '.ROOT.$namespace.'/'.$fileName.'Controller.php'."\r\n";
+            $this->cdir = ROOT.$namespace.'/'.$fileName.'Controller.php';
             return $this;
         }
 
@@ -46,6 +47,8 @@ class Make {
         $str = ob_get_clean();
         file_put_contents(ROOT.$namespace.'/'.$fileName.'Controller.php', "<?php\r\n".$str);
         $this->cdir = ROOT.$namespace.'/'.$fileName.'Controller.php';
+
+        echo "sucessful: ".$this->cdir."\r\n";
         return $this;
     }
 
@@ -62,7 +65,8 @@ class Make {
         is_dir($dir) OR mkdir($dir, 0777, true);
 
         if(file_exists(ROOT.$namespace.'/'.$fileName.'.php')){
-            echo '存在'.$fileName.'.php';
+            echo '存在 '.ROOT.$namespace.'/'.$fileName.'.php'."\r\n";
+            $this->mdir = ROOT.$namespace.'/'.$fileName.'.php';
             return $this;
         }
 
@@ -71,6 +75,8 @@ class Make {
         $str = ob_get_clean();
         file_put_contents(ROOT.$namespace.'/'.$fileName.'.php', "<?php\r\n".$str);
         $this->mdir = ROOT.$namespace.'/'.$fileName.'.php';
+
+        echo "sucessful: ".$this->mdir."\r\n";
         return $this;
     }
 
@@ -82,25 +88,31 @@ class Make {
         include(ROOT . 'templates/create.html');
         $str = ob_get_clean();
         if(file_exists(ROOT.'views/'.$name.'/create.html'))
-            echo '存在'.$name.'/create.html';
-        else
+            echo '存在 '.ROOT.'views/'.$name.'/create.html'."\r\n";
+        else{
             file_put_contents(ROOT.'views/'.$name.'/create.html', $str);
+            echo "sucessful: ".ROOT.'views/'.$name.'/create.html'."\r\n";
+        }
         // edit.html
         ob_start();
         include(ROOT . 'templates/edit.html');
         $str = ob_get_clean();
         if(file_exists(ROOT.'views/'.$name.'/edit.html'))
-            echo '存在'.$name.'/edit.html';
-        else
+            echo '存在 '.ROOT.'views/'.$name.'/edit.html'."\r\n";
+        else{
             file_put_contents(ROOT.'views/'.$name.'/edit.html', $str);
+            echo "sucessful: ".ROOT.'views/'.$name.'/edit.html'."\r\n";
+        }
         // index.html
         ob_start();
         include(ROOT . 'templates/index.html');
         $str = ob_get_clean();
         if(file_exists(ROOT.'views/'.$name.'/index.html'))
-            echo ('存在'.$name.'/index.html');
-        else
+            echo '存在 '.ROOT.'views/'.$name.'/index.html'."\r\n";
+        else{
             file_put_contents(ROOT.'views/'.$name.'/index.html', $str);
+            echo "sucessful: ".ROOT.'views/'.$name.'/index.html'."\r\n";
+        }
     }
 
     function group($name) {
@@ -120,7 +132,7 @@ class Make {
         $namespace = "app\\".$mode."s";
         
         if(preg_match('/\//',$name)){
-            // 存在 命名空间
+            // 存在  命名空间
             $name = preg_replace('/\//','\\',$name);
             $name = $namespace."\\".$name;
             $index = strrpos($name,'\\');
