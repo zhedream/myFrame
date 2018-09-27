@@ -226,7 +226,7 @@ class Model {
 
         $wherekeys = array_keys($condition); // 条件字段
         $wherevals = array_values($condition); // 条件值
-//        dd($condition);
+        // dd($condition);
         $where = '';
         foreach ($wherekeys as $key => $value) {
             if ($key == end($wherekeys))
