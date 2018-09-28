@@ -7,45 +7,6 @@ use core\DB; // DB 类
 class <?=$fileName?> extends Model {
     // protected $table = '<?=$this->table?>';
     // protected $fillable = [];
-    function insert($data) {
-        
-        $data = [
-            'key'=>'',
-        ];
-        
-        $data = self::exec_insert($data);
-        if ($data) {
-            return true;
-
-        }else{
-            return false;
-
-        }
-
-    }
-
-    function delete($id) {
-
-        $condition = [
-            'id'=>$id,
-        ];
-        return self::exec_delete($condition);
-        
-    }
-
-    function update($id,$data){
-
-        $data = [
-            'key'=>'',
-        ];
-
-        $condition = [
-            'id'=>$id,
-        ];
-
-        return self::exec_update($data,$condition);
-    }
-
 
 
 }
