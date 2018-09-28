@@ -10,14 +10,18 @@ Model::ModelRun();
 
 class Model {
 
-    static $pdo = null;
-    static $redis = null;
+    private static $pdo = null;
+    private static $redis = null;
+
     protected $table = null;
     protected $fillable = null;
+    protected $fillData; // 填充的数据
 
     protected $select = "SELECT * ";
     protected $from;
+    
     protected $where;
+    protected $whereKeys;
     protected $whereVals;
     protected $leftJoin;
     protected $groupBy;
@@ -25,16 +29,18 @@ class Model {
     protected $orderBy;
     protected $limit;
 
-    protected $fillData; // 填充的数据
 
     function __construct() {
         self::db();
         self::rd();
-        // self::$table = $this->table() ;
-
-
         $this->table = $this->table();
     }
+
+    // 钩子 函数
+    protected function _before_write(){}
+    protected function _after_write(){}
+    protected function _before_delete(){}
+    protected function _after_delete(){}
 
     static function ModelRun() {
         self::db();
@@ -135,6 +141,51 @@ class Model {
         return $stmt->execute($data);
     }
 
+    function insert(){
+        return $this->exec_insert($this->fillData);
+    }
+    
+    function update($condition=[]){
+
+        return $this->exec_update($this->fillData,$condition);
+    }
+    /**
+     * 自动 update OR insert
+     * ( 存在 $this->where  update  否则 insert )
+     */
+    function save(){
+    }
+
+    /**
+     * 自动填充数据
+     * 1. 数据 
+     * 2. 填充模式
+     */
+    function fill($data,$must=false){
+        // dd($data);
+        if($this->fillable){
+            $this->fillData = [];
+            if($must){
+
+                $tem = [];
+                foreach ($this->fillable as $key) 
+                    $tem[$key] = $data[$key];
+                $this->fillData = $tem;
+            }else{
+
+                foreach ($data as $key => $val) 
+                    if(!in_array($key, $this->fillable))
+                        unset($data[$k]);
+                $this->fillData = $data;
+            }
+
+        }else{
+            throwE(get_called_class().'的$fillable 不能为空','fill');
+        }
+        return $this;
+        
+    }
+
     /**
      * update 语句
      * 0. 表名 = 类名+s;
@@ -148,7 +199,7 @@ class Model {
         // var_dump($keys,$vals,end($keys));die;
         $wherekeys = array_keys($condition); // 条件字段
         $wherevals = array_values($condition); // 条件值
-//        dd($condition);
+        //dd($condition);
         $set = '';
         foreach ($keys as $key => $value) {
             if ($value == end($keys))
@@ -182,7 +233,7 @@ class Model {
         // dd($table);
         $table = "`$table`";
         $sql = "UPDATE {$table} SET {$set} WHERE {$where}";
-//        dd($sql);
+        dd($sql);
         return self::exec($sql, $data);
     }
 
@@ -638,6 +689,14 @@ class Model {
 
         echo "该模型" . __CLASS__ . "不存在静态方法" . $name . lm;
 
+    }
+
+    public function __set($name,$val){
+        $this->fillData[$name] = $val;
+    }
+
+    public function __get($name){
+        return $this->fillData[$name];
     }
 
 
