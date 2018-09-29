@@ -96,6 +96,18 @@ Route::post('/$name/update','app/controllers/{$fileName}Controller@update')->nam
             $table = $prefix. $class;
             $this->table = $table;
 
+        $sql = "SHOW FULL FIELDS FROM ".$this->table;
+        // 取出表信息
+        $fields = \core\DB::findAll($sql);
+        $this->fields = $fields;
+
+        foreach ($fields as  $val) {
+            if($val['Key'] =='PRI' || $val['Field'] =='created_at' || $val['Field'] =='updated_at' )
+                continue;
+            $fillables[] = "'".$val['Field']."'";
+        }
+        $fillableStr = '['.implode(',',$fillables).']';
+
         $dir = ROOT.$namespace;
         is_dir($dir) OR mkdir($dir, 0777, true);
 

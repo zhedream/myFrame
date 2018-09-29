@@ -23,7 +23,7 @@
             <?=$csrf_field?>
             <table width="100%" id="general-table">
                 <?php foreach($this->fields as $v): 
-                    if($v['Field'] == 'id' || $v['Field'] == 'created_at')
+                    if($v['Field'] == 'id' || $v['Field'] == 'created_at' || $v['Field'] == 'updated_at' )
                         continue ;
                 ?>
                 <tr>

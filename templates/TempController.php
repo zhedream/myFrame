@@ -33,8 +33,9 @@ class <?=$fileName?>Controller extends Controller {
     
     // 显示 修改页
     function mod(){
-        
-        view('<?=$name?>.edit');
+        $<?=$name?> = new <?=$fileName?>;
+        $data = $<?=$name?>->where(1)->get();
+        view('<?=$name?>.edit',['data'=>$data]);
     }
 
     // 修改

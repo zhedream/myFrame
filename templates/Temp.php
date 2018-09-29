@@ -5,8 +5,9 @@ use core\RD; // redis 类
 use core\DB; // DB 类
 
 class <?=$fileName?> extends Model {
-    // protected $table = '<?=$this->table?>';
-    // protected $fillable = [];
+    
+    protected $table = '<?=$this->table?>';
+    protected $fillable = <?=$fillableStr?>;
 
 
 }
