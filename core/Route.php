@@ -3,6 +3,7 @@
 namespace core;
 
 use core\Request;
+use core\ReflexMethod; // 自定义 反射类
 
 class Route {
 
@@ -29,6 +30,9 @@ class Route {
     static $gets = []; //保存GET 路由
     static $posts = [];
 
+    static $currentRouteInfo = []; //
+    static $currentRouteVar = []; //
+
     static $routeName; // 请求路由 名称
 
     static function initDispatch() {
@@ -36,11 +40,11 @@ class Route {
         self::$method = $_SERVER['REQUEST_METHOD'];
         self::$pathinfo = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';
 
-        // echo '<hr>';
-        // echo $_SERVER['PATH_INFO'];
-        // echo '<hr>';
-        // echo self::$method;
-        // echo '<hr>';
+        echo '<hr>';
+        echo $_SERVER['PATH_INFO'];
+        echo '<hr>';
+        echo self::$method;
+        echo '<hr>';
         // echo self::$pathinfo;
         // echo '<hr>';
 
@@ -50,17 +54,19 @@ class Route {
                 $patt = "/" . $value['patt'] . "/";
                 // preg_match()
                 $isMatched = preg_match($patt, self::$pathinfo, $matches);
-                // var_dump($matches);
-
+                // var_dump($matches);die;
+                // dd($isMatched);
                 if ($isMatched) {
+                    self::$currentRouteInfo = $value; // 路由信息
+                    self::$currentRouteVar = $matches;// 路由变量
                     self::$routeName = isset($value['name']) ? $value['name'] : null;
                     // echo "<hr>".self::$pathinfo."该路由为GET注册路由,控制器{$value['controller']},方法{$value['action']}, 正则{$value['patt']} <hr>";
                     $controller = new $value['controller'];
                     $ac = $value['action'];
-                    // 分发 路由
-                    // $controller->$ac(isset($matches[1])?$matches[1]:null,new Request($value,$matches));
-                    $data = $controller->$ac(new Request($value, $matches), isset($matches[1]) ? $matches[1] : null);
-                    // die("<br>END");
+
+                    $ref = new ReflexMethod ($controller,$ac); // 反射 方法
+                    $ref->invokeArgs($controller);
+                    
                     return;
                 }
             }
@@ -73,9 +79,11 @@ class Route {
                 $patt = "/" . $value['patt'] . "/";
                 // preg_match()
                 $isMatched = preg_match($patt, self::$pathinfo, $matches);
-                // var_dump($matches);
                 if ($isMatched) {
-                    self::$routeName = isset($value['name']) ? $value['name'] : null;
+                    // var_dump($value,$matches);die;
+                    self::$currentRouteInfo = $value; // 路由信息
+                    self::$currentRouteVar = $matches;// 路由变量
+                    self::$routeName = isset($value['name']) ? $value['name'] : null; // 路由名
                     // echo "<hr>".self::$pathinfo."该路由为POST注册路由,控制器{$value['controller']},方法{$value['action']}, 正则{$value['patt']} ,路由名称 {$value['name']} <hr>";
                     // die;
 
@@ -101,8 +109,9 @@ class Route {
                     
                     $controller = new $value['controller'];
                     $ac = $value['action'];
-                    // $controller->$ac(isset($matches[1])?$matches[1]:null,new Request($value,$matches));
-                    $controller->$ac(new Request($value, $matches), isset($matches[1]) ? $matches[1] : null);
+
+                    $ref = new ReflexMethod ($controller,$ac); // 反射 方法
+                    $ref->invokeArgs($controller);
                     // die("<br>END");
                     return;
                 }
@@ -116,6 +125,47 @@ class Route {
         a:;
         echo "goto";
 
+    }
+
+    /**
+     * 获得类的方法参数，只获得有类型的参数
+     * @param  [type] $className   [description]
+     * @param  [type] $methodsName [description]
+     * @return [type]              [description]
+     */
+    protected static function getMethodParams($className, $methodsName = 'insert') {
+
+        // 通过反射获得该类
+        $class = new \ReflectionClass($className);
+        $paramArr = []; // 记录参数，和参数类型
+
+        // 判断该类是否有构造函数
+        if ($class->hasMethod($methodsName)) {
+            // 获得构造函数
+            $construct = $class->getMethod($methodsName);
+
+            // 判断构造函数是否有参数
+            $params = $construct->getParameters();
+
+            if (count($params) > 0) {
+
+                // 判断参数类型
+                foreach ($params as $key => $param) {
+
+                    if ($paramClass = $param->getClass()) {
+
+                        // 获得参数类型名称
+                        $paramClassName = $paramClass->getName();
+
+                        // 获得参数类型
+                        $args = self::getMethodParams($paramClassName);
+                        $paramArr[] = (new \ReflectionClass($paramClass->getName()))->newInstanceArgs($args);
+                    }
+                }
+            }
+        }
+
+        return $paramArr;
     }
 
     /**
@@ -271,7 +321,8 @@ class Route {
         }
 
         if (preg_match('/\{.*\}/', $url, $matches)) {
-            throwE('请检查路由参数', 'Route');
+            // dd($matches);
+            throwE('请检查路由参数,存在未解析的路由参数'.$matches[0], 'Route');
         }
 
         if ($full) {
