@@ -58,9 +58,9 @@ Route::get('/$name/index','app/controllers/{$fileName}Controller@index')->name('
 Route::get('/$name/search','app/controllers/{$fileName}Controller@search')->name('$name.search'); // 搜索
 Route::get('/$name/add','app/controllers/{$fileName}Controller@add')->name('$name.add'); // 显示 添加
 Route::post('/$name/insert','app/controllers/{$fileName}Controller@insert')->name('$name.insert'); // 添加
-Route::post('/$name/del','app/controllers/{$fileName}Controller@del')->name('$name.del'); // 删除
-Route::get('/$name/mod','app/controllers/{$fileName}Controller@mod')->name('$name.mod'); // 显示 修改
-Route::post('/$name/update','app/controllers/{$fileName}Controller@update')->name('$name.update'); // 修改
+Route::post('/$name/del/{id}','app/controllers/{$fileName}Controller@del')->name('$name.del'); // 删除
+Route::get('/$name/mod/{id}','app/controllers/{$fileName}Controller@mod')->name('$name.mod'); // 显示 修改
+Route::post('/$name/update/{id}','app/controllers/{$fileName}Controller@update')->name('$name.update'); // 修改
         ";
         $f = fopen(ROOT."route/web.php",'a');
         fwrite($f,$putRoute."\r\n");
@@ -138,9 +138,9 @@ Route::post('/$name/update','app/controllers/{$fileName}Controller@update')->nam
         $putRoute_index = "<?=Route('$name.index')?>";
         $putRoute_add = "<?=Route('$name.add')?>";
         $putRoute_insert = "<?=Route('$name.insert')?>";
-        $putRoute_del = "<?=Route('$name.del')?>";
-        $putRoute_mod = "<?=Route('$name.mod')?>";
-        $putRoute_update = "<?=Route('$name.update')?>";
+        $putRoute_del = "<?=Route('$name.del',['id'=>\$v['id']])?>";
+        $putRoute_mod = "<?=Route('$name.mod',['id'=>\$v['id']])?>";
+        $putRoute_update = "<?=Route('$name.update',['id'=>\$data['id']])?>";
         $putRoute_search = "<?=Route('$name.search')?>";
         $csrf_field = "<?=csrf_field()?>";
         $csrf = "<?=csrf()?>";

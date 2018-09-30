@@ -21,25 +21,43 @@ class <?=$fileName?>Controller extends Controller {
 
     // 添加
     function insert(Request $req,$id) {
+
         $data = $req->all();
         $<?=$name?> = new <?=$fileName?>;
         $<?=$name?>->exec_insert($data);
-        redirect(Route('<?=$name?>.add'));
+        message('数据添加成功',1,Route('<?=$name?>.index'),3);
+        // redirect(Route('<?=$name?>.index'));
     }
 
     // 删除
     function del(Request $req,$id){
+
+        // $data = $req->all();
+        $<?=$name?> = new <?=$fileName?>;
+        $<?=$name?>->where($id)
+            ->delete();
+        message('数据删除成功',1,Route('user.index'),3);
     }
     
     // 显示 修改页
-    function mod(){
+    function mod(Request $req,$id){
+
+        $data = $req->all();
         $<?=$name?> = new <?=$fileName?>;
-        $data = $<?=$name?>->where(1)->get();
+        $data = $<?=$name?>->where($id)->get()[0];
         view('<?=$name?>.edit',['data'=>$data]);
     }
 
     // 修改
     function update(Request $req,$id) {
+        
+        $data = $req->all();
+        $<?=$name?> = new <?=$fileName?>;
+        $<?=$name?>->where($id)
+            ->fill($data)
+            ->update();
+        message('数据更改成功',1,Route('<?=$name?>.index'),3);
+        
     }
 
     // 搜索

@@ -164,8 +164,10 @@ class Model {
     }
 
     function delete() {
-
-        return $this->exec_delete($condition);
+        // var_dump($this->where);die;
+        // var_dump($this->whereKeys);die;
+        // var_dump($this->whereVals);die;
+        return $this->exec_delete($this->where);
     }
 
     /**
@@ -336,32 +338,30 @@ class Model {
         return self::exec($sql, $data);
     }
 
-    function exec_delete(array $condition) {
+    function exec_delete($where) {
 
-        $wherekeys = array_keys($condition); // 条件字段
-        $wherevals = array_values($condition); // 条件值
-        // dd($condition);
-        $where = '';
-        foreach ($wherekeys as $key => $value) {
-            if ($key == end($wherekeys))
-                $where .= "`$value`=? ";
-            else
-                $where .= "`$value`=?, ";
-        }
-        // dd($where);
-        $data = [];
-        foreach ($wherevals as $key => $value) {
-            // array_unshift($data,$value);
-            $data[] = $value;
-        }
+        // $wherekeys = array_keys($condition); // 条件字段
+        // $wherevals = array_values($condition); // 条件值
+        // // dd($condition);
+        // $where = '';
+        // foreach ($wherekeys as $key => $value) {
+        //     if ($key == end($wherekeys))
+        //         $where .= "`$value`=? ";
+        //     else
+        //         $where .= "`$value`=?, ";
+        // }
+        // // dd($where);
+        // $data = [];
+        // foreach ($wherevals as $key => $value) {
+        //     // array_unshift($data,$value);
+        //     $data[] = $value;
+        // }
 
         $table = $this->table();
         // dd($table);
         $table = "`$table`";
-        $sql = "DELETE FROM {$table} WHERE {$where}";
-        // dd($sql);
-        // dd($data);
-        return self::exec($sql, $data);
+        $sql = "DELETE FROM {$table} {$where}";
+        return self::exec($sql, $this->whereVals);
     }
 
     function exec_select() {
