@@ -4,6 +4,7 @@ namespace core;
 
 use core\Request;
 use core\ReflexMethod; // 自定义 反射类
+use core\reflexs\ReflexDispatchMethod; // 自定义 反射类
 
 class Route {
 
@@ -64,7 +65,7 @@ class Route {
                     $controller = new $value['controller'];
                     $ac = $value['action'];
 
-                    $ref = new ReflexMethod ($controller,$ac); // 反射 方法
+                    $ref = new ReflexDispatchMethod ($controller,$ac); // 反射 方法
                     $ref->invokeArgs($controller);
                     
                     return;
@@ -110,7 +111,7 @@ class Route {
                     $controller = new $value['controller'];
                     $ac = $value['action'];
 
-                    $ref = new ReflexMethod ($controller,$ac); // 反射 方法
+                    $ref = new ReflexDispatchMethod ($controller,$ac); // 反射 方法
                     $ref->invokeArgs($controller);
                     // die("<br>END");
                     return;
