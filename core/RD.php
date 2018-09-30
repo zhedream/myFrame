@@ -3,7 +3,6 @@
 namespace core;
 
 use \Predis\Client as redis;
-use app\Models\Article;
 
 RD::getRD();
 
@@ -35,6 +34,7 @@ class RD {
                 echo "_redis连接失败！" . $e->getMessage();
             }
         }
+        return 1;
     }
 
     /**
