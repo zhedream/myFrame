@@ -36,7 +36,7 @@ class <?=$fileName?>Controller extends Controller {
         $<?=$name?> = new <?=$fileName?>;
         $<?=$name?>->where($id)
             ->delete();
-        message('数据删除成功',1,Route('user.index'),3);
+        message('数据删除成功',1,Route('<?=$name?>.index'),3);
     }
     
     // 显示 修改页

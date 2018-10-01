@@ -19,3 +19,12 @@ Route::get('/user/del/{id}','app/controllers/UserController@del')->name('user.de
 Route::get('/user/mod/{id}','app/controllers/UserController@mod')->name('user.mod'); // 显示 修改
 Route::post('/user/update/{id}','app/controllers/UserController@update')->name('user.update'); // 修改
         
+// category
+Route::get('/category/index','app/controllers/CategoryController@index')->name('category.index'); // 显示列表
+Route::get('/category/search','app/controllers/CategoryController@search')->name('category.search'); // 搜索
+Route::get('/category/add','app/controllers/CategoryController@add')->name('category.add'); // 显示 添加
+Route::post('/category/insert','app/controllers/CategoryController@insert')->name('category.insert'); // 添加
+Route::get('/category/del/{id}','app/controllers/CategoryController@del')->name('category.del'); // 删除
+Route::get('/category/mod/{id}','app/controllers/CategoryController@mod')->name('category.mod'); // 显示 修改
+Route::post('/category/update/{id}','app/controllers/CategoryController@update')->name('category.update'); // 修改
+        

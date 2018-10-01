@@ -65,7 +65,6 @@ class Request {
             $posts = self::$posts;
             $gets = self::$gets;
             $all = array_merge_recursive($gets, $posts);
-            // dd($all);
             return ($all);
         } else if (Route::$method == 'GET')
             return (self::$gets);
@@ -96,10 +95,10 @@ class Request {
 
         if (Route::$method == 'POST') {
 
-            if (self::$posts[$name])
+            if (isset(self::$posts[$name]))
                 return self::$posts[$name];
-            else if (self::$gets[$name])
-                return (self::$gets[$name]);
+            else if (isset(self::$gets[$name]))
+                return self::$gets[$name];
 
         } else if (Route::$method == 'GET') {
 

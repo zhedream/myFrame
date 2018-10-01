@@ -36,6 +36,20 @@ class Model {
         $this->table = $this->table();
     }
 
+    /**
+     * @return null
+     */
+    public function getFillable() {
+        return $this->fillable;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFillData() {
+        return $this->fillData;
+    }
+
     // 钩子 函数
     protected function _before_write() {
     }
