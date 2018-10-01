@@ -40,27 +40,10 @@ class Request {
 
     public static function run() {
         self::getRouteVar();
+        self::getRawData();
     }
 
-    public static function getRouteVar() {
 
-        if (self::$routeVar)
-            return self::$routeVar;
-        else {
-            $path = Route::$currentRouteInfo;
-            $matches2 = Route::$currentRouteVar;
-            self::$gets = $_GET;
-            self::$posts = $_POST;
-            preg_match_all('/\{(.*)\}/U', $path['url'], $matches);
-            foreach ($matches[1] as $key => $value) {
-                self::$routeVar[$value] = $matches2[$key + 1];
-            }
-            return self::$routeVar;
-        }
-
-
-
-    }
 
     // 钩子 函数
     protected function _before_all() {
@@ -88,6 +71,24 @@ class Request {
             return (self::$gets);
 
         $this->_after_all();
+    }
+
+    public static function getRouteVar() {
+
+        if (self::$routeVar)
+            return self::$routeVar;
+        else {
+            $path = Route::$currentRouteInfo;
+            $matches2 = Route::$currentRouteVar;
+            self::$gets = $_GET;
+            self::$posts = $_POST;
+            preg_match_all('/\{(.*)\}/U', $path['url'], $matches);
+            foreach ($matches[1] as $key => $value) {
+                self::$routeVar[$value] = $matches2[$key + 1];
+            }
+            return self::$routeVar;
+        }
+
     }
 
 

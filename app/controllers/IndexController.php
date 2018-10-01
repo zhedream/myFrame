@@ -13,7 +13,7 @@ class IndexController extends Controller {
     function index() {
         $index = new Index;
         $info = $index->welcome();
-        view('index.index',['info'=>$info]);
+        view('index.index');
     }
 
     function top () {
@@ -22,32 +22,38 @@ class IndexController extends Controller {
     }
 
     function test() {
-        $index = new User;
-        $G = new GoodsAttribute;
 
-        $data = $G->whereIn('goods_id',[1])
-            ->toSql();
+        $user = new User;
+        
+        $user->fill(['email'=>'123','name'=>'河是德国','money'=>0,'avatar'=>'asdf','password'=>md5('123123')]);
+
+        $user->dd = 1;
+        // dd($user->dd);
+        // var_dump($user);die;
+        // $data = $user->whereIn('id',[1])
+            // ->toSql();
             // ->get();
-        dd($data);
+        // dd($data);die;
         $data = [
             'asd'=>123,
         ];
-        // $data =  $index->findOne('select * from users where id=?',[1]);
+        // $data =  $user->findOne('select * from users where id=?',[1]);
         // dd($data);
-        // $index->otest(['id','<=',2]);
+        // $user->otest(['id','<=',2]);
         // dd(1,false);
-        $data = $index->where(['id'=>1])
-                ->where('display2',2)
-                ->where('display3','<=',3)
-                ->where('display3','LIKE',"'%title%'")
-                ->orWhere(['a'=>4])
-                ->orWhere('b','NOT LIKE',"'%asd%'")
-                ->orWhere('c',6)
-                ->whereIn('d',[6,99],'not')
-                ->whereIn('id',function($s){
-                    // 'select `user_id` from users'
-                    return $s->where('display','>=',2)->orWhereIn('id',[123,2],true);
-                })
+        $data = $user
+                // ->where(['id'=>1])
+                // ->where('money','>=',3)
+                ->Where('name','LIKE',"%liu%")
+                // ->where('display3','LIKE',"'%title%'")
+                // ->orWhere(['a'=>4])
+                // ->orWhere('b','NOT LIKE',"'%asd%'")
+                // ->orWhere('c',6)
+                // ->whereIn('d',[6,99],'not')
+                // ->whereIn('id',function($s){
+                //     // 'select `user_id` from users'
+                //     return $s->where('display','>=',2)->orWhereIn('id',[123,2],true);
+                // })
                 // ->whereIn('d',function(){})
                 // ->toSql();
                 ->get();

@@ -41,12 +41,12 @@ class Route {
         self::$method = $_SERVER['REQUEST_METHOD'];
         self::$pathinfo = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';
 
-        echo '<hr>';
-        echo $_SERVER['PATH_INFO'];
-        echo '<hr>';
-        echo self::$method;
-        echo '<hr>';
+        // echo '<hr>';
         // echo self::$pathinfo;
+        // echo '<hr>';
+        // echo self::$method;
+        // echo '<hr>';
+        // echo $_SERVER['PATH_INFO'];
         // echo '<hr>';
 
         if (self::$method == 'GET') {
