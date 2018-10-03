@@ -1,10 +1,10 @@
 <?php
 
-namespace Core;
+namespace core;
 
 use \PDO;
-use Core\DB;
-use Core\RD;
+use core\DB;
+use core\RD;
 
 Model::ModelRun();
 

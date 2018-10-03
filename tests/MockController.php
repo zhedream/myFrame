@@ -2,9 +2,9 @@
 
 namespace app\controllers;
 
-use Core\Controller;
+use core\Controller;
 use core\Request;
-use Core\DB;
+use core\DB;
 use app\Models\Test;
 use app\Models\Heart;
 use app\Models\Comment;

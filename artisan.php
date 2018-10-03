@@ -2,8 +2,8 @@
 define('ROOT', dirname(__FILE__) . '/'); // 根目录
 define("ACCESS", true);// 入口标识
 // var_dump(ROOT);die;
-require_once ROOT . "Core/Loader.php";
-require_once ROOT . "Core/CoreFn.php";
+require_once ROOT . "core/Loader.php";
+require_once ROOT . "core/CoreFn.php";
 core\App::initDir();
 if (php_sapi_name() != 'cli')
     die('使用错误');

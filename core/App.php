@@ -4,7 +4,7 @@ if (!defined("ACCESS")) {
     echo "未经过 主入口<br>";
     header("location:../index.php");
 }
-require_once ROOT . "Core/Loader.php";
+require_once ROOT . "core/Loader.php";
 
 use core\Route;
 

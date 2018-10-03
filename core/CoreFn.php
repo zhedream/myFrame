@@ -135,7 +135,7 @@ function hpe($content) {
     static $purifier = null;
     if ($purifier === null) {
         $config = \HTMLPurifier_Config::createDefault();
-        $config->set('Core.Encoding', 'utf-8');
+        $config->set('core.Encoding', 'utf-8');
         $config->set('HTML.Doctype', 'HTML 4.01 Transitional');
         $config->set('Cache.SerializerPath', ROOT . 'cache');
         $config->set('HTML.Allowed', 'div,b,strong,i,em,a[href|title],ul,ol,ol[start],li,p[style],br,span[style],img[width|height|alt|src],*[style|class],pre,hr,code,h2,h3,h4,h5,h6,blockquote,del,table,thead,tbody,tr,th,td');

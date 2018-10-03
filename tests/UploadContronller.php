@@ -2,9 +2,9 @@
 
 namespace app\controllers;
 
-use Core\Controller;
+use core\Controller;
 use core\Request;
-use Core\DB;
+use core\DB;
 use libs\Upload;
 
 class UploadContronller extends Controller {

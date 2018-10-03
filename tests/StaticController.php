@@ -2,10 +2,10 @@
 
 namespace app\controllers;
 
-use Core\Controller;
+use core\Controller;
 use core\Request;
-use Core\DB;
-use Core\RD;
+use core\DB;
+use core\RD;
 use app\Models\Temp;
 
 class StaticController extends Controller {

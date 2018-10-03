@@ -2,8 +2,8 @@
 
 namespace app\controllers;
 
-use Core\DB;
-use Core\RD;
+use core\DB;
+use core\RD;
 use libs\Log;
 use libs\Mail;
 

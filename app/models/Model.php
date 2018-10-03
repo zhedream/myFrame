@@ -2,7 +2,7 @@
 
 namespace app\Models;
 
-use Core\Model as BashModel;
+use core\Model as BashModel;
 
 class Model extends BashModel {
 
