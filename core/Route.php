@@ -3,6 +3,7 @@
 namespace core;
 
 use core\Request;
+use core\Middleware; // 中间件
 use core\ReflexMethod; // 自定义 反射类
 use core\reflexs\ReflexDispatchMethod; // 自定义 反射类
 
@@ -35,6 +36,8 @@ class Route {
     static $currentRouteVar = []; //
 
     static $routeName; // 请求路由 名称
+
+    static $middlewareNames = [];
 
     static function initDispatch() {
         // goto a; // 原始路由
@@ -129,47 +132,6 @@ class Route {
     }
 
     /**
-     * 获得类的方法参数，只获得有类型的参数
-     * @param  [type] $className   [description]
-     * @param  [type] $methodsName [description]
-     * @return [type]              [description]
-     */
-    protected static function getMethodParams($className, $methodsName = 'insert') {
-
-        // 通过反射获得该类
-        $class = new \ReflectionClass($className);
-        $paramArr = []; // 记录参数，和参数类型
-
-        // 判断该类是否有构造函数
-        if ($class->hasMethod($methodsName)) {
-            // 获得构造函数
-            $construct = $class->getMethod($methodsName);
-
-            // 判断构造函数是否有参数
-            $params = $construct->getParameters();
-
-            if (count($params) > 0) {
-
-                // 判断参数类型
-                foreach ($params as $key => $param) {
-
-                    if ($paramClass = $param->getClass()) {
-
-                        // 获得参数类型名称
-                        $paramClassName = $paramClass->getName();
-
-                        // 获得参数类型
-                        $args = self::getMethodParams($paramClassName);
-                        $paramArr[] = (new \ReflectionClass($paramClass->getName()))->newInstanceArgs($args);
-                    }
-                }
-            }
-        }
-
-        return $paramArr;
-    }
-
-    /**
      * 注册 get 路由
      * 1. 地址
      * 2. 分发控制器方法
@@ -208,6 +170,7 @@ class Route {
             'controller' => $controller,
             'action' => $action,
             'patt' => $patt,
+            'middlewares'=>self::$middlewareNames,
         ];
         // return;
         // echo "<hr>";
@@ -261,6 +224,7 @@ class Route {
             'controller' => $controller,
             'action' => $action,
             'patt' => $patt,
+            'middlewares'=>self::$middlewareNames,
         ];
         // return;
         // echo "<hr>";
@@ -292,7 +256,7 @@ class Route {
     function name($name) {
         
         if(in_array($name,array_keys(self::$map))){
-            throwE('路由名称重复','name');
+            throwE($name.':路由名称重复','name');
         }
 
         self::$map[$name] = self::$lastUrl;
@@ -339,6 +303,61 @@ class Route {
      */
     function getRouteName(){
         var_dump(self::$map);
+    }
+
+    /**
+     * 执行中间件 处理请求
+     */
+    function disMiddleware(){
+
+    }
+
+    /**
+     * 处理数据
+     */
+    function disRequest(){
+
+    }
+
+    /**
+     * 注册路由中间件
+     */
+    public static function middleware(){
+
+        $args = func_get_args();
+        // dd($args);
+        $num = func_num_args();
+        if ($num == 1) {
+
+            if (is_string($args[0]))
+                return call_user_func_array([__NAMESPACE__ . '\Route', "middlewareSingle"], $args);
+        }else if($num == 2){
+
+            if (is_array($args[0]) && is_callable($args[1]))
+                return call_user_func_array([__NAMESPACE__ . '\Route', "middlewareMult"], $args);
+        }
+
+    }
+
+    static function middlewareSingle($name){
+        $mid = new Middleware;
+        // echo '123';die;
+        if (self::$lastUrl['method'] == 'get'){
+            $index = count(self::$gets) - 1;
+            self::$gets[$index]['middlewares'][] = $name;
+        }
+        else{
+            $index = count(self::$posts) - 1;
+            self::$posts[$index]['middlewares'][] = $name;
+        }
+        return self::new();
+    }
+
+    static function middlewareMult($names,$call){
+        $mid = new Middleware;
+        self::$middlewareNames = $names;
+        $call();
+        self::$middlewareNames = [];
     }
 
 

@@ -12,6 +12,7 @@ class Request {
     protected static $routeVar = [];
     protected static $posts = [];
     protected static $gets = [];
+    protected static $allData; // 数据
 
     public $test = "这是Request 测试变量";
 
@@ -26,6 +27,7 @@ class Request {
     }
 
     /**
+     * 获取原始数据
      * @return mixed
      */
     public static function getRawData() {
@@ -41,8 +43,8 @@ class Request {
     public static function run() {
         self::getRouteVar();
         self::getRawData();
+        self::getAll();
     }
-
 
 
     // 钩子 函数
@@ -59,19 +61,33 @@ class Request {
     }
 
     function all() {
-        $this->_before_all();
-        // dd(Route::$method);
+        return self::$allData;
+    }
+
+    /**
+     * 获取数据 GET POST
+     */
+    public static function getAll() {
+        // self::_before_all();
+        
+        self::$gets = $_GET;
+        self::$posts = $_POST;
+        
         if (Route::$method == 'POST') {
             $posts = self::$posts;
             $gets = self::$gets;
             $all = array_merge_recursive($gets, $posts);
-            return ($all);
+            self::$allData = $all;
         } else if (Route::$method == 'GET')
-            return (self::$gets);
+        self::$allData = self::$gets;
 
-        $this->_after_all();
+        // self::_after_all();
     }
 
+    /**
+     * 获取路由参数
+     * @return array
+     */
     public static function getRouteVar() {
 
         if (self::$routeVar)
@@ -79,8 +95,6 @@ class Request {
         else {
             $path = Route::$currentRouteInfo;
             $matches2 = Route::$currentRouteVar;
-            self::$gets = $_GET;
-            self::$posts = $_POST;
             preg_match_all('/\{(.*)\}/U', $path['url'], $matches);
             foreach ($matches[1] as $key => $value) {
                 self::$routeVar[$value] = $matches2[$key + 1];
@@ -108,18 +122,17 @@ class Request {
     }
 
 
-
     /**
      * @return array
      */
-    public static function getPosts() {
+    public function getPosts() {
         return self::$posts;
     }
 
     /**
      * @return array
      */
-    public static function getGets() {
+    public function getGets() {
         return self::$gets;
     }
 
