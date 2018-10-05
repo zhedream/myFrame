@@ -26,18 +26,18 @@ class Route {
     static $csrfPass = ['alipay.notify', 'wxpay.notify','user.doavatar']; //csrf 白名单
     static $method; // 请求方式
     static $pathinfo; // 请求路径
-    static $map = []; // 名称映射
-
+    
     static $lastUrl; // 命名中转
-    static $gets = []; //保存GET 路由
     static $posts = [];
+    static $gets = []; //保存GET 路由
+    static $map = []; // 名称映射
 
     static $currentRouteInfo = []; //
     static $currentRouteVar = []; //
 
     static $routeName; // 请求路由 名称
 
-    static $middlewareNames = [];
+    static $middlewareNames = []; // 注册的中间件
 
     static function initDispatch() {
         // goto a; // 原始路由
@@ -309,7 +309,8 @@ class Route {
      * 执行中间件 处理请求
      */
     function disMiddleware(){
-
+        $middleware = new core\Middleware;
+        $middleware->run();
     }
 
     /**
@@ -358,6 +359,34 @@ class Route {
         self::$middlewareNames = $names;
         $call();
         self::$middlewareNames = [];
+    }
+
+    // web 缓存 map gets post
+    static function webInit(){
+        
+        $md5 = md5_file(ROOT."route/web.php");
+        
+        // $data = file_get_contents(ROOT."cache/webChache");
+        $data = RD::chache('webChache',3600,function()use($md5){
+            return array_merge_recursive(['md5'=>$md5],['map'=>self::$map],['gets'=>self::$gets],['posts'=>self::$posts]);
+        });
+        if($data){
+            $data = json_decode($data,true);
+            if($md5==$data['md5']){
+                
+                self::$map = $data['map'];
+                self::$gets = $data['gets'];
+                self::$posts = $data['gets'];
+                return true;
+            }
+        }
+        require_once ROOT . "/route/web.php"; // 注册路由
+        $data = array_merge_recursive(['md5'=>$md5],['map'=>self::$map],['gets'=>self::$gets],['posts'=>self::$posts]);
+        // file_put_contents(ROOT."cache/webChache",json_encode($data));
+        $data = RD::chache('webChache',3600,function()use($md5){
+            return array_merge_recursive(['md5'=>$md5],['map'=>self::$map],['gets'=>self::$gets],['posts'=>self::$posts]);
+        },true);
+
     }
 
 
