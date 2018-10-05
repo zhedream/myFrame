@@ -41,6 +41,7 @@ class Request {
     }
 
     public static function run() {
+        // dd($_SERVER);
         self::getRouteVar();
         self::getRawData();
         self::getAll();
@@ -69,6 +70,10 @@ class Request {
      */
     public static function getAll() {
         // self::_before_all();
+
+        if(self::$allData){
+            return self::$allData;
+        }
         
         self::$gets = $_GET;
         self::$posts = $_POST;

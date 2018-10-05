@@ -74,6 +74,7 @@ class RD {
         }
 //        dd($key);
         $data = $call();
+        // dd($data);
         if($data){
             $str = json_encode($data);
             self::$_redis->setex($key, $minutes, $str);

@@ -21,6 +21,7 @@ class App {
         self::initCharset();
         self::initDir();
         self::initError();
+        Route::webInit();
         Route::initDispatch();
     }
 
