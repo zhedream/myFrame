@@ -167,7 +167,7 @@ function csrf_field() {
  * 1. 异常信息
  * 2. 抛出异常的函数名
  */
-function throwE($str, $fn = null) {
+function throwE($str, $fn = 'throwE') {
     ob_clean();
     // 所有调用点
     $AllCall = debug_backtrace();

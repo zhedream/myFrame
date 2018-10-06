@@ -13,6 +13,9 @@ class Request {
     protected static $posts = [];
     protected static $gets = [];
     protected static $allData; // 数据
+    protected static $disRequest; // 控制器 注入的请求类
+
+    static $currentRouteInfo;
 
     public $test = "这是Request 测试变量";
 
@@ -21,7 +24,7 @@ class Request {
 
         // throwE('qwe');
         $a = self::getRawData();
-
+        self::$currentRouteInfo = Route::$currentRouteInfo;
         // dd(self::$routeVar);
         $this->_after_construct();
     }
@@ -45,6 +48,27 @@ class Request {
         self::getRouteVar();
         self::getRawData();
         self::getAll();
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getDisRequest() {
+        return self::$disRequest;
+    }
+
+    /**
+     * @param mixed $disRequest
+     */
+    public static function setDisRequest($disRequest) {
+        self::$disRequest = $disRequest;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCurrentRouteInfo(): array {
+        return self::$currentRouteInfo;
     }
 
 

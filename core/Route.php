@@ -5,7 +5,7 @@ namespace core;
 use core\Request;
 use core\Middleware; // 中间件
 use core\ReflexMethod; // 自定义 反射类
-use core\reflexs\ReflexDispatchMethod; // 自定义 反射类
+use core\Reflexs\ReflexDispatchMethod; // 自定义 反射类
 
 class Route {
 
@@ -49,11 +49,12 @@ class Route {
         $controller = new $controller;
         
         $ref = new ReflexDispatchMethod ($controller,$ac); // 反射 方法
-        $request = function()use($ref,$controller){
+        // dd($ref);
+        $app = function()use($ref,$controller){
             $ref->invokeArgs($controller);
         };
 
-        self::disMiddleware($request);
+        self::disMiddleware($app);
 
     }
 
@@ -69,7 +70,7 @@ class Route {
         // echo '<hr>';
 
         if (self::$method == 'GET') {
-            // dd(Route::$gets);
+            // dd(self::$gets);
             foreach (self::$gets as $key => $value) {
 
                 
@@ -359,16 +360,15 @@ class Route {
                 // dd(self::$gets);
                 return true;
             }
-        }else{
-            // echo '22';
-            require_once ROOT . "/route/web.php"; // 注册路由
-            // $data = array_merge_recursive(['md5'=>$md5],['map'=>self::$map],['gets'=>self::$gets],['posts'=>self::$posts]);
-            // file_put_contents(ROOT."cache/webChache",json_encode($data));
-            $data = RD::chache('webChache',3600,function()use($md5){
-                return array_merge_recursive(['md5'=>$md5],['map'=>self::$map],['gets'=>self::$gets],['posts'=>self::$posts]);
-            },true);
-
         }
+
+        // echo '22';
+        require_once ROOT . "/route/web.php"; // 注册路由
+        // $data = array_merge_recursive(['md5'=>$md5],['map'=>self::$map],['gets'=>self::$gets],['posts'=>self::$posts]);
+        // file_put_contents(ROOT."cache/webChache",json_encode($data));
+        $data = RD::chache('webChache',3600,function()use($md5){
+            return array_merge_recursive(['md5'=>$md5],['map'=>self::$map],['gets'=>self::$gets],['posts'=>self::$posts]);
+        },true);
 
         // die;
     }

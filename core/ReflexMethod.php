@@ -21,6 +21,7 @@ class ReflexMethod extends ReflectionMethod {
         parent::__construct($class, $name);
         $this->params = $this->getParameters();
         $this->analysis();
+        $this->_after_construct();
     }
 
     private function analysis() {
@@ -31,12 +32,16 @@ class ReflexMethod extends ReflectionMethod {
             $typeName = null;
             if ($value->hasType()) {
                 $typeName = $value->getType()->getName();
+                $this->_after_analysis_hasType($typeName);
+                // dd($typeName);
             }
             $this->paramNames[$key] = [
                 'position' => $position,
                 'typeName' => $typeName
             ];
         }
+
+        $this->_after_analysis();
     }
 
     /**
@@ -44,6 +49,20 @@ class ReflexMethod extends ReflectionMethod {
      * @param $args
      */
     protected function _before_invokeArgs(&$args){
+    }
+
+    /**
+     * 构造后钩子
+     */
+    protected function _after_construct(){
+    }
+
+    /**
+     * 存在参数类型 钩子
+     */
+    protected function _after_analysis_hasType($typeName){
+    }
+    protected function _after_analysis(){
     }
 
     function invokeArgs($object, array $args = []) {
