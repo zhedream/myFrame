@@ -48,8 +48,11 @@ class ReflexMethod extends ReflectionMethod {
 
     function invokeArgs($object, array $args = []) {
 
-//        dd($args);
-//        var_dump($this->paramNames);die;
+        // dd($args);
+        // var_dump($this->paramNames);die;
+        if(is_string($object)){
+            $object = new $object;
+        }
         $this->_before_invokeArgs($args);
         parent::invokeArgs($object, $args);
     }

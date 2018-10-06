@@ -44,91 +44,66 @@ class Route {
         self::$method = $_SERVER['REQUEST_METHOD'];
         self::$pathinfo = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';
 
+        list($controller,$ac) = self::getDispatch();
+        // dd($controller);
+        $controller = new $controller;
+        
+        $ref = new ReflexDispatchMethod ($controller,$ac); // 反射 方法
+        $request = function()use($ref,$controller){
+            $ref->invokeArgs($controller);
+        };
+
+        self::disMiddleware($request);
+
+    }
+
+    /**
+     * 获取 对象 与 方法
+     */
+    static function getDispatch(){
+
         // echo '<hr>';
         // echo self::$pathinfo;
         // echo '<hr>';
         // echo self::$method;
         // echo '<hr>';
-        // echo $_SERVER['PATH_INFO'];
-        // echo '<hr>';
 
         if (self::$method == 'GET') {
+            // dd(Route::$gets);
             foreach (self::$gets as $key => $value) {
 
+                
                 $patt = "/" . $value['patt'] . "/";
                 // preg_match()
                 $isMatched = preg_match($patt, self::$pathinfo, $matches);
-                // var_dump($matches);die;
-                // dd($isMatched);
                 if ($isMatched) {
                     self::$currentRouteInfo = $value; // 路由信息
                     self::$currentRouteVar = $matches;// 路由变量
                     self::$routeName = isset($value['name']) ? $value['name'] : null;
-                    // echo "<hr>".self::$pathinfo."该路由为GET注册路由,控制器{$value['controller']},方法{$value['action']}, 正则{$value['patt']} <hr>";
-                    $controller = new $value['controller'];
-                    $ac = $value['action'];
 
-                    $ref = new ReflexDispatchMethod ($controller,$ac); // 反射 方法
-                    $ref->invokeArgs($controller);
-                    
-                    return;
+                    return [$value['controller'],$value['action']];
                 }
             }
         } else if (self::$method == 'POST') {
-            // var_dump(self::$pathinfo);die;
-            
 
             foreach (self::$posts as $key => $value) {
 
                 $patt = "/" . $value['patt'] . "/";
-                // preg_match()
                 $isMatched = preg_match($patt, self::$pathinfo, $matches);
                 if ($isMatched) {
                     // var_dump($value,$matches);die;
                     self::$currentRouteInfo = $value; // 路由信息
                     self::$currentRouteVar = $matches;// 路由变量
                     self::$routeName = isset($value['name']) ? $value['name'] : null; // 路由名
-                    // echo "<hr>".self::$pathinfo."该路由为POST注册路由,控制器{$value['controller']},方法{$value['action']}, 正则{$value['patt']} ,路由名称 {$value['name']} <hr>";
-                    // die;
-
-                    if (!in_array(self::$routeName, self::$csrfPass)) {
-                        if (!isset($_POST['_token'])) {
-                            echo json_encode([
-                                'err' => 007,
-                                'msg' => '请求无效,无令牌'
-                            ]);
-                            return;
-                        }
-        
-                        if ($_POST['_token'] != $_SESSION['_token']) {
-                            // var_dump($_SESSION['_token']);
-                            echo json_encode([
-                                'session' => $_SESSION,
-                                'err' => 007,
-                                'msg' => '请求超时,令牌过期'
-                            ]);
-                            return;
-                        }
-                    }
-                    
-                    $controller = new $value['controller'];
-                    $ac = $value['action'];
-
-                    $ref = new ReflexDispatchMethod ($controller,$ac); // 反射 方法
-                    $ref->invokeArgs($controller);
-                    // die("<br>END");
-                    return;
+                
+                    return [$value['controller'],$value['action']];
                 }
             }
 
         }
 
         view("error");
-
-        die('页面不见了');
-        a:;
-        echo "goto";
-
+        die;
     }
 
     /**
@@ -308,9 +283,9 @@ class Route {
     /**
      * 执行中间件 处理请求
      */
-    function disMiddleware(){
-        $middleware = new core\Middleware;
-        $middleware->run();
+    static function disMiddleware($app){
+        $middleware = new Middleware;
+        $middleware->run($app);
     }
 
     /**
@@ -362,31 +337,40 @@ class Route {
     }
 
     // web 缓存 map gets post
-    static function webInit(){
+    public static function webInit(){
         
         $md5 = md5_file(ROOT."route/web.php");
         
         // $data = file_get_contents(ROOT."cache/webChache");
         $data = RD::chache('webChache',3600,function()use($md5){
+            require_once ROOT . "/route/web.php"; // 注册路由 过期重新注册路由
             return array_merge_recursive(['md5'=>$md5],['map'=>self::$map],['gets'=>self::$gets],['posts'=>self::$posts]);
         });
         if($data){
-            $data = json_decode($data,true);
+            // var_dump($data);
+            // echo '11';
+            // $data = json_decode($data,true);
             if($md5==$data['md5']){
-                
+                // dd($data);
                 self::$map = $data['map'];
                 self::$gets = $data['gets'];
-                self::$posts = $data['gets'];
+                self::$posts = $data['posts'];
+                // var_dump(self::$gets,$data['gets']); die;
+                // dd(self::$gets);
                 return true;
             }
-        }
-        require_once ROOT . "/route/web.php"; // 注册路由
-        $data = array_merge_recursive(['md5'=>$md5],['map'=>self::$map],['gets'=>self::$gets],['posts'=>self::$posts]);
-        // file_put_contents(ROOT."cache/webChache",json_encode($data));
-        $data = RD::chache('webChache',3600,function()use($md5){
-            return array_merge_recursive(['md5'=>$md5],['map'=>self::$map],['gets'=>self::$gets],['posts'=>self::$posts]);
-        },true);
+        }else{
+            // echo '22';
+            require_once ROOT . "/route/web.php"; // 注册路由
+            // $data = array_merge_recursive(['md5'=>$md5],['map'=>self::$map],['gets'=>self::$gets],['posts'=>self::$posts]);
+            // file_put_contents(ROOT."cache/webChache",json_encode($data));
+            $data = RD::chache('webChache',3600,function()use($md5){
+                return array_merge_recursive(['md5'=>$md5],['map'=>self::$map],['gets'=>self::$gets],['posts'=>self::$posts]);
+            },true);
 
+        }
+
+        // die;
     }
 
 
