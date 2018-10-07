@@ -11,7 +11,7 @@ class ReflexDispatchMethod extends ReflexMethod
      * 传入路由参数 与 依赖注入
      * @param $args
      */
-    public $injection;
+    public $injection = false;
     
     protected function _before_invokeArgs(&$args) {
 
@@ -45,8 +45,11 @@ class ReflexDispatchMethod extends ReflexMethod
 
     // analysis 解决 二次钩子 无依赖注入 情况
     protected function _after_analysis(){
-        if(!$this->$injection)
-        \core\Request::setDisRequest(new \core\Request);
+        if($this->$injection === false){
+
+            // dd($this->injection); //  !$this->$injection 这是什么BUG
+            \core\Request::setDisRequest(new \core\Request);
+        }
     }
 
 

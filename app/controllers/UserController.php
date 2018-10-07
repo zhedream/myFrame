@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use core\Request;
+use app\Requests\UserRequest;
 use app\models\User;
 
 class UserController extends Controller {
@@ -50,14 +51,16 @@ class UserController extends Controller {
     }
 
     // 修改
-    function update(Request $req,$id) {
-        
+    function update(UserRequest $req,$id) {
+        // dd($req);
         $data = $req->all();
-        $user = new User;
-        $user->where($id)
-            ->fill($data)
-            ->update();
-        message('数据更改成功',1,Route('user.index'),3);
+        var_dump($data,$id);
+        // die;
+        // $user = new User;
+        // $user->where($id)
+        //     ->fill($data)
+        //     ->update();
+        // message('数据更改成功',1,Route('user.index'),3);
         
     }
 

@@ -13,20 +13,21 @@ class UserRequest extends FromRequest
     public function rules(){
 
         return [
-            'username'=>[
-                'required',
-                function($val){
-
-                    return true;
-                }
-            ],
             'email'=>[
                 'required',
                 function($val){
 
                     return true;
                 }
-            ]
+            ],
+            'password'=>[
+                'required',
+                function($val){
+
+                    return false;
+                }
+            ],
+            
         ];
     }
 

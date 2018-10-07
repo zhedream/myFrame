@@ -71,6 +71,10 @@ class Request {
         return self::$currentRouteInfo;
     }
 
+    public function getMethod(){
+        return Route::$method;
+    }
+
 
     // 钩子 函数
     protected function _before_all() {

@@ -13,9 +13,12 @@ class CheckLogin
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request,Closure $next)
-    {   
-        echo '前置中间件:检查登陆状态<br>';
+    public function handle($request,Closure $next){   
+        if(!$_SESSION['user_id']){
+            echo '前置中间件:未登陆';
+            // return message('请重新登陆',1,'/');
+        }else
+            echo '前置中间件:已登陆';
         return $next();
     }
 }
