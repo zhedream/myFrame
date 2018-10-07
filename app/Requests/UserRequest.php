@@ -16,6 +16,7 @@ class UserRequest extends FromRequest
             'username'=>[
                 'required',
                 function($val){
+
                     return true;
                 }
             ],

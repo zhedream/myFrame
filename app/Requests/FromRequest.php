@@ -6,6 +6,7 @@ use core\Request;
 
 class FromRequest extends Request
 {
+    
     public function authorize(){
         return false;
     }
@@ -14,10 +15,6 @@ class FromRequest extends Request
     }
 
     public function message(){
-    }
-
-    public function _before_construct(){
-
     }
 
 
