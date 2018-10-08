@@ -45,7 +45,7 @@ class ReflexDispatchMethod extends ReflexMethod
 
     // analysis 解决 二次钩子 无依赖注入 情况
     protected function _after_analysis(){
-        if($this->$injection === false){
+        if($this->$injection == false){
 
             // dd($this->injection); //  !$this->$injection 这是什么BUG
             \core\Request::setDisRequest(new \core\Request);
