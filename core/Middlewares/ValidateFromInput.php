@@ -17,6 +17,7 @@ class ValidateFromInput
 
         $ex =  method_exists($request,'authorize');
         $ex2 =  method_exists($request,'rules');
+        // dd($request);
         if($ex && $ex2){
             echo '前置中间件:需要验证表单<br>';
 
@@ -26,7 +27,7 @@ class ValidateFromInput
                 // dd($rules);
                 foreach ($rules as $key => $val) {
                     // var_dump($request->all());
-                    $tem = $request->$key.lm;
+                    $tem = $request->$key;
                     // echo $tem;
                         // 验证项目
                     foreach ($val as $k => $v) {

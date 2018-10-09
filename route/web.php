@@ -90,3 +90,7 @@ Route::get('/admin/del/{id}','app/controllers/AdminController@del')->name('admin
 Route::get('/admin/mod/{id}','app/controllers/AdminController@mod')->name('admin.mod'); // 显示 修改
 Route::post('/admin/update/{id}','app/controllers/AdminController@update')->name('admin.update'); // 修改
         
+// login
+Route::get('/login/index','app/controllers/LoginController@index')->name('login.index'); // 显示登陆页
+Route::post('/login/login','app/controllers/LoginController@login')->name('login.login'); // 显示登陆页
+        

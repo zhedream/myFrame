@@ -824,7 +824,7 @@ class Model {
             . $this->having
             . $this->orderBy
             . $this->limit;
-//        var_dump($sql,$this->whereVals);die;
+    //    var_dump($sql,$this->whereVals);die;
         return $this->findAll($sql, $this->whereVals);
     }
 
