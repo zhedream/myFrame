@@ -46,7 +46,7 @@ class DB {
     }
 
     // 获取 类DB的 实例化
-    public static function new(){
+    public static function getInstance(){
         if (self::$_instance === NULL){
             self::$_instance = new self;
             return self::$_instance;

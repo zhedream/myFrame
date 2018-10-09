@@ -113,7 +113,7 @@ function routeName() {
  */
 function Route($name, $data = [], $full = false) {
 
-    $router = core\Route::new();
+    $router = core\Route::getInstance();
     return $router->makeUrl($name, $data, $full);
 
 }
@@ -274,7 +274,7 @@ function includeJs($path,$tag = true){
 }
 
 function response(){
-    return Response::new();
+    return Response::getInstance();
 }
 
 

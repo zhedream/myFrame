@@ -13,7 +13,7 @@ class Download{
     private function __clone() {
     }
 
-    public static function new() {
+    public static function getInstance() {
         if (self::$_instance == null) {
             self::$_instance = new self();
             return self::$_instance;

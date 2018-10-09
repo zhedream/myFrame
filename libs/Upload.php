@@ -3,7 +3,7 @@
 namespace libs;
 
 use core\RD;
-//Uploader::new();
+//Uploader::getInstance();
 
 class Upload {
 
@@ -20,7 +20,7 @@ class Upload {
     private function __clone() {
     }
 
-    public static function new() {
+    public static function getInstance() {
         if (self::$_instance == null) {
             self::$_instance = new self();
             return self::$_instance;

@@ -18,7 +18,7 @@ class UploadContronller extends Controller {
 
         // extract($req->all()); // 解压 变量
         $md5 = $_GET['md5'];
-        $u =  Upload::new();
+        $u =  Upload::getInstance();
 
         echo $u->readyfile($md5);
 

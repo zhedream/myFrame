@@ -17,7 +17,7 @@ class Route {
     private function __clone() {
     }
 
-    static function new() {
+    static function getInstance() {
         if (self::$self === null)
             self::$self = new self;
         return self::$self;
@@ -116,7 +116,7 @@ class Route {
      * 2. 分发控制器方法
      */
     static function get($url, $path) {
-        $self = self::new();
+        $self = self::getInstance();
 
         foreach (self::$gets as $key => $value)
             if ($value['url'] == $url)
@@ -177,7 +177,7 @@ class Route {
      * 2. 分发控制器方法
      */
     static function post($url, $path) {
-        $self = self::new();
+        $self = self::getInstance();
         foreach (self::$posts as $key => $value)
             if ($value['url'] == $url)
                 throwE("POST路由地址( {$url} )已存在", 'get');
@@ -253,7 +253,7 @@ class Route {
             self::$gets[count(self::$gets) - 1]['name'] = $name;
         else
             self::$posts[count(self::$posts) - 1]['name'] = $name;
-        return self::new();
+        return self::getInstance();
     }
 
     /**
@@ -340,7 +340,7 @@ class Route {
             $index = count(self::$posts) - 1;
             self::$posts[$index]['middlewares'][] = $name;
         }
-        return self::new();
+        return self::getInstance();
     }
 
     static function middlewareMult($names,$call){
@@ -409,7 +409,7 @@ class Route {
     // 单独设置锁
     static function lockSingle($names){
         
-        return self::new();
+        return self::getInstance();
     }
     // 批量 添加锁
     static function lockMult($call){
@@ -435,7 +435,7 @@ class Route {
         else
             self::$posts[count(self::$posts) - 1]['lockName'] = $name;
 
-        return self::new();
+        return self::getInstance();
     }
 
 

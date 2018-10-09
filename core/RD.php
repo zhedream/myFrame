@@ -46,7 +46,7 @@ class RD {
         return self::$_redis;
     }
 
-    public static function new(){
+    public static function getInstance(){
         if (self::$_instance === NULL){
             self::$_instance = new self;
             return self::$_instance;
