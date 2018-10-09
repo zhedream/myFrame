@@ -58,7 +58,7 @@ Route::get('/$name/index','app/controllers/{$fileName}Controller@index')->name('
 Route::get('/$name/search','app/controllers/{$fileName}Controller@search')->name('$name.search'); // 搜索
 Route::get('/$name/add','app/controllers/{$fileName}Controller@add')->name('$name.add'); // 显示 添加
 Route::post('/$name/insert','app/controllers/{$fileName}Controller@insert')->name('$name.insert'); // 添加
-Route::post('/$name/del/{id}','app/controllers/{$fileName}Controller@del')->name('$name.del'); // 删除
+Route::get('/$name/del/{id}','app/controllers/{$fileName}Controller@del')->name('$name.del'); // 删除 post
 Route::get('/$name/mod/{id}','app/controllers/{$fileName}Controller@mod')->name('$name.mod'); // 显示 修改
 Route::post('/$name/update/{id}','app/controllers/{$fileName}Controller@update')->name('$name.update'); // 修改
         ";
@@ -71,8 +71,11 @@ Route::post('/$name/update/{id}','app/controllers/{$fileName}Controller@update')
         return $this;
     }
 
-    function model($name) {
+    function model($name,$table=null) {
 
+        // var_dump(func_get_args());die;
+        // var_dump($name,$table);die;
+        
         list($namespace,$fileName) = $this->parsePath($name);
         $this->mspace = $namespace;
 
@@ -93,20 +96,35 @@ Route::post('/$name/update/{id}','app/controllers/{$fileName}Controller@update')
                 return "_".strtolower($matches[1]);
             },$class);
             $prefix = $GLOBALS['config']['db']['prefix'];
-            $table = $prefix. $class;
-            $this->table = $table;
+            if($table)
+                $table = $prefix. $table;
+            else
+                $table = $prefix. $class;
 
+            $this->table = $table;
+        $pdo = \core\DB::getDB();
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_SILENT); //ERRMODE_SILENT  ERRMODE_WARNING
+        
         $sql = "SHOW FULL FIELDS FROM ".$this->table;
         // 取出表信息
         $fields = \core\DB::findAll($sql);
-        $this->fields = $fields;
+        if($fields){
 
-        foreach ($fields as  $val) {
-            if($val['Key'] =='PRI' || $val['Field'] =='created_at' || $val['Field'] =='updated_at' )
-                continue;
-            $fillables[] = "'".$val['Field']."'";
+            $this->fields = $fields;
+            foreach ($fields as  $val) {
+                if($val['Key'] =='PRI' || $val['Field'] =='created_at' || $val['Field'] =='updated_at' )
+                    continue;
+                $fillables[] = "'".$val['Field']."'";
+            }
+            $fillableStr = '['.implode(',',$fillables).']';
+            
+        }else{
+            $fields= [];
+            $this->fields = [];
+            $fillableStr = '[]';
         }
-        $fillableStr = '['.implode(',',$fillables).']';
+
+        
 
         $dir = ROOT.$namespace;
         is_dir($dir) OR mkdir($dir, 0777, true);
@@ -178,9 +196,16 @@ Route::post('/$name/update/{id}','app/controllers/{$fileName}Controller@update')
         }
     }
 
-    function group($name) {
+    function group($name,$table=null) {
+
+        // var_dump(func_get_args());die;
+        // var_dump($name,$table);die;
         $this->group = true;
-        $this->model($name);
+        if($table)
+            $this->model($name,$table);
+        else
+            $this->model($name);
+
         $this->controller($this->mFname);
         $this->view($this->mname);
 

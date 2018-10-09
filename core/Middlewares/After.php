@@ -16,7 +16,7 @@ class After
     public function handle($request,Closure $next)
     {      
         $return = $next();
-        echo '<br>后置中间件:后置处理日志记录，请求分析<br>';
+        // echo '<br>后置中间件:后置处理日志记录，请求分析<br>';
         return $return;
     }
 }

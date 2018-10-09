@@ -51,13 +51,19 @@ if($argv[1] == 'make'){
         echo $make->cdir;
     }
     if ($argv[2] == 'M'){
+        if(isset($argv[4]))
+            return $make->model($argv[3],$argv[4]);
+        else
+            $make->model($argv[3]);
         
-        $make->model($argv[3]);
         echo $make->mdir;
     }
     if($argv[2] == 'G'){
         
-        $make->group($argv[3]);
+        if(isset($argv[4]))
+            $make->group($argv[3],$argv[4]);
+        else
+            $make->group($argv[3]);
 
     }
 

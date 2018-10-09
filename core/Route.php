@@ -39,6 +39,9 @@ class Route {
 
     static $middlewareNames = []; // 注册的中间件
 
+    static $startLock=false; // 开启加锁
+    static $lockMap = []; // 锁映射/权限映射
+
     static function initDispatch() {
         // goto a; // 原始路由
         self::$method = $_SERVER['REQUEST_METHOD'];
@@ -124,6 +127,7 @@ class Route {
 
         $pathinfo = explode('/', $url);
 
+        $name = str_replace('\\', '.', $controller).'.'.$action;
 
         // var_dump($pathinfo);
         $patt = "^";
@@ -140,13 +144,17 @@ class Route {
         }
 
         // die;
-
+        $lockKey = md5($url.$path);
         self::$gets[] = [
             'url' => $url,
             'controller' => $controller,
             'action' => $action,
+            'name'=>$name,
             'patt' => $patt,
             'middlewares'=>self::$middlewareNames,
+            'locked'=>self::$startLock,
+            'lockKey'=>$lockKey,
+            'lockName'=>$path,
         ];
         // return;
         // echo "<hr>";
@@ -177,7 +185,7 @@ class Route {
         $controller = str_replace('/', '\\', $controller);
 
         $pathinfo = explode('/', $url);
-
+        $name = str_replace('\\', '.', $controller).'.'.$action;
         // var_dump($pathinfo);
         $patt = "^";
         if (count($pathinfo) > 0 && $pathinfo[1] != "") {
@@ -194,13 +202,17 @@ class Route {
         }
 
         // die;
-
+        $lockKey = md5($url.$path);
         self::$posts[] = [
             'url' => $url,
             'controller' => $controller,
             'action' => $action,
+            'name'=>$name,
             'patt' => $patt,
             'middlewares'=>self::$middlewareNames,
+            'locked'=>self::$startLock,
+            'lockKey'=>$lockKey,
+            'lockName'=>$path,
         ];
         // return;
         // echo "<hr>";
@@ -241,7 +253,8 @@ class Route {
             self::$gets[count(self::$gets) - 1]['name'] = $name;
         else
             self::$posts[count(self::$posts) - 1]['name'] = $name;
-    }   
+        return self::new();
+    }
 
     /**
      * 生产路由 URL
@@ -364,6 +377,8 @@ class Route {
 
         // echo '22';
         require_once ROOT . "/route/web.php"; // 注册路由
+        // echo 'Route:370';
+        // die;
         // $data = array_merge_recursive(['md5'=>$md5],['map'=>self::$map],['gets'=>self::$gets],['posts'=>self::$posts]);
         // file_put_contents(ROOT."cache/webChache",json_encode($data));
         $data = RD::chache('webChache',3600,function()use($md5){
@@ -371,6 +386,56 @@ class Route {
         },true);
 
         // die;
+    }
+
+    /**
+     * RBAC
+     * 为路由加锁
+     */
+    public static function lock(){
+        $args = func_get_args();
+        // dd($args);
+        $num = func_num_args();
+        if ($num == 1) {
+
+            if (is_string($args[0]))
+                return call_user_func_array([__NAMESPACE__ . '\Route', "lockSingle"], $args);
+            if ( is_callable($args[0]))
+                return call_user_func_array([__NAMESPACE__ . '\Route', "lockMult"], $args);
+        }
+        throwE('参数错误,请检查函数lock','lock');
+    }
+
+    // 单独设置锁
+    static function lockSingle($names){
+        
+        return self::new();
+    }
+    // 批量 添加锁
+    static function lockMult($call){
+
+        self::$startLock = true;
+        $call();
+        self::$middlewareNames = false;
+
+    }
+    // 锁名 权限名称
+    function lockName($name){
+
+
+
+        if(in_array($name,array_keys(self::$map))){
+            throwE($name.':路由名称重复','name');
+        }
+        
+        self::$lockMap[$name] = self::$lastUrl;
+
+        if (self::$lastUrl['method'] == 'get')
+            self::$gets[count(self::$gets) - 1]['lockName'] = $name;
+        else
+            self::$posts[count(self::$posts) - 1]['lockName'] = $name;
+
+        return self::new();
     }
 
 

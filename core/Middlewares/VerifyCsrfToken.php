@@ -37,7 +37,7 @@ class VerifyCsrfToken
             }
         }
 
-        echo '前置中间件:token验证通过<br>';
+        // echo '前置中间件:token验证通过<br>';
 
         return $next();
     }

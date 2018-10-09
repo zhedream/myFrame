@@ -11,6 +11,7 @@ class IndexController extends Controller {
 
     // 显示列表
     function index() {
+        // echo 'iframe 不能有其他输出';
         $index = new Index;
         $info = $index->welcome();
         view('index.index');

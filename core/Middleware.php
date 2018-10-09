@@ -16,8 +16,8 @@ class Middleware {
         $pipes = $this->makeStack($request);
 
         $firstSlice = function () use ($app) {
-            echo "<br> EXEC :: Application." . '<br>';
             $app();
+            echo "<br> EXEC :: Application." . '<br>';
         };
 
         $pipes = array_reverse($pipes);
