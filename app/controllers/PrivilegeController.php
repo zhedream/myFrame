@@ -14,16 +14,27 @@ class PrivilegeController extends Controller {
         view('privilege.index',['data'=>$data]);
     }
 
+    function base(){
+        
+        $privilege = new Privilege;
+        $base = $privilege->getBasePrivilege();
+        view('privilege.base',['data'=>$base]);
+    }
+
     // 显示 添加页
     function add(){
         
-        view('privilege.create');
+        $privilege = new Privilege;
+        $base = $privilege->getBasePrivilege();
+        // die;
+        view('privilege.create',['privileges'=>$base]);
     }
 
     // 添加
     function insert(Request $req,$id) {
 
         $data = $req->all();
+        dd($data);
         $privilege = new Privilege;
         $privilege->exec_insert($data);
         message('数据添加成功',1,Route('privilege.index'),3);

@@ -34,7 +34,7 @@ Route::get('/user/mod/{id}','app/controllers/UserController@mod')->name('user.mo
 Route::post('/user/update/{id}','app/controllers/UserController@update')->name('user.update'); // 修改
 
 // category
-Route::get('/category/index','app/controllers/CategoryController@index')->name('category.index')->lockName('AAA'); // 显示列表
+Route::get('/category/index','app/controllers/CategoryController@index')->name('category.index'); // 显示列表
 Route::get('/category/search','app/controllers/CategoryController@search')->name('category.search'); // 搜索
 Route::get('/category/add','app/controllers/CategoryController@add')->name('category.add'); // 显示 添加
 Route::post('/category/insert','app/controllers/CategoryController@insert')->name('category.insert'); // 添加
@@ -68,7 +68,7 @@ Route::post('/goods/update/{id}','app/controllers/GoodsController@update')->name
 
 
 // privilege
-Route::get('/privilege/base','app/controllers/PrivilegeController@base')->name('privilege.base'); // 显示列表
+Route::get('/privilege/base','app/controllers/PrivilegeController@base')->name('privilege.base'); // 基本权限
 Route::get('/privilege/index','app/controllers/PrivilegeController@index')->name('privilege.index'); // 显示列表
 Route::get('/privilege/search','app/controllers/PrivilegeController@search')->name('privilege.search'); // 搜索
 Route::get('/privilege/add','app/controllers/PrivilegeController@add')->name('privilege.add'); // 显示 添加
