@@ -19,9 +19,32 @@ class LoginController extends Controller {
         $data['password'] = md5($req->password);
         $admin = new Admin;
         $admin->fill($data);
-        $data = $admin->where($admin->getFillData())->get();
-        dd($data,false);
+        $data = $admin->where($admin->getFillData())->get()[0];
+
+        if($data){
+            
+            $_SESSION['amdin_id'] = $data['id'];
+            $_SESSION['username'] = $data['username'];
+            $_SESSION['authorization'] = []; // 获取 授权码
+            
+            redirect('/');
+        }else{
+            back();
+
+        }
+        // var_dump($data,$_SESSION);die;
+        // dd($data,false);
     }   
+
+    public function logout(){
+        
+        $_SESSION['amdin_id'] = null;
+        $_SESSION['username'] = null;
+        $_SESSION['authorization'] = null;
+
+        redirect('/login/index');
+
+    }
 
 }
 

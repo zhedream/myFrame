@@ -5,11 +5,16 @@ use core\Route;
 // test
 Route::get('/test/test', 'app/controllers/IndexController@test');
 
+
+
+Route::middleware(['CheckLogin'],function(){
+
 Route::get('/', 'app/controllers/IndexController@index')->name('index');
 Route::get('/index/top', 'app/controllers/IndexController@top')->name('index.top');
 Route::get('/index/menu', 'app/controllers/IndexController@menu')->name('index.menu');
 Route::get('/index/main', 'app/controllers/IndexController@main')->name('index.main');
-        
+
+});
 
 // 添加中间件
 Route::middleware(['CheckLogin'],function(){
@@ -92,5 +97,6 @@ Route::post('/admin/update/{id}','app/controllers/AdminController@update')->name
         
 // login
 Route::get('/login/index','app/controllers/LoginController@index')->name('login.index'); // 显示登陆页
-Route::post('/login/login','app/controllers/LoginController@login')->name('login.login'); // 显示登陆页
+Route::get('/login/logout','app/controllers/LoginController@logout')->name('login.logout'); // 退出
+Route::post('/login/login','app/controllers/LoginController@login')->name('login.login'); // 登陆验证
         

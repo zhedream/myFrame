@@ -14,11 +14,15 @@ class CheckLogin
      * @return mixed
      */
     public function handle($request,Closure $next){   
-        if(!$_SESSION['user_id']){
-            echo '前置中间件:未登陆';
+        if(!isset($_SESSION['amdin_id'])){
+            // echo '前置中间件:未登陆';
+            // dd($_SESSION);
+            return redirect('/login/index');
             // return message('请重新登陆',1,'/');
-        }else
-            echo '前置中间件:已登陆';
+        }else{
+            
+            // echo '前置中间件:已登陆';
+        }
         return $next();
     }
 }
