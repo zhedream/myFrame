@@ -100,3 +100,21 @@ Route::get('/login/index','app/controllers/LoginController@index')->name('login.
 Route::get('/login/logout','app/controllers/LoginController@logout')->name('login.logout'); // 退出
 Route::post('/login/login','app/controllers/LoginController@login')->name('login.login'); // 登陆验证
         
+// article
+Route::get('/article/index','app/controllers/ArticleController@index')->name('article.index'); // 显示列表
+Route::get('/article/search','app/controllers/ArticleController@search')->name('article.search'); // 搜索
+Route::get('/article/add','app/controllers/ArticleController@add')->name('article.add'); // 显示 添加
+Route::post('/article/insert','app/controllers/ArticleController@insert')->name('article.insert'); // 添加
+Route::get('/article/del/{id}','app/controllers/ArticleController@del')->name('article.del'); // 删除 post
+Route::get('/article/mod/{id}','app/controllers/ArticleController@mod')->name('article.mod'); // 显示 修改
+Route::post('/article/update/{id}','app/controllers/ArticleController@update')->name('article.update'); // 修改
+        
+// articlecategory
+Route::get('/articlecategory/index','app/controllers/ArticleCategoryController@index')->name('articlecategory.index'); // 显示列表
+Route::get('/articlecategory/search','app/controllers/ArticleCategoryController@search')->name('articlecategory.search'); // 搜索
+Route::get('/articlecategory/add','app/controllers/ArticleCategoryController@add')->name('articlecategory.add'); // 显示 添加
+Route::post('/articlecategory/insert','app/controllers/ArticleCategoryController@insert')->name('articlecategory.insert'); // 添加
+Route::get('/articlecategory/del/{id}','app/controllers/ArticleCategoryController@del')->name('articlecategory.del'); // 删除 post
+Route::get('/articlecategory/mod/{id}','app/controllers/ArticleCategoryController@mod')->name('articlecategory.mod'); // 显示 修改
+Route::post('/articlecategory/update/{id}','app/controllers/ArticleCategoryController@update')->name('articlecategory.update'); // 修改
+        
