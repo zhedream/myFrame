@@ -24,7 +24,8 @@ class <?=$fileName?>Controller extends Controller {
 
         $data = $req->all();
         $<?=$name?> = new <?=$fileName?>;
-        $<?=$name?>->exec_insert($data);
+        $<?=$name?>->fill($data);
+        $<?=$name?>->exec_insert($<?=$name?>->getFillData());
         message('数据添加成功',1,Route('<?=$name?>.index'),3);
         // redirect(Route('<?=$name?>.index'));
     }
