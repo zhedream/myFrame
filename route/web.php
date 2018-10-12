@@ -26,6 +26,7 @@ Route::get('/user/reg2','app/controllers/UserController@reg2')->name('user.reg2'
 Route::post('/user/sendsms','app/controllers/UserController@sendsms')->name('user.sendsms'); // 手机注册
 
 Route::post('/user/reg','app/controllers/UserController@doreg')->name('user.doreg'); // 注册
+Route::post('/user/reg2','app/controllers/UserController@doreg2')->name('user.doreg2'); // 注册
 // code
 Route::get('/code/Captcha','app/controllers/CodeController@getCaptcha')->name('code.Captcha'); // 验证码
     

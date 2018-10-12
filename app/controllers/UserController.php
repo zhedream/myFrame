@@ -5,6 +5,7 @@ namespace app\controllers;
 use core\Request;
 use app\models\User;
 use libs\Mail;
+use libs\AliSms;
 
 class UserController extends Controller {
 
@@ -112,19 +113,36 @@ class UserController extends Controller {
 
     // 手机注册
     function reg2(){
+        
         view('user.register2');
     }
 
     function sendsms(Request $req){
+        
         $data = $req->all();
         if($req->captcha==$_SESSION['Captcha']){
+
+            $sms = new AliSms;
+            $code = rand(100000, 999999);
+            $_SESSION[$req->phone] = $code;
+            // $re = $sms->send($req->phone,$code); // $re->Message == "OK" || $re->Code == "OK"
+            if(true)
+                echo json_encode([
+                    'err'=>1,
+                    'msg'=>'发送成功',
+                    'data'=>$data,
+                    'sess'=>$_SESSION,
+                    // 'sms'=>$re
+                ]);
+            else
+                echo json_encode([
+                    'err'=>1,
+                    'msg'=>'发送失败,请检查手机号是否正确',
+                    'data'=>$data,
+                    'sess'=>$_SESSION,
+                    // 'sms'=>$re
+                ]);
             
-            echo json_encode([
-                'err'=>1,
-                'msg'=>'发送成功',
-                'data'=>$data,
-                'sess'=>$_SESSION,
-            ]);
         }else{
             echo json_encode([
                 'err'=>3,
@@ -160,6 +178,34 @@ class UserController extends Controller {
         }else{
                     
             message('验证码错误',1,'/user/reg',3);
+            var_dump($data,$_SESSION);die;
+        }
+
+      
+
+    }
+    function doreg2(Request $req){
+        $data = $req->all();
+        if($data['captcha']==$_SESSION[$req->phone]){
+            
+            $user = new User;
+            $u = $user->where('phone',$req->phone)->get()[0];
+            if(!$u){
+
+                $user->fill($data);
+                $user->email = '';
+                $user->exec_insert($user->getFillData());
+                message('手机注册成功',1,'/user/login',3);
+            }else{
+                dd($u);
+                message('手机注册成功',1,'/user/login',3);
+            }
+
+
+            
+        }else{
+                    
+            message('短信验证码错误',1,'/user/reg',3);
             var_dump($data,$_SESSION);die;
         }
 

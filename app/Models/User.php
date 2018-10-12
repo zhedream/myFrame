@@ -8,7 +8,7 @@ use core\DB; // DB 类
 class User extends Model {
     
     protected $table = 'users';
-    protected $fillable = ['email','name','password'];
+    protected $fillable = ['phone','email','name','password'];
 
 
 }
