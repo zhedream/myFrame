@@ -90,24 +90,28 @@
                     <table class="result-tab" width="100%">
                         <tr>
                             <th class="tc" width="5%"><input class="allChoose" name="" type="checkbox"></th>
-                            <?php foreach($this->fields as $v): ?>
-                            <th><?=$v['Comment']?></th>
-                            <?php endforeach; ?>
-                            <th>操作</th>
+                                                        <th>ID</th>
+                                                        <th>标题</th>
+                                                        <th>文章内容</th>
+                                                        <th>发表时间</th>
+                                                        <th>跳转的地址</th>
+                                                        <th>关联的分类</th>
+                                                        <th>操作</th>
                         </tr>
-                        <?='<?php foreach($data as $v): ?>';?>
-                            <tr>
+                        <?php foreach($data as $v): ?>                            <tr>
                                 <td class="tc"><input name="id[]" value="59" type="checkbox"></td>
-                                <?php foreach($this->fields as $v): ?>
-                                <td><?='<?=$v[\''.$v['Field'].'\']?>';?></td>
-                                <?php endforeach; ?>
-                                <td>
-                                    <a href="<?=$putRoute_mod?>" target="_blank">修改</a>
-                                    <a onclick="return confirm('确定要删除吗？');" href="<?=$putRoute_del?>">删除</a>
+                                                                <td><?=$v['id']?></td>
+                                                                <td><?=$v['title']?></td>
+                                                                <td><?=$v['content']?></td>
+                                                                <td><?=$v['created_at']?></td>
+                                                                <td><?=$v['link']?></td>
+                                                                <td><?=$v['cat_name']?></td>
+                                                                <td>
+                                    <a href="<?=Route('article.mod',['id'=>$v['id']])?>" target="_blank">修改</a>
+                                    <a onclick="return confirm('确定要删除吗？');" href="<?=Route('article.del',['id'=>$v['id']])?>">删除</a>
                                 </td>
                             </tr>
-                        <?='<?php endforeach; ?>';?>
-                    </table>
+                        <?php endforeach; ?>                    </table>
                     <div class="list-page"> 2 条 1/1 页</div>
                 </div>
             </form>

@@ -17,6 +17,7 @@ return [
     // 路由中间件
     'routeMiddleware'=>[
         'CheckLogin'=>\app\Middlewares\CheckLogin::class,
+        'PassErrTime'=>\app\Middlewares\PassErrTime::class,
 
     ],
     'middlewareGroups'=>[

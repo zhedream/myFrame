@@ -17,7 +17,7 @@ class Middleware {
 
         $firstSlice = function () use ($app) {
             $app();
-            echo "<br> EXEC :: Application." . '<br>';
+            // echo "<br> EXEC :: Application." . '<br>';
         };
 
         $pipes = array_reverse($pipes);

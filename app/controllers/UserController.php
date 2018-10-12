@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use core\Request;
 use app\models\User;
+use libs\Mail;
 
 class UserController extends Controller {
 
@@ -67,6 +68,15 @@ class UserController extends Controller {
     }
 
     function dologin(Request $req){
+
+        $redis =  \core\RD::getRD();
+        $time = $redis->get('errTime');
+        if($time>=3){
+            message('错误次数过多请稍后再试',1,'/user/login',2);
+            return;
+        }
+        
+        // dd($time);
         $data = $req->all();
         // dd($data);
         $user = new User;
@@ -80,12 +90,49 @@ class UserController extends Controller {
 
             message('登陆成功',1,'/index/index',2);
             return ;
+        }else{
+
+           
+           if($redis->exists('errTime')){
+               echo '123';
+                $redis->incrby('errTime',1); //foo为59
+
+           }else{
+               echo '234';
+                $redis->setex('errTime', 60*10, 1);
+           }
+           
+            message('密码错误',1,'/user/login',2);
         }
-        message('密码错误',1,'/user/login',2);
     }
 
     function reg(){
         view('user.register');
+    }
+
+    // 手机注册
+    function reg2(){
+        view('user.register2');
+    }
+
+    function sendsms(Request $req){
+        $data = $req->all();
+        if($req->captcha==$_SESSION['Captcha']){
+            
+            echo json_encode([
+                'err'=>1,
+                'msg'=>'发送成功',
+                'data'=>$data,
+                'sess'=>$_SESSION,
+            ]);
+        }else{
+            echo json_encode([
+                'err'=>3,
+                'msg'=>'失败,验证码错误',
+                'data'=>$data,
+                'sess'=>$_SESSION,
+            ]);
+        }
     }
 
     function doreg(Request $req){
@@ -96,7 +143,20 @@ class UserController extends Controller {
             $user = new User;
             $user->fill($data);
             $user->exec_insert($user->getFillData());
-            message('注册成功',1,'/user/login',3);
+            $mailer = new Mail;
+            $email = $data['email'];
+            // dd($email);
+            $code = md5(rand(10000, 99999));
+            // dd($code);
+            $content = "
+            点击以下链接进行激活：<br> 点击激活：
+            <a href='http://lhz.tunnel.echomod.cn/user/active?code={$code}'>
+            http://lhz.tunnel.echomod.cn/user/active?code={$code}</a><p>
+            如果按钮不能点击，请复制上面链接地址，在浏览器中访问来激活账号！</p>";
+
+            // $state = $mailer->send('注册激活', $content, $email);
+            
+            message('注册成功,能送激活码：已注释',1,'/user/login',3);
         }else{
                     
             message('验证码错误',1,'/user/reg',3);

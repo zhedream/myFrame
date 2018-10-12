@@ -23,8 +23,8 @@ return array(
         'host' => 'smtp.163.com', // 服务器地址
         'port' => 25, // 端口
         'name' => 'master', // nick name
-        'username' => 'XXX@163.com', // 邮箱账户
-        'password' => 'password', // 账户密码 或 授权码
+        'username' => 'l19517863@163.com', // 邮箱账户
+        'password' => 'l18396315377', // 账户密码 或 授权码
     ),
     'upload' => array(
         //设置文件上传允许的后缀1
