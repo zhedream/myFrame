@@ -10,7 +10,7 @@ class LoginController extends Controller {
 
     public function index(){
         
-        view('login.login');
+        view('login.index');
     }
 
     public function login(Request $req){
@@ -34,7 +34,7 @@ class LoginController extends Controller {
         }
         // var_dump($data,$_SESSION);die;
         // dd($data,false);
-    }   
+    }
 
     public function logout(){
         

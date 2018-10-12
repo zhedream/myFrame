@@ -3,15 +3,13 @@
 namespace app\controllers;
 
 use core\Request;
-use \Index;
 
 class IndexController extends Controller {
 
     // 显示列表
     function index() {
-        $index = new Index;
-        $data = $index->get();
-        view('index.index',['data'=>$data]);
+        
+        view('index.index');
     }
 
     // 显示 添加页

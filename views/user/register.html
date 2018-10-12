@@ -3,9 +3,9 @@
 <head>
 		<meta charset="utf-8">
 		<title>注册界面</title>
-		<link rel="stylesheet" href="css/reset.css" />
-		<link rel="stylesheet" href="css/common.css" />
-		<link rel="stylesheet" href="css/font-awesome.min.css" />
+		<link rel="stylesheet" href="/css/reset.css" />
+		<link rel="stylesheet" href="/css/common.css" />
+		<link rel="stylesheet" href="/css/font-awesome.min.css" />
 	</head>
 	<body>
 		<div class="wrap login_wrap">
@@ -17,12 +17,13 @@
 					
 					<div class="login_form">
 						<div class="login_title">
-							注册
+							邮箱注册
 						</div>
-						<form action="#" method="post">
-							
+						<form action="/user/reg" method="post">
+							<?=csrf_field()?>
+								
 							<div class="form_text_ipt">
-								<input name="username" type="text" placeholder="手机号/邮箱">
+								<input name="email" type="text" placeholder="邮箱">
 							</div>
 							<div class="ececk_warning"><span>手机号/邮箱不能为空</span></div>
 							<div class="form_text_ipt">
@@ -33,13 +34,21 @@
 								<input name="repassword" type="password" placeholder="重复密码">
 							</div>
 							<div class="ececk_warning"><span>密码不能为空</span></div>
+								<img src="/code/Captcha"  onclick="this.src='/code/Captcha?'+Math.random();" alt="123">
 							<div class="form_text_ipt">
 								<input name="code" type="text" placeholder="验证码">
 							</div>
 							<div class="ececk_warning"><span>验证码不能为空</span></div>
+
+							<div class="form_text_ipt">
+								<input name="name" type="text" placeholder="用户名">
+							</div>
+							<div class="ececk_warning"><span>用户名不能为空</span></div>
 							
 							<div class="form_btn">
-								<button type="button" onclick="javascript:window.location.href='#'">注册</button>
+								<!-- <button type="button" >注册</button> -->
+								<input type="submit" value="注册">
+								
 							</div>
 							<div class="form_reg_btn">
 								<span>已有帐号？</span><a href="index.html">马上登录</a>
@@ -59,7 +68,7 @@
 				</div>
 			</div>
 		</div>
-		<script type="text/javascript" src="js/jquery.min.js" ></script>
-		<script type="text/javascript" src="js/common.js" ></script>
+		<script type="text/javascript" src="/js/jquery.min.js" ></script>
+		<script type="text/javascript" src="/js/common.js" ></script>
 	</body>
 </html>
