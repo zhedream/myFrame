@@ -20,14 +20,14 @@
         <tr>
                         <th>ID</th>
                         <th>权限名称</th>
-                        <th>对应的URL地址，多个地址用,隔开</th>
+                        <th style="width:10px;">对应的URL地址，多个地址用,隔开</th>
                         <th>上级权限的ID</th>
                         <th>操作</th>
         </tr>
         <?php foreach($data as $v): ?>        <tr>
                         <td><?=$v['id']?></td>
-                        <td><?=$v['pri_name']?></td>
-                        <td><?=$v['url_path']?></td>
+                        <td><?=str_repeat('-',$v['level']*8).$v['pri_name']?></td>
+                        <td style="width:10px;"><?=$v['url_path']?></td>
                         <td><?=$v['parent_id']?></td>
                         <td>
                 <a href="<?=Route('privilege.mod',['id'=>$v['id']])?>">修改</a>

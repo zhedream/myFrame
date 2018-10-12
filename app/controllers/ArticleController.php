@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use core\Request;
 use app\models\Article;
+use app\models\ArticleCategory;
 
 class ArticleController extends Controller {
 
@@ -17,7 +18,9 @@ class ArticleController extends Controller {
     // 显示 添加页
     function add(){
         
-        view('article.create');
+        $ArticleCategory = new ArticleCategory;
+        $data = $ArticleCategory->get(); // 获取所有分类
+        view('article.create',['articleCategories'=>$data]);
     }
 
     // 添加
@@ -47,7 +50,11 @@ class ArticleController extends Controller {
         $data = $req->all();
         $article = new Article;
         $data = $article->where($id)->get()[0];
-        view('article.edit',['data'=>$data]);
+
+        $ArticleCategory = new ArticleCategory;
+        $Category = $ArticleCategory->get(); // 获取所有分类
+        
+        view('article.edit',['data'=>$data,'articleCategories'=>$Category]);
     }
 
     // 修改

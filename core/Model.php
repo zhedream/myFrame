@@ -255,12 +255,12 @@ class Model {
         }
         $this->whereVals = array_merge($data, $this->whereVals);
 
-        
+
         $table = $this->table();
         // dd($table);
         $table = "`$table`";
         $sql = "UPDATE {$table} SET {$set} {$where}";
-    //    var_dump($sql, $this->whereVals);die;
+        //    var_dump($sql, $this->whereVals);die;
         return self::exec($sql, $this->whereVals);
     }
 
@@ -448,10 +448,10 @@ class Model {
             foreach ($condition as $key => $value) {
                 if ($key == end($wherekeys))
                     $where .= " AND `$key`=? ";
-                    // $where .= " AND `$key`=$value ";
+                // $where .= " AND `$key`=$value ";
                 else
                     $where .= " AND `$key`=? ";
-                    // $where .= " AND `$key`=$value ";
+                // $where .= " AND `$key`=$value ";
             }
             $this->where = "WHERE 1 " . $where;
 
@@ -460,10 +460,10 @@ class Model {
             foreach ($condition as $key => $value) {
                 if ($key == end($wherekeys))
                     $where .= " AND `$key`=? ";
-                    // $where .= " AND `$key`=$value ";
+                // $where .= " AND `$key`=$value ";
                 else
                     $where .= " AND `$key`=? ";
-                    // $where .= " AND `$key`=$value ";
+                // $where .= " AND `$key`=$value ";
             }
 
             $this->where .= $where;
@@ -536,10 +536,10 @@ class Model {
         foreach ($condition as $key => $value) {
             if ($key == end($wherekeys))
                 $where .= "OR `$key`=? ";
-                // $where .= "OR `$key`=$value ";
+            // $where .= "OR `$key`=$value ";
             else
                 $where .= "OR `$key`=? ";
-                // $where .= "OR `$key`=$value ";
+            // $where .= "OR `$key`=$value ";
         }
 
         // 储存 条件值
@@ -723,7 +723,7 @@ class Model {
             $where = " OR `$k` IN $val ";
 
         $this->where .= $where; // link sql
-        
+
         return $this;
 
     }
@@ -824,7 +824,7 @@ class Model {
             . $this->having
             . $this->orderBy
             . $this->limit;
-    //    var_dump($sql,$this->whereVals);die;
+        //    var_dump($sql,$this->whereVals);die;
         return $this->findAll($sql, $this->whereVals);
     }
 
@@ -893,6 +893,32 @@ class Model {
 
         echo "该模型" . __CLASS__ . "不存在方法" . $name . lm;
 
+    }
+
+    /**
+     * 对无限极分类 排序
+     * @param $data //排序数据
+     * @param $label //关系索引
+     * @param int $parent_id //递归参数 默认 0
+     * @param int $level //递归参数 默认 0
+     * @return array //返回排序的带层级的数据
+     */
+    protected function Infinite_order_sort($data,array $label = ['pid' => 'parent_id', 'id' => 'id', 'level' => 'level'], $parent_id = 0, $level = 0) {
+        // 定义一个数组保存排序好之后的数据
+        static $_ret = [];
+        foreach ($data as $v) {
+            // 父ID
+            if ($v[$label['pid']] == $parent_id) {
+                // 标签它的级别
+                $v[$label['level']] = $level;
+                // 挪到排序之后的数组中
+                $_ret[] = $v;
+                // 找 $v 的子分类    先看这
+                $this->Infinite_order_sort($data, $label, $v[$label['id']], $level + 1);
+            }
+        }
+        // 返回排序好的数组
+        return $_ret;
     }
 
     public static function __callstatic($name, $arr) {

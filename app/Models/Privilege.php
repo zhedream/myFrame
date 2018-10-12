@@ -26,5 +26,12 @@ class Privilege extends Model {
         
     }
 
+    function tree() {
+
+        $data = $this->get();
+        $label = ['pid' => 'parent_id', 'id' => 'id', 'level' => 'level'];
+        return $this->Infinite_order_sort($data,$label);
+    }
+
 
 }

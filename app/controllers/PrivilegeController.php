@@ -10,7 +10,9 @@ class PrivilegeController extends Controller {
     // 显示列表
     function index() {
         $privilege = new Privilege;
-        $data = $privilege->get();
+        $data = $privilege->tree();
+        // $data = $privilege->get();
+        // dd($data);
         view('privilege.index',['data'=>$data]);
     }
 
@@ -26,17 +28,20 @@ class PrivilegeController extends Controller {
         
         $privilege = new Privilege;
         $base = $privilege->getBasePrivilege();
+        $data = $privilege->tree();
+        // dd($data);
         // die;
-        view('privilege.create',['privileges'=>$base]);
+        view('privilege.create',['privileges'=>$base,'data'=>$data]);
     }
 
     // 添加
     function insert(Request $req,$id) {
 
         $data = $req->all();
-        dd($data);
+        // dd($data);
         $privilege = new Privilege;
-        $privilege->exec_insert($data);
+        $privilege->fill($data);
+        $privilege->exec_insert($privilege->getFillData());
         message('数据添加成功',1,Route('privilege.index'),3);
         // redirect(Route('privilege.index'));
     }
