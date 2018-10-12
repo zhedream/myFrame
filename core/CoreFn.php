@@ -14,9 +14,9 @@ function view($viewFileName, $data = []) {
     extract($data);
     $path = str_replace('.', '/', $viewFileName) . '.html';
     // 
-    
-    if(!file_exists(ROOT . 'views/' . $path))
-        throwE('view()引入的视图文件不存在','view');
+
+    if (!file_exists(ROOT . 'views/' . $path))
+        throwE('view()引入的视图文件不存在', 'view');
     require(ROOT . 'views/' . $path);
     // die;
 }
@@ -25,20 +25,42 @@ function view($viewFileName, $data = []) {
 /**
  *  获取当前 URL 上所有的参数，并且还能排除掉某些参数
  *  参数：要排除的变量
+ *  模式：1. 
  */
-function getUrlParams($except = []) {
+function getUrlParams($model = 1,$cover = [], $except = [] ) {
     // ['odby','odway']
     // 循环删除变量
-    foreach ($except as $v) {
-        unset($_GET[$v]);
+    $gets = $_GET;
+
+    if ($model == 1) {
+        foreach ($except as $v) {
+            unset($gets[$v]);
+        }
+        foreach ($cover as $key => $value) {
+            $gets[$key] = $value;
+        }
+        $data = [];
+        foreach ($gets as $key => $value) {
+            $data[] = $key.'='.$value;
+        }
+        return $data;
     }
 
-    $str = '';
-    foreach ($_GET as $k => $v) {
-        $str .= "$k=$v&";
-    }
+    if($model==2){
 
-    return $str;
+        foreach ($except as $v) {
+            unset($gets[$v]);
+        }
+    
+        $str = '';
+        foreach ($gets as $k => $v) {
+            $str .= "$k=$v&";
+        }
+    
+        return $str;
+
+    }
+    
 
 }
 
@@ -228,23 +250,23 @@ function dd($data, $clean = true) {
     $ThrowCall = [];
     $ThrowCall['file'] = $AllCall[0]['file'];
     $ThrowCall['line'] = $AllCall[0]['line'];
-    if($clean)
+    if ($clean)
         ob_clean();
     var_dump($data, $ThrowCall);
     die;
 
 }
 
-function env($key,$val='') {
+function env($key, $val = '') {
 
     $conf = include ROOT . "/env.php";
     $keys = array_keys($conf);
-    if(in_array($key,$keys))
+    if (in_array($key, $keys))
         return $conf[$key];
     return $val;
 }
 
-function config($name){
+function config($name) {
 
     return $GLOBALS['config'][$name];
 }
@@ -254,10 +276,10 @@ function config($name){
  * 1. 路径 css/XX.css
  * 2. 是否包含 标签
  */
-function includeCss($path,$tag = true){
+function includeCss($path, $tag = true) {
     // $path = str_replace('.', '/', $path) . '.css';
-    $str = file_get_contents( ROOT."public/".$path);
-    if($tag)
+    $str = file_get_contents(ROOT . "public/" . $path);
+    if ($tag)
         return "<style>{$str}</style>";
     return $str;
 }
@@ -265,15 +287,15 @@ function includeCss($path,$tag = true){
 /**
  * 注意 引入 的 js 不会执行 php 代码块
  */
-function includeJs($path,$tag = true){
+function includeJs($path, $tag = true) {
     // $path = str_replace('.', '/', $path) . '.js';
-    $str = file_get_contents( ROOT."public/".$path);
-    if($tag)
+    $str = file_get_contents(ROOT . "public/" . $path);
+    if ($tag)
         return "<script>{$str}</script>";
     return $str;
 }
 
-function response(){
+function response() {
     return Response::getInstance();
 }
 

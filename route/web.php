@@ -7,9 +7,9 @@ Route::get('/test/test', 'app/controllers/IndexController@test');
 
 
 
-Route::get('/', 'app/controllers/IndexController@index')->name('index');
 
 Route::middleware(['CheckLogin'],function(){
+    Route::get('/', 'app/controllers/IndexController@index')->name('index'); // 首页
     Route::get('/index/index','app/controllers/IndexController@index')->name('index.index'); // 显示首页
 
 // article

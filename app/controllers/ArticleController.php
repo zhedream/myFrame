@@ -4,14 +4,33 @@ namespace app\controllers;
 
 use core\Request;
 use app\models\Article;
+use app\models\ArticleCategory;
+use app\models\User;
 
 class ArticleController extends Controller {
 
     // 显示列表
     function index() {
+        // dd($_SERVER);
+        $user = new User;
+        $data = $user->paginate(2);
+        dd($data);
+
         $article = new Article;
-        $data = $article->findAll('select * from article LEFT JOIN article_category on article.article_category_id=article_category.id');
-        view('article.index',['data'=>$data]);
+        if(isset($_GET['search-sort']) && is_numeric($_GET['search-sort'])){
+            $article->where('article_category_id',(int)$_GET['search-sort']);
+        }
+
+        
+        
+        $data = $article->leftjoin('article_category','article.article_category_id','=','article_category.id')
+            // ->get();
+            ->paginate(2);
+        dd($data);
+        $articleCategory = new ArticleCategory;
+        $categories = $articleCategory->get();
+        // dd($categories);
+        view('article.index',['data'=>$data['data'],'categories'=>$categories]);
     }
 
     // 显示 添加页

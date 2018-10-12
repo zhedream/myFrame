@@ -762,7 +762,7 @@ class Model {
     function orWhereInSql() {
     }
 
-
+    // 待开发 where 即可 用
     final function like() {
     }
 
@@ -776,10 +776,24 @@ class Model {
     final function orGroup() {
     }
 
-    final function leftJoin() {
+
+    // 连表查询
+    final function leftJoin($field, $condition1, $sign, $condition2) {
+
+
+        if (!$this->leftJoin) {
+            $this->leftJoin = "";
+            $this->leftJoin = " LEFT JOIN $field on $condition1 $sign $condition2 ";
+        } else {
+            $this->leftJoin .= "LEFT JOIN $field on $condition1 $sign $condition2 ";
+        }
+
+
         return $this;
     }
 
+
+    // 分组
     final function groupBy() {
         return $this;
     }
@@ -793,6 +807,21 @@ class Model {
     }
 
     final function limit() {
+
+        $args = func_get_args();
+        $num = func_num_args();
+        // dd($args);
+        return call_user_func_array([__NAMESPACE__ . '\Model', "limit" . $num], $args);
+    }
+
+    function limit1($num) {
+        $this->limit = " LIMIT $num ";
+        return $this;
+    }
+
+    function limit2($num, $num2) {
+        $args = func_get_args();
+        $this->limit = " LIMIT $num,$num2 ";
         return $this;
     }
 
@@ -800,8 +829,8 @@ class Model {
         $this->from();
         $sql = $this->select
             . $this->from
-            . $this->where
             . $this->leftJoin
+            . $this->where
             . $this->groupBy
             . $this->having
             . $this->orderBy
@@ -818,14 +847,71 @@ class Model {
         $this->from();
         $sql = $this->select
             . $this->from
-            . $this->where
             . $this->leftJoin
+            . $this->where
             . $this->groupBy
             . $this->having
             . $this->orderBy
             . $this->limit;
-        //    var_dump($sql,$this->whereVals);die;
+//        var_dump($sql, $this->whereVals);die;
         return $this->findAll($sql, $this->whereVals);
+    }
+
+    /**
+     * @param $num // 每页数量
+     * @return $data // 分页数据
+     */
+    final function paginate($num,$pageName='page') {
+//        dd($_SERVER);
+        $page = $_GET['page']; // 当前页
+        if($page<1)
+            $page=1;
+        $count = $this->count();
+        $PageCount = ceil($count / $num); // 总页数
+//        dd($PageCount);
+        $this->limit($page * $num - 2, $num);
+        $result = $this->get();
+        $urlParams = getUrlParams(1,['page'=>2]);
+        // dd($urlParams);
+        $data['current_page'] = $page; // 当前页码
+        $data['first_page_url'] = $_SERVER['PATH_INFO'].'?'.implode("&",getUrlParams(1,['page'=>1])) ; // 第一页
+        $data['last_page_url'] = $_SERVER['PATH_INFO'].'?'.implode('&',getUrlParams(1,['page'=>$PageCount])) ; // 最后一页
+        $data['prev_page_url'] = $_SERVER['PATH_INFO'].'?'.implode('&',getUrlParams(1,['page'=>($page-1)>=1?($page-1):1])) ; // 上一页
+        $data['next_page_url'] = $_SERVER['PATH_INFO'].'?'.implode('&',getUrlParams(1,['page'=>($page+1)<=$PageCount?($page+1):$PageCount])) ; // 下一页
+        $data['last_page'] = $PageCount; // 最后的页码
+        $data['total'] = $count; // 总数
+        $this->makePage($data);
+        $data['data'] = $result; // 数据
+        return $data;
+    }
+
+    /**
+     * 制作页码等
+     */
+    final function makePage($data) {
+
+        extract($data);
+        
+        // dd($data);
+        ob_start();
+        include(ROOT . 'templates/page.html');
+        $str = ob_get_clean();
+        echo $str;die;
+        return $data;
+    }
+
+    final function count() {
+        $this->from();
+        $sql = "select count(*) c "
+            . $this->from
+            . $this->leftJoin
+            . $this->where
+            . $this->groupBy
+            . $this->having
+            . $this->orderBy
+            . $this->limit;
+//        var_dump($sql,$this->whereVals);die;
+        return $this->findOneFirst($sql, $this->whereVals);
     }
 
     final function sqlReset() {
@@ -903,7 +989,7 @@ class Model {
      * @param int $level //递归参数 默认 0
      * @return array //返回排序的带层级的数据
      */
-    protected function Infinite_order_sort($data,array $label = ['pid' => 'parent_id', 'id' => 'id', 'level' => 'level'], $parent_id = 0, $level = 0) {
+    protected function Infinite_order_sort($data, array $label = ['pid' => 'parent_id', 'id' => 'id', 'level' => 'level'], $parent_id = 0, $level = 0) {
         // 定义一个数组保存排序好之后的数据
         static $_ret = [];
         foreach ($data as $v) {
