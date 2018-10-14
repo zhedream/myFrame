@@ -23,12 +23,14 @@ class Model {
     protected $where = null;
     protected $whereKeys = null;
     protected $whereVals = null;
+    protected $join = null;
     protected $leftJoin = null;
+    protected $rightJoin = null;
     protected $groupBy = null;
     protected $having = null;
     protected $orderBy = null;
     protected $limit = null;
-    
+
     protected $startGroup = null;
 
 
@@ -133,8 +135,9 @@ class Model {
     static function findOneFirst($sql, $data = []) {
         $stmt = self::$pdo->prepare($sql);
         if ($stmt->execute($data)) {
-            $stmt->setFetchMode();//PDO::FETCH_ASSOC
+            $stmt->setFetchMode(PDO::FETCH_NUM);//PDO::FETCH_ASSOC  PDO::FETCH_NUM
             $arr = $stmt->fetch();
+            // dd($arr);
             return $arr[0];
         }
         return false;
@@ -386,29 +389,30 @@ class Model {
     final function select() {
         $args = func_get_args();
         $num = func_num_args();
-        if($num == 0){
+        if ($num == 0) {
             $this->select = "SELECT * ";
             return $this;
         }
-        if(is_array($args[0])){
+        if (is_array($args[0])) {
             dd($args);
             return call_user_func_array([__NAMESPACE__ . '\Model', "selectArr"], $args);
-        }else{
-            
+        } else {
+
             // dd($args);
             return call_user_func_array([__NAMESPACE__ . '\Model', "selects"], $args);
         }
         // dd($args);
     }
 
-    function selects(){
+    function selects() {
         $data = func_get_args();
-        $str = \implode(',',$data);
+        $str = \implode(',', $data);
         $this->select = "SELECT $str ";
         return $this;
     }
+
     // 待编写
-    function selectArr($data){
+    function selectArr($data) {
         return $this;
     }
 
@@ -796,13 +800,18 @@ class Model {
 
     // 大括号  and ()
     final function group(callable $call) {
-        $this->where .='AND ( 1 ';
+        if ($this->where)
+            $this->where .= 'AND ( 1 ';
+        else
+            $this->where = ' WHERE ( 1 ';
+
         $call($this);
         $this->where .= ') ';
     }
+
     // or ()
     final function orGroup(callable $call) {
-        $this->where .='OR ( 1 ';
+        $this->where .= 'OR ( 1 ';
         $call($this);
         $this->where .= ') ';
     }
@@ -819,6 +828,32 @@ class Model {
             $this->leftJoin .= "LEFT JOIN $field on $condition1 $sign $condition2 ";
         }
 
+
+        return $this;
+    }
+
+    // 连表查询
+    final function rightJoin($field, $condition1, $sign, $condition2) {
+
+        if (!$this->rightJoin) {
+            $this->rightJoin = "";
+            $this->rightJoin = " RIGHT JOIN $field on $condition1 $sign $condition2 ";
+        } else {
+            $this->rightJoin .= "RIGHT JOIN $field on $condition1 $sign $condition2 ";
+        }
+
+        return $this;
+    }
+
+    // 连表查询
+    final function join($field, $condition1, $sign, $condition2) {
+
+        if (!$this->leftJoin) {
+            $this->join = "";
+            $this->join = "JOIN $field on $condition1 $sign $condition2 ";
+        } else {
+            $this->join .= "JOIN $field on $condition1 $sign $condition2 ";
+        }
 
         return $this;
     }
@@ -860,17 +895,26 @@ class Model {
         $this->from();
         $sql = $this->select
             . $this->from
+            . $this->join
             . $this->leftJoin
+            . $this->rightJoin
             . $this->where
             . $this->groupBy
             . $this->having
             . $this->orderBy
             . $this->limit;
-
         if ($fill) {
-            // 如果为真 把 ？ 替换 成 data
+            $whereVals = $this->whereVals;
+            $sql = preg_replace_callback('/\?/', function ($matches) use ($whereVals) {
+                static $whereVals;
+                $str = "'" . current($whereVals) . "'";
+                next($whereVals);
+                return $str;
+                // ;
+            }, $sql);
         }
-        // dd($sql);
+        var_dump($sql, $this->whereVals);
+        die;
         return $sql;
     }
 
@@ -878,7 +922,9 @@ class Model {
         $this->from();
         $sql = $this->select
             . $this->from
+            . $this->join
             . $this->leftJoin
+            . $this->rightJoin
             . $this->where
             . $this->groupBy
             . $this->having
@@ -893,14 +939,14 @@ class Model {
      * @return $data // 分页数据
      */
     final function paginate($num, $pageName = 'page') {
-    //    dd($_SERVER);
+        //    dd($_SERVER);
         $page = $_GET['page']; // 当前页
         if ($page < 1)
             $page = 1;
         $count = $this->count();
         $PageCount = ceil($count / $num); // 总页数
-    //    dd($PageCount);
-        $this->limit($page * $num - 2, $num);
+        // dd($PageCount);
+        $this->limit($page * $num - $num, $num);
         $result = $this->get();
         $urlParams = getUrlParams(1, ['page' => 2]);
         // dd($urlParams);
@@ -938,7 +984,7 @@ class Model {
             . $this->having
             . $this->orderBy
             . $this->limit;
-    //    var_dump($sql,$this->whereVals);die;
+        // var_dump($sql,$this->whereVals);die;
         return $this->findOneFirst($sql, $this->whereVals);
     }
 

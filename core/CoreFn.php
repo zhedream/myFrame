@@ -25,9 +25,9 @@ function view($viewFileName, $data = []) {
 /**
  *  获取当前 URL 上所有的参数，并且还能排除掉某些参数
  *  参数：要排除的变量
- *  模式：1. 
+ *  模式：1.
  */
-function getUrlParams($model = 1,$cover = [], $except = [] ) {
+function getUrlParams($model = 1, $cover = [], $except = []) {
     // ['odby','odway']
     // 循环删除变量
     $gets = $_GET;
@@ -41,26 +41,26 @@ function getUrlParams($model = 1,$cover = [], $except = [] ) {
         }
         $data = [];
         foreach ($gets as $key => $value) {
-            $data[] = $key.'='.$value;
+            $data[] = $key . '=' . $value;
         }
         return $data;
     }
 
-    if($model==2){
+    if ($model == 2) {
 
         foreach ($except as $v) {
             unset($gets[$v]);
         }
-    
+
         $str = '';
         foreach ($gets as $k => $v) {
             $str .= "$k=$v&";
         }
-    
+
         return $str;
 
     }
-    
+
 
 }
 

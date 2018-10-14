@@ -15,18 +15,20 @@ class Article extends Model {
         if(isset($_GET['search-sort']) && is_numeric($_GET['search-sort'])){
             $article->where('article_category_id',(int)$_GET['search-sort']);
         }
-
+        
         if( isset($_GET['keywords']) && $_GET['keywords']!=''){
             $keyW = $_GET['keywords'];
             
             $article->group(function($q)use($keyW){
-                $q->orWhere('content','LIKE',"%$keyW%")
+                $q->where('content','LIKE',"%$keyW%")
                 ->orWhere('title','LIKE',"%$keyW%");
             });
         }
+        // die('15');
 
-        $data = $article->leftjoin('article_category','article.article_category_id','=','article_category.id')
+        $data = $article->join('article_category','article.article_category_id','=','article_category.id')
             ->select('article.*','article_category.cat_name')
+            // ->toSql(true);
             ->paginate(3);
         return $data;
     }
