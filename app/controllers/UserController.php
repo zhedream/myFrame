@@ -71,7 +71,7 @@ class UserController extends Controller {
     function dologin(Request $req){
 
         $redis =  \core\RD::getRD();
-        $time = $redis->get('errTime');
+        $time = $redis->get($emila.'errTime');
         if($time>=3){
             message('错误次数过多请稍后再试',1,'/user/login',2);
             return;
@@ -85,6 +85,7 @@ class UserController extends Controller {
         ->where('password',$req->password)
         ->get()[0];
         if($data){
+            // 判断 密码
             $_SESSION['user_id'] = $data['id'];
             $_SESSION['email'] = $data['email'];
             $_SESSION['name'] = $data['name'];
@@ -93,13 +94,13 @@ class UserController extends Controller {
             return ;
         }else{
 
-           
+            // 判断 是否输错过
            if($redis->exists('errTime')){
-               echo '123';
-                $redis->incrby('errTime',1); //foo为59
+
+                $redis->incrby('errTime',1); // 出错过 错误次数 + 1
 
            }else{
-               echo '234';
+                // 第一次 出错 设置 错误 次数 为 1
                 $redis->setex('errTime', 60*10, 1);
            }
            

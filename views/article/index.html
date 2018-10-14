@@ -102,6 +102,7 @@
                             <th>关联的分类</th>
                             <th>操作</th>
                         </tr>
+                        <?php extract($data); // 解压变量?>
                         <?php foreach($data as $v): ?>
                         <tr>
                             <td class="tc"><input name="id[]" value="59" type="checkbox"></td>
@@ -118,7 +119,8 @@
                             </td>
                         </tr>
                         <?php endforeach; ?>                    </table>
-                    <div class="list-page"> 2 条 1/1 页</div>
+                    <div class="list-page"> 
+                        <?=$pageHtml?><?=$total?> 条 <?=$current_page?>/<?=$last_page?> 页</div>
                 </div>
             </form>
         </div>

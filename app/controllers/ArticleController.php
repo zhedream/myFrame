@@ -12,25 +12,14 @@ class ArticleController extends Controller {
     // 显示列表
     function index() {
         // dd($_SERVER);
-        $user = new User;
-        $data = $user->paginate(2);
-        dd($data);
-
+        // dd($_GET);
         $article = new Article;
-        if(isset($_GET['search-sort']) && is_numeric($_GET['search-sort'])){
-            $article->where('article_category_id',(int)$_GET['search-sort']);
-        }
-
-        
-        
-        $data = $article->leftjoin('article_category','article.article_category_id','=','article_category.id')
-            // ->get();
-            ->paginate(2);
-        dd($data);
         $articleCategory = new ArticleCategory;
+        
+        $data = $article->search();
         $categories = $articleCategory->get();
         // dd($categories);
-        view('article.index',['data'=>$data['data'],'categories'=>$categories]);
+        view('article.index',['data'=>$data,'categories'=>$categories]);
     }
 
     // 显示 添加页

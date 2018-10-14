@@ -28,6 +28,8 @@ class Model {
     protected $having = null;
     protected $orderBy = null;
     protected $limit = null;
+    
+    protected $startGroup = null;
 
 
     function __construct() {
@@ -381,13 +383,36 @@ class Model {
     function exec_select() {
     }
 
-    final function select($data) {
-        $this->select = 'SELECT *';
+    final function select() {
+        $args = func_get_args();
+        $num = func_num_args();
+        if($num == 0){
+            $this->select = "SELECT * ";
+            return $this;
+        }
+        if(is_array($args[0])){
+            dd($args);
+            return call_user_func_array([__NAMESPACE__ . '\Model', "selectArr"], $args);
+        }else{
+            
+            // dd($args);
+            return call_user_func_array([__NAMESPACE__ . '\Model', "selects"], $args);
+        }
+        // dd($args);
+    }
 
+    function selects(){
+        $data = func_get_args();
+        $str = \implode(',',$data);
+        $this->select = "SELECT $str ";
+        return $this;
+    }
+    // 待编写
+    function selectArr($data){
         return $this;
     }
 
-    final function from() {
+    final function from(array $data = []) {
         if (!$this->from)
             $this->from = " FROM " . "`" . $this->table() . "` ";
 
@@ -769,11 +794,17 @@ class Model {
     final function orLike() {
     }
 
-    // 大括号
-    final function group() {
+    // 大括号  and ()
+    final function group(callable $call) {
+        $this->where .='AND ( 1 ';
+        $call($this);
+        $this->where .= ') ';
     }
-
-    final function orGroup() {
+    // or ()
+    final function orGroup(callable $call) {
+        $this->where .='OR ( 1 ';
+        $call($this);
+        $this->where .= ') ';
     }
 
 
@@ -853,7 +884,7 @@ class Model {
             . $this->having
             . $this->orderBy
             . $this->limit;
-//        var_dump($sql, $this->whereVals);die;
+        // var_dump($sql, $this->whereVals);die;
         return $this->findAll($sql, $this->whereVals);
     }
 
@@ -861,26 +892,26 @@ class Model {
      * @param $num // 每页数量
      * @return $data // 分页数据
      */
-    final function paginate($num,$pageName='page') {
-//        dd($_SERVER);
+    final function paginate($num, $pageName = 'page') {
+    //    dd($_SERVER);
         $page = $_GET['page']; // 当前页
-        if($page<1)
-            $page=1;
+        if ($page < 1)
+            $page = 1;
         $count = $this->count();
         $PageCount = ceil($count / $num); // 总页数
-//        dd($PageCount);
+    //    dd($PageCount);
         $this->limit($page * $num - 2, $num);
         $result = $this->get();
-        $urlParams = getUrlParams(1,['page'=>2]);
+        $urlParams = getUrlParams(1, ['page' => 2]);
         // dd($urlParams);
         $data['current_page'] = $page; // 当前页码
-        $data['first_page_url'] = $_SERVER['PATH_INFO'].'?'.implode("&",getUrlParams(1,['page'=>1])) ; // 第一页
-        $data['last_page_url'] = $_SERVER['PATH_INFO'].'?'.implode('&',getUrlParams(1,['page'=>$PageCount])) ; // 最后一页
-        $data['prev_page_url'] = $_SERVER['PATH_INFO'].'?'.implode('&',getUrlParams(1,['page'=>($page-1)>=1?($page-1):1])) ; // 上一页
-        $data['next_page_url'] = $_SERVER['PATH_INFO'].'?'.implode('&',getUrlParams(1,['page'=>($page+1)<=$PageCount?($page+1):$PageCount])) ; // 下一页
+        $data['first_page_url'] = $_SERVER['PATH_INFO'] . '?' . implode("&", getUrlParams(1, ['page' => 1])); // 第一页
+        $data['last_page_url'] = $_SERVER['PATH_INFO'] . '?' . implode('&', getUrlParams(1, ['page' => $PageCount])); // 最后一页
+        $data['prev_page_url'] = $_SERVER['PATH_INFO'] . '?' . implode('&', getUrlParams(1, ['page' => ($page - 1) >= 1 ? ($page - 1) : 1])); // 上一页
+        $data['next_page_url'] = $_SERVER['PATH_INFO'] . '?' . implode('&', getUrlParams(1, ['page' => ($page + 1) <= $PageCount ? ($page + 1) : $PageCount])); // 下一页
         $data['last_page'] = $PageCount; // 最后的页码
         $data['total'] = $count; // 总数
-        $this->makePage($data);
+        $this->makePageHtml($data);
         $data['data'] = $result; // 数据
         return $data;
     }
@@ -888,21 +919,18 @@ class Model {
     /**
      * 制作页码等
      */
-    final function makePage($data) {
-
-        extract($data);
-        
+    private function makePageHtml(&$data) {
         // dd($data);
+        extract($data); // 解压变量 给模板使用
         ob_start();
         include(ROOT . 'templates/page.html');
         $str = ob_get_clean();
-        echo $str;die;
-        return $data;
+        $data['pageHtml'] = $str;
     }
 
     final function count() {
         $this->from();
-        $sql = "select count(*) c "
+        $sql = "select count(*) count "
             . $this->from
             . $this->leftJoin
             . $this->where
@@ -910,7 +938,7 @@ class Model {
             . $this->having
             . $this->orderBy
             . $this->limit;
-//        var_dump($sql,$this->whereVals);die;
+    //    var_dump($sql,$this->whereVals);die;
         return $this->findOneFirst($sql, $this->whereVals);
     }
 
