@@ -3,66 +3,43 @@
 namespace core\Middlewares;
 
 use Closure;
-
-class ValidateFromInput
-{
+use core\FromValidate;
+// 表单中间件
+class ValidateFromInput {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Closure $next
      * @return mixed
      */
-    public function handle($request,Closure $next){   
+    public function handle($request, Closure $next) {
 
-        $ex =  method_exists($request,'authorize');
-        $ex2 =  method_exists($request,'rules');
+        $ex = method_exists($request, 'authorize');
+        $ex2 = method_exists($request, 'rules');
         // dd($request);
-        if($ex && $ex2){
+        if ($ex && $ex2) {
             echo '前置中间件:需要验证表单<br>';
-
+            
             $auth = $request->authorize();
-            if($auth){
-                $rules = $request->rules();
-                // dd($rules);
-                foreach ($rules as $key => $val) {
-                    // var_dump($request->all());
-                    $tem = $request->$key;
-                    // echo $tem;
-                        // 验证项目
-                    foreach ($val as $k => $v) {
-                        if(is_string($v)){
-                            if($v == 'required'){
+            if ($auth) {
 
-                            }
-                        }
-                        if(is_callable($v)){
-
-                            $re = $v($tem);
-                            if($re)
-                                echo '函数验证'.$key."结果:通过".lm;
-                            else{
-                                
-                                echo '函数验证'.$key."结果:失败".lm;
-                                // return ;
-                            }
-                        }
-                    }
+                $validate = FromValidate::getInstance();
+                $data = $validate->verify($request);
+                if($data!==true){
+                    var_dump($data);die;
+                    response()->setInputErrs($data);
+                    return back();
                 }
 
-            }else{
+            } else {
 
-                echo('权限不足'); 
-                return ;
-
+                echo('权限不足');
+                return;
             }
-
-            
-
 
         }
 
-        
         return $next();
     }
 }

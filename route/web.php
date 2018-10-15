@@ -26,7 +26,9 @@ Route::post('/article/update/{id}','app/controllers/ArticleController@update')->
 Route::get('/user/login','app/controllers/UserController@login')->name('user.login'); // 显示 登陆
 
 
-Route::post('/user/login','app/controllers/UserController@dologin')->middleware('PassErrTime')->name('user.dologin'); // 登陆
+Route::middleware(['PassErrTime'],function(){
+    Route::post('/user/login','app/controllers/UserController@dologin')->name('user.dologin'); // 登陆
+});
 
 Route::get('/user/reg','app/controllers/UserController@reg')->name('user.reg'); // 邮箱注册
 Route::get('/user/reg2','app/controllers/UserController@reg2')->name('user.reg2'); // 手机注册

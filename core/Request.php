@@ -142,18 +142,29 @@ class Request {
 
         if (Route::$method == 'POST') {
 
-            if (isset(self::$posts[$name]))
-                return self::$posts[$name];
-            else if (isset(self::$gets[$name]))
-                return self::$gets[$name];
+            if (isset(self::$allData[$name]))
+                return self::$allData[$name];
+            return null;
 
         } else if (Route::$method == 'GET') {
 
-            if (self::$gets[$name])
-                return self::$gets[$name];
+            if (self::$allData[$name])
+                return self::$allData[$name];
+            return null;
         }
     }
 
+    function setAllData($key,$val){
+            self::$allData[$key] = $val;
+    }
+    function unsetAllData($key){
+        unset(self::$allData[$key]);
+    }
+    function popAllData($key){
+            $data = self::$allData[$key];
+            unset(self::$allData[$key]);
+            return $data;
+    }
 
     /**
      * @return array

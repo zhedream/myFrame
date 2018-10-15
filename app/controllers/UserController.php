@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use core\Request;
+use app\Requests\LoginRequest;
 use app\models\User;
 use libs\Mail;
 use libs\AliSms;
@@ -68,7 +69,7 @@ class UserController extends Controller {
         view('user.login');
     }
 
-    function dologin(Request $req){
+    function dologin(LoginRequest $req){
 
         $redis =  \core\RD::getRD();
         $time = $redis->get($emila.'errTime');
@@ -79,11 +80,18 @@ class UserController extends Controller {
         
         // dd($time);
         $data = $req->all();
-        // dd($data);
+        dd($data,false);
+        // dd($req->email);
         $user = new User;
-        $data = $user->where('email',$req->email)
-        ->where('password',$req->password)
-        ->get()[0];
+        $user->group(function($q)use($req){
+            $q->where('email',$req->username)
+                ->orWhere('phone',$req->username);
+        });
+            
+        $data = $user->where('password',$req->password)
+        ->toSql(true);
+        // ->get()[0];
+        dd($data);
         if($data){
             // 判断 密码
             $_SESSION['user_id'] = $data['id'];

@@ -7,6 +7,8 @@ class Response {
 
     private static $_instance = null; // 实例化单例 对象
 
+    public static $errInputMessages = [];
+
     private function __construct() {
     }
 
@@ -49,6 +51,13 @@ class Response {
         $conf = config('cookie');
 //        dd($conf);
         return setcookie($name, $value, time() + $expire, $conf['path'], $conf['domain'], $conf['secure']);
+    }
+
+    function getInputErrs(){
+        return self::$errInputMessages;
+    }
+    function setInputErrs($data){
+        self::$errInputMessages = $data;
     }
 
 
