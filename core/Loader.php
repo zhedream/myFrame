@@ -1,7 +1,7 @@
 <?php
-require_once ROOT . "vendor/autoload.php";
+require_once ROOT . "/vendor/autoload.php"; // 加载 vendor
 
-Loader::$myclassDir = ROOT . "libs/myClass/";
+Loader::$myclassDir = ROOT . "/libs/myClass/";
 Loader::$is_debug = 0;
 spl_autoload_register('Loader::autoload');
 spl_autoload_register("Loader::ForClass");
@@ -27,7 +27,7 @@ class Loader {
     public static function autoload($class) {
         $path = str_replace('\\', '/', $class);
         if (file_exists(ROOT . $path . '.php')) {
-            require(ROOT . $path . '.php');
+            require_once(ROOT . $path . '.php');
             if (self::$is_debug)
                 echo "<br>正在自动加载类" . __FUNCTION__ . ":{$class}<br>";
         }
@@ -38,7 +38,7 @@ class Loader {
         $path = str_replace('\\', '/', $class);
         // echo ROOT . $path . '.class.php'."--autoload3--<br>";
         if (file_exists(ROOT . $path . '.class.php')) {
-            require(ROOT . $path . '.class.php');
+            require_once(ROOT . $path . '.class.php');
             echo "<br>正在自动加载类" . __FUNCTION__ . ":{$class}<br>";
         }
     }

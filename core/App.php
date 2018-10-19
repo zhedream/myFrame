@@ -25,6 +25,39 @@ class App {
         Route::initDispatch();
     }
 
+    public static function websocketRun($argv = []) {
+
+        if (php_sapi_name() == 'cli') {
+            self::initDir();
+            self::initError();
+            self::CliDispatch($argv);
+            return;
+        }
+        self::initCharset();
+        self::initDir();
+        self::initError();
+        Route::webInit();
+        Route::initDispatch();
+    }
+    public static function websocketConnect($e) {
+
+        return function($e){
+            
+        };
+    }
+    public static function websocketClose($e) {
+
+        return function($e){
+            
+        };
+    }
+    public static function websocketMessage($e) {
+
+        return function($e){
+            
+        };
+    }
+
     private static function initCharset() {
         header("Content-type:text/html;charset=utf-8");
     }

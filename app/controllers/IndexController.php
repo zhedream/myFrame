@@ -11,6 +11,10 @@ class IndexController extends Controller {
         
         view('index.index');
     }
+    function chat(){
+        
+        view('chat.index');
+    }
 
     // 显示 添加页
     function add(){
