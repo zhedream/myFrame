@@ -913,8 +913,8 @@ class Model {
                 // ;
             }, $sql);
         }
-        var_dump($sql, $this->whereVals);
-        die;
+        // var_dump($sql, $this->whereVals);
+        // die;
         return $sql;
     }
 

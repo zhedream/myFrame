@@ -80,7 +80,7 @@ class UserController extends Controller {
         
         // dd($time);
         $data = $req->all();
-        dd($data,false);
+        // dd($data,false);
         // dd($req->email);
         $user = new User;
         $user->group(function($q)use($req){
@@ -91,7 +91,7 @@ class UserController extends Controller {
         $data = $user->where('password',$req->password)
         ->toSql(true);
         // ->get()[0];
-        dd($data);
+        // dd($data);
         if($data){
             // 判断 密码
             $_SESSION['user_id'] = $data['id'];
