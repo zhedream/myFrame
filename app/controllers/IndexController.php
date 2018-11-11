@@ -23,9 +23,15 @@ class IndexController extends Controller {
 
     function dologin(Request $req){
         $data = $req->all();
-        $user = (new User)->get();
-        dd($user);
-        dd($data);
+        $user = (new User)->where(['uname'=>$req->uname,'password'=>$req->password])->first();
+        // dd($user);
+        if($user){
+            $_SESSION['uid'] = $user['uid'];
+            $_SESSION['uname'] = $user['uname'];
+            message('登陆成功',1,Route('index.chat'),2);
+        }else{
+            return back();
+        }
     }
     
     function regist(){
@@ -34,11 +40,18 @@ class IndexController extends Controller {
     
     function doregist(Request $req){
         $data = $req->all();
-        dd($data);
         $user = new User;
-
-        $user;
-        dd($user);
+        $a = $user->where('uname',$req->uname)->first();
+        if(!$a){
+            $user->fill($data);
+            $user->tel_num = '';
+            $user->reg_time = date('Y-m-d G:i:s');
+            $user->insert();
+            message('注册成功',1,Route('index.login'),2);
+        }else{
+            return back();
+        }
+        
     }
     function test(){
 

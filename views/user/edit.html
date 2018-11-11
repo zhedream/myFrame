@@ -14,39 +14,39 @@
     <div style="clear:both"></div>
 </h1>
 <div class="main-div">
-    
-    <form action="<?=Route('user.update',['id'=>$data['id']])?>" method="post" enctype="multipart/form-data">
+
+    <form action="<?=Route('user.update',['id'=>$data['uid']])?>" method="post" enctype="multipart/form-data">
         <?=csrf_field()?>        <table width="100%" id="general-table">
                         <tr>
-                <td class="label">:</td>
+                <td class="label">uid:</td>
                 <td>
                                             <input type='text' size="80" name='uid' value='<?=$data['uid']?>'>
                                         <font color="red">*</font>
                 </td>
             </tr>
                         <tr>
-                <td class="label">:</td>
+                <td class="label">uname:</td>
                 <td>
                                             <input type='text' size="80" name='uname' value='<?=$data['uname']?>'>
                                         <font color="red">*</font>
                 </td>
             </tr>
                         <tr>
-                <td class="label">:</td>
+                <td class="label">password:</td>
                 <td>
                                             <input type='text' size="80" name='password' value='<?=$data['password']?>'>
                                         <font color="red">*</font>
                 </td>
             </tr>
                         <tr>
-                <td class="label">:</td>
+                <td class="label">tel_num:</td>
                 <td>
                                             <input type='text' size="80" name='tel_num' value='<?=$data['tel_num']?>'>
                                         <font color="red">*</font>
                 </td>
             </tr>
                         <tr>
-                <td class="label">:</td>
+                <td class="label">reg_time:</td>
                 <td>
                                             <input type='text' size="80" name='reg_time' value='<?=$data['reg_time']?>'>
                                         <font color="red">*</font>

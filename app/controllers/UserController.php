@@ -36,7 +36,7 @@ class UserController extends Controller {
 
         // $data = $req->all();
         $user = new User;
-        $user->where($id)
+        $user->where('uid',$id)
             ->delete();
         message('数据删除成功',1,Route('user.index'),3);
     }
@@ -46,7 +46,7 @@ class UserController extends Controller {
 
         $data = $req->all();
         $user = new User;
-        $data = $user->where($id)->get()[0];
+        $data = $user->where('uid',$id)->get()[0];
         view('user.edit',['data'=>$data]);
     }
 
@@ -55,7 +55,7 @@ class UserController extends Controller {
         
         $data = $req->all();
         $user = new User;
-        $user->where($id)
+        $user->where('uid',$id)
             ->fill($data)
             ->update();
         message('数据更改成功',1,Route('user.index'),3);

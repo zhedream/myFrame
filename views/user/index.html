@@ -36,7 +36,7 @@
                     <a href="#"><i class="icon-font">&#xe003;</i>文章模块</a>
                     <ul class="sub-menu">
                         <li><a href="/article/index"><i class="icon-font">&#xe008;</i>作品管理</a></li>
-                       
+
                     </ul>
                 </li>
                 <li>
@@ -55,7 +55,8 @@
     <div class="main-wrap">
 
         <div class="crumb-wrap">
-            <div class="crumb-list"><i class="icon-font"></i><a href="index.html">首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">作品管理</span></div>
+            <div class="crumb-list"><i class="icon-font"></i><a href="index.html">首页</a><span
+                    class="crumb-step">&gt;</span><span class="crumb-name">作品管理</span></div>
         </div>
         <div class="search-wrap">
             <div class="search-content">
@@ -66,11 +67,13 @@
                             <td>
                                 <select name="search-sort" id="">
                                     <option value="">全部</option>
-                                    <option value="19">精品界面</option><option value="20">推荐界面</option>
+                                    <option value="19">精品界面</option>
+                                    <option value="20">推荐界面</option>
                                 </select>
                             </td>
                             <th width="70">关键字:</th>
-                            <td><input class="common-text" placeholder="关键字" name="keywords" value="" id="" type="text"></td>
+                            <td><input class="common-text" placeholder="关键字" name="keywords" value="" id="" type="text">
+                            </td>
                             <td><input class="btn btn-primary btn2" name="sub" value="查询" type="submit"></td>
                         </tr>
                     </table>
@@ -90,25 +93,26 @@
                     <table class="result-tab" width="100%">
                         <tr>
                             <th class="tc" width="5%"><input class="allChoose" name="" type="checkbox"></th>
-                                                        <th></th>
-                                                        <th></th>
-                                                        <th></th>
-                                                        <th></th>
-                                                        <th></th>
-                                                        <th>操作</th>
+                            <th>uid</th>
+                            <th>uname</th>
+                            <th>password</th>
+                            <th>tel_num</th>
+                            <th>reg_time</th>
+                            <th>操作</th>
                         </tr>
-                        <?php foreach($data as $v): ?>                            <tr>
-                                <td class="tc"><input name="id[]" value="59" type="checkbox"></td>
-                                                                <td><?=$v['uid']?></td>
-                                                                <td><?=$v['uname']?></td>
-                                                                <td><?=$v['password']?></td>
-                                                                <td><?=$v['tel_num']?></td>
-                                                                <td><?=$v['reg_time']?></td>
-                                                                <td>
-                                    <a href="<?=Route('user.mod',['id'=>$v['id']])?>" target="_blank">修改</a>
-                                    <a onclick="return confirm('确定要删除吗？');" href="<?=Route('user.del',['id'=>$v['id']])?>">删除</a>
-                                </td>
-                            </tr>
+                        <?php foreach($data as $v): ?>
+                        <tr>
+                            <td class="tc"><input name="id[]" value="59" type="checkbox"></td>
+                            <td><?=$v['uid']?></td>
+                            <td><?=$v['uname']?></td>
+                            <td><?=$v['password']?></td>
+                            <td><?=$v['tel_num']?></td>
+                            <td><?=$v['reg_time']?></td>
+                            <td>
+                                <a href="<?=Route('user.mod',['id'=>$v['uid']])?>" target="_blank">修改</a>
+                                <a onclick="return confirm('确定要删除吗？');" href="<?=Route('user.del',['id'=>$v['uid']])?>">删除</a>
+                            </td>
+                        </tr>
                         <?php endforeach; ?>                    </table>
                     <div class="list-page"> 2 条 1/1 页</div>
                 </div>

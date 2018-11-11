@@ -12,19 +12,13 @@ require_once ROOT . "/core/CoreFn.php"; // 核心辅助全局函数
 use Workerman\Lib\Timer;
 use Workerman\Worker;
 // require_once './Workerman/Autoloader.php';
-$global_uid = 0;
+$global_id = 0;
  
-// 当客户端连上来时分配uid,自动保存连接, 并通知所有客户端
+// 当客户端连上来时分配id,自动保存连接, 并通知所有客户端
 function handle_connect($connection) {
-    global $ws_worker, $global_uid;
-    // 为这个链接分配一个uid
-    $connection->uid = ++$global_uid;
-    $_SESSION['name_id'] = $global_uid;
-    $_SESSION['get'] = $_GET;
-    sendAll('userConnect',[
-        'msg'=>"我上线了 Online",
-        'uid'=>$connection->uid,
-    ]);
+    global $ws_worker, $global_id;
+    // 为这个链接分配一个id
+    $connection->count_id = ++$global_id;
 }
 
 // 当客户端断开时,广播给所有客户端
@@ -32,24 +26,61 @@ function handle_close($connection) {
     global $ws_worker;
     sendAll('userClose',[
         'msg'=>"我离开了 Doneline",
+        'uname'=>$connection->uname,
+        'from_conn_id'=>$connection->id,
+        'to_conn_id'=>-1,
         'uid'=>$connection->uid,
+        'clients_list'=>getAllClient(),
     ]);
 }
 
 // 当客户端发 动作 过来时，转发给所有人
 function handle_message($connection, $data) {
     
-    // 路由 转发到 函数
-    $connection->lastMessageTime = time(); //  心跳 存储 最后通讯时间
     global $ws_worker;
+    $connection->lastMessageTime = time(); //  心跳 存储 最后通讯时间
 
-    $data = json_decode($data);
-    sendAll('message',[
-        'uid'=>$connection->uid,
-        'msg'=>$data->data,
-        'session'=>$_SESSION,
-        // 'server'=>$_SERVER,
-    ]);
+    $req = json_decode($data); // 注意数据为对象
+    $action = $req->action;
+    $data = $req->data;
+    
+    switch ($action) {
+        // 连接后 登入信息
+        case 'login':
+            # code...
+        $connection->uid = $data->uid;
+        $connection->uname = $data->uname;
+        sendAll('userConnect',[
+            'uname'=>$connection->uname,
+            'from_conn_id'=>$connection->id,
+            'to_conn_id'=>-1,
+            'msg'=>$data->uname." Online",
+            'clients_list'=>getAllClient(),
+        ]);
+        var_dump($connection);
+            return ;
+        
+        case 'all':
+
+            sendAll('all',[
+                'uname'=>$connection->uname,
+                'from_conn_id'=>$connection->id,
+                'to_conn_id'=>$data->to,
+                'msg'=>$data->message,
+                // 'clients_list'=>getAllClient(),
+            ]);
+            return;
+        case 'to':
+
+        sendOne('to',[
+                'uname'=>$connection->uname,
+                'from_conn_id'=>$connection->id,
+                'to_conn_id'=>$data->to,
+                'msg'=>$data->message,
+                // 'clients_list'=>getAllClient(),
+        ],$data->to);
+            return;
+    }
 
 }
 /**
@@ -68,14 +99,27 @@ function sendAll($action,$data){
         $conn->send(json_encode($data));
     }
 }
-function sendOne($action,$data,$conn){
+function sendOne($action,$data,$conn_id){
     global $ws_worker;
     $data = [
         'action'=>$action,
         'data'=>$data,
     ];
+    $ws_worker->connections[$conn_id]->send(json_encode($data));
+}
 
-    $conn->send(json_encode($data));
+// 获取在线 列表
+function getAllClient(){
+    global $ws_worker;
+    $clients = [];
+    foreach ($ws_worker->connections as $conn) {
+        $clients[]=[
+            'conn_id'=>$conn->id,
+            'uid'=>$conn->uid,
+            'uname'=>$conn->uname,
+        ];
+    }
+    return $clients;
 }
 
 

@@ -1,8 +1,8 @@
-app = new Vue({
+var app = new Vue({
 
     el: '#app',
     data: {
-        name: '',
+        uname: '',
         content: '',
         members: {},
         viewindex: 0,
@@ -14,6 +14,7 @@ app = new Vue({
                 '欢迎来到本闲聊房间',
                 '注意文明用语',
             ],
+            clients:{},
         }
     },
     computed: {
@@ -40,16 +41,18 @@ app = new Vue({
     },
     created: function () {
         console.log('创建后');
+        this.uname = uname;
+        this.uid = uid;
     }
 
 })
 
 
-lay = layui.use(['layer'], function () {
-    var layer = layui.layer;
-    this.msg = function (text = 'hello') {
-        layer.msg(text, {
-            time: 850
-        });
-    }
-});
+// lay = layui.use(['layer'], function () {
+//     var layer = layui.layer;
+//     this.msg = function (text = 'hello') {
+//         layer.msg(text, {
+//             time: 850
+//         });
+//     }
+// });
