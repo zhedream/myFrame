@@ -12,6 +12,8 @@ class MyWebSocket{
             conf.onerror(e)
         }
         this.WebSocket.onmessage = function(e){
+            console.log(e.data);
+            
             let data = JSON.parse(e.data) || e.data;
             conf.onmessage(data,e)
         }

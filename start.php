@@ -19,7 +19,8 @@ function handle_connect($connection) {
     global $ws_worker, $global_uid;
     // 为这个链接分配一个uid
     $connection->uid = ++$global_uid;
-
+    $_SESSION['name_id'] = $global_uid;
+    $_SESSION['get'] = $_GET;
     sendAll('userConnect',[
         'msg'=>"我上线了 Online",
         'uid'=>$connection->uid,
@@ -46,6 +47,8 @@ function handle_message($connection, $data) {
     sendAll('message',[
         'uid'=>$connection->uid,
         'msg'=>$data->data,
+        'session'=>$_SESSION,
+        // 'server'=>$_SERVER,
     ]);
 
 }
