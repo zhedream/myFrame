@@ -11,4 +11,5 @@ Route::get('/', 'app/controllers/IndexController@chat')->name('index.chat'); // 
 // code
 Route::get('/code/Captcha','app/controllers/CodeController@getCaptcha')->name('code.Captcha'); // 验证码
     
-
+Route::get('/user','app/controllers/IndexController@user')->name('index.user');
+        
