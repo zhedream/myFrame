@@ -30,7 +30,7 @@ class IndexController extends Controller {
             $_SESSION['uname'] = $user['uname'];
             message('登陆成功',1,Route('index.chat'),2);
         }else{
-            return back();
+            return message('用户不存在 或密码错误',1,Route('index.login'),2);
         }
     }
     
@@ -47,9 +47,9 @@ class IndexController extends Controller {
             $user->tel_num = '';
             $user->reg_time = date('Y-m-d G:i:s');
             $user->insert();
-            message('注册成功',1,Route('index.login'),2);
+            return message('注册成功',1,Route('index.login'),2);
         }else{
-            return back();
+            return message('用户已注册,忘记密码请联系 管理员',1,Route('index.login'),2);
         }
         
     }

@@ -1,7 +1,7 @@
 
 function connect(){
     ms = new MyWebSocket({
-        url: "ws://127.0.0.1:2347",
+        url: "ws://192.168.13.89:2347",
         onopen: onopen,
         onclose: onclose,
         onmessage: onmessage

@@ -46,7 +46,7 @@ class Route {
         // goto a; // 原始路由
         self::$method = $_SERVER['REQUEST_METHOD'];
         // self::$pathinfo = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';
-        if(isset($_SERVER['PATH_INFO']) && $_SERVER['PATH_INFO']==''){
+        if(!isset($_SERVER['PATH_INFO']) || $_SERVER['PATH_INFO']==''){
             self::$pathinfo = '/';
         }else{
             self::$pathinfo = $_SERVER['PATH_INFO'];
