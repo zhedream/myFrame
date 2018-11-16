@@ -934,6 +934,22 @@ class Model {
         return $this->findAll($sql, $this->whereVals);
     }
 
+    final function first() {
+        $this->from();
+        $sql = $this->select
+            . $this->from
+            . $this->join
+            . $this->leftJoin
+            . $this->rightJoin
+            . $this->where
+            . $this->groupBy
+            . $this->having
+            . $this->orderBy
+            . $this->limit;
+        // var_dump($sql, $this->whereVals);die;
+        return $this->findOne($sql, $this->whereVals);
+    }
+
     /**
      * @param $num // 每页数量
      * @return $data // 分页数据
