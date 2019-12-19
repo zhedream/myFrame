@@ -1,8 +1,8 @@
 
 namespace <?=$namespace?>;
-<?= ($namespace =='app\controllers') ? "\r\n" :  'use app\\controllers\\Controller;'."\r\n" ?>
+<?= ($namespace =='app\Controllers') ? PHP_EOL :  'use app\\controllers\\Controller;'.PHP_EOL ?>
 use core\Request;
-<?= (isset($this->group))? "use ".$this->mspace."\\$fileName;"."\r\n" : "" ?>
+<?= $this->group==true ? "use ".($this->mspace??'app\\Models')."\\$fileName;".PHP_EOL : "use app\\Models\\$fileName;" ?>
 
 class <?=$fileName?>Controller extends Controller {
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\controllers;
+namespace app\Controllers;
 
 use Yansongda\Pay\Pay;
 use Endroid\QrCode\QrCode;

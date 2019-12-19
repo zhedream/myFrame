@@ -15,7 +15,7 @@ class Log {
      */
     public function log($content) {
 
-        fwrite($this->fp, str_repeat('-', 100) . "\r\n" . date("Y-m-d H:i:s") . "\r\n" . "\r\n" . $content . "\r\n");
+        fwrite($this->fp, str_repeat('-', 100) . PHP_EOL . date("Y-m-d H:i:s") . PHP_EOL . PHP_EOL . $content . PHP_EOL);
     }
 
 

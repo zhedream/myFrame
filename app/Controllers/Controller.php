@@ -1,5 +1,5 @@
 <?php
-namespace app\controllers;
+namespace app\Controllers;
 use core\Controller as BashController;
 
 class Controller extends BashController {

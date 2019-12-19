@@ -48,7 +48,7 @@ if($argv[1] == 'make'){
     if ($argv[2] == 'C'){
         
         $make->controller($argv[3]);
-        echo $make->cdir;
+        echo $make->cdir . PHP_EOL;
     }
     if ($argv[2] == 'M'){
         if(isset($argv[4]))
@@ -56,7 +56,7 @@ if($argv[1] == 'make'){
         else
             $make->model($argv[3]);
         
-        echo $make->mdir;
+        echo $make->mdir . PHP_EOL;
     }
     if($argv[2] == 'G'){
         
@@ -68,8 +68,3 @@ if($argv[1] == 'make'){
     }
 
 }
-
-
-
-
-?>

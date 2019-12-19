@@ -8,8 +8,8 @@ namespace libs;
  */
 class Make {
 
-    public $isView = false;
-    public $group = false;
+    public $isView = null;
+    public $group = null;
 
     public $cspace = null; // 控制器 命名空间
     public $mspace = null; // 模型 命名空间
@@ -37,37 +37,37 @@ class Make {
         $this->cname = $name;
         $this->cFname = $fileName;
 
-        $dir = ROOT.$namespace;
+        $dir = ROOT.preg_replace("/\\\\/",'/',$namespace);
         is_dir($dir) OR mkdir($dir, 0777, true);
         
-        if(file_exists(ROOT.$namespace.'/'.$fileName.'Controller.php')){
-            echo '存在 '.ROOT.$namespace.'/'.$fileName.'Controller.php'."\r\n";
-            $this->cdir = ROOT.$namespace.'/'.$fileName.'Controller.php';
+        if(file_exists($dir.'/'.$fileName.'Controller.php')){
+            echo '存在 '.$dir.'/'.$fileName.'Controller.php'.PHP_EOL;
+            $this->cdir = $dir.'/'.$fileName.'Controller.php';
             return $this;
         }
 
         ob_start();
         include(ROOT . 'templates/TempController.php');
         $str = ob_get_clean();
-        file_put_contents(ROOT.$namespace.'/'.$fileName.'Controller.php', "<?php\r\n".$str);
-        $this->cdir = ROOT.$namespace.'/'.$fileName.'Controller.php';
+        file_put_contents($dir.'/'.$fileName.'Controller.php', "<?php".PHP_EOL.$str);
+        $this->cdir = $dir.'/'.$fileName.'Controller.php';
 
         // regist Route
         $putRoute = "// $name
-Route::get('/$name/index','app/controllers/{$fileName}Controller@index')->name('$name.index'); // 显示列表
-Route::get('/$name/search','app/controllers/{$fileName}Controller@search')->name('$name.search'); // 搜索
-Route::get('/$name/add','app/controllers/{$fileName}Controller@add')->name('$name.add'); // 显示 添加
-Route::post('/$name/insert','app/controllers/{$fileName}Controller@insert')->name('$name.insert'); // 添加
-Route::get('/$name/del/{id}','app/controllers/{$fileName}Controller@del')->name('$name.del'); // 删除 post
-Route::get('/$name/mod/{id}','app/controllers/{$fileName}Controller@mod')->name('$name.mod'); // 显示 修改
-Route::post('/$name/update/{id}','app/controllers/{$fileName}Controller@update')->name('$name.update'); // 修改
+Route::get('/$name/index','app/Controllers/{$fileName}Controller@index')->name('$name.index'); // 显示列表
+Route::get('/$name/search','app/Controllers/{$fileName}Controller@search')->name('$name.search'); // 搜索
+Route::get('/$name/add','app/Controllers/{$fileName}Controller@add')->name('$name.add'); // 显示 添加
+Route::post('/$name/insert','app/Controllers/{$fileName}Controller@insert')->name('$name.insert'); // 添加
+Route::get('/$name/del/{id}','app/Controllers/{$fileName}Controller@del')->name('$name.del'); // 删除 post
+Route::get('/$name/mod/{id}','app/Controllers/{$fileName}Controller@mod')->name('$name.mod'); // 显示 修改
+Route::post('/$name/update/{id}','app/Controllers/{$fileName}Controller@update')->name('$name.update'); // 修改
         ";
         $f = fopen(ROOT."route/web.php",'a');
-        fwrite($f,$putRoute."\r\n");
+        fwrite($f,$putRoute.PHP_EOL);
         fclose($f);
         
 
-        echo "sucessful: ".$this->cdir."\r\n";
+        echo "sucessful: ".$this->cdir.PHP_EOL;
         return $this;
     }
 
@@ -126,22 +126,22 @@ Route::post('/$name/update/{id}','app/controllers/{$fileName}Controller@update')
 
         
 
-        $dir = ROOT.$namespace;
+        $dir = ROOT.preg_replace("/\\\\/",'/',$namespace);
         is_dir($dir) OR mkdir($dir, 0777, true);
 
-        if(file_exists(ROOT.$namespace.'/'.$fileName.'.php')){
-            echo '存在 '.ROOT.$namespace.'/'.$fileName.'.php'."\r\n";
-            $this->mdir = ROOT.$namespace.'/'.$fileName.'.php';
+        if(file_exists($dir.'/'.$fileName.'.php')){
+            echo '存在 '.$dir.'/'.$fileName.'.php'.PHP_EOL;
+            $this->mdir = $dir.'/'.$fileName.'.php';
             return $this;
         }
 
         ob_start();
         include(ROOT . 'templates/Temp.php');
         $str = ob_get_clean();
-        file_put_contents(ROOT.$namespace.'/'.$fileName.'.php', "<?php\r\n".$str);
-        $this->mdir = ROOT.$namespace.'/'.$fileName.'.php';
+        file_put_contents($dir.'/'.$fileName.'.php', "<?php".PHP_EOL.$str);
+        $this->mdir = $dir.'/'.$fileName.'.php';
 
-        echo "sucessful: ".$this->mdir."\r\n";
+        echo "sucessful: ".$this->mdir.PHP_EOL;
         return $this;
     }
 
@@ -169,30 +169,30 @@ Route::post('/$name/update/{id}','app/controllers/{$fileName}Controller@update')
         include(ROOT . 'templates/create.html');
         $str = ob_get_clean();
         if(file_exists(ROOT.'views/'.$name.'/create.html'))
-            echo '存在 '.ROOT.'views/'.$name.'/create.html'."\r\n";
+            echo '存在 '.ROOT.'views/'.$name.'/create.html'.PHP_EOL;
         else{
             file_put_contents(ROOT.'views/'.$name.'/create.html', $str);
-            echo "sucessful: ".ROOT.'views/'.$name.'/create.html'."\r\n";
+            echo "sucessful: ".ROOT.'views/'.$name.'/create.html'.PHP_EOL;
         }
         // edit.html
         ob_start();
         include(ROOT . 'templates/edit.html');
         $str = ob_get_clean();
         if(file_exists(ROOT.'views/'.$name.'/edit.html'))
-            echo '存在 '.ROOT.'views/'.$name.'/edit.html'."\r\n";
+            echo '存在 '.ROOT.'views/'.$name.'/edit.html'.PHP_EOL;
         else{
             file_put_contents(ROOT.'views/'.$name.'/edit.html', $str);
-            echo "sucessful: ".ROOT.'views/'.$name.'/edit.html'."\r\n";
+            echo "sucessful: ".ROOT.'views/'.$name.'/edit.html'.PHP_EOL;
         }
         // index.html
         ob_start();
         include(ROOT . 'templates/index.html');
         $str = ob_get_clean();
         if(file_exists(ROOT.'views/'.$name.'/index.html'))
-            echo '存在 '.ROOT.'views/'.$name.'/index.html'."\r\n";
+            echo '存在 '.ROOT.'views/'.$name.'/index.html'.PHP_EOL;
         else{
             file_put_contents(ROOT.'views/'.$name.'/index.html', $str);
-            echo "sucessful: ".ROOT.'views/'.$name.'/index.html'."\r\n";
+            echo "sucessful: ".ROOT.'views/'.$name.'/index.html'.PHP_EOL;
         }
     }
 
@@ -217,6 +217,7 @@ Route::post('/$name/update/{id}','app/controllers/{$fileName}Controller@update')
     function parsePath($name){
         $mode =  debug_backtrace()[1]['function'];
         // dd($mode);
+        $mode = ucfirst($mode);
         $namespace = "app\\".$mode."s";
         
         if(preg_match('/\//',$name)){

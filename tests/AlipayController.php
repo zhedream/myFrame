@@ -1,6 +1,6 @@
 <?php
 
-namespace app\controllers;
+namespace app\Controllers;
 
 use Yansongda\Pay\Pay;
 use libs\Log;
@@ -96,11 +96,11 @@ class AlipayController {
                 ob_clean();
             }
 
-            $a = '订单ID：' . $data->out_trade_no . "\r\n";
-            $a .= '支付总金额：' . $data->total_amount . "\r\n";
-            $a .= '支付状态：' . $data->trade_status . "\r\n";
-            $a .= '商户ID：' . $data->seller_id . "\r\n";
-            $a .= 'app_id：' . $data->app_id . "\r\n";
+            $a = '订单ID：' . $data->out_trade_no . PHP_EOL;
+            $a .= '支付总金额：' . $data->total_amount . PHP_EOL;
+            $a .= '支付状态：' . $data->trade_status . PHP_EOL;
+            $a .= '商户ID：' . $data->seller_id . PHP_EOL;
+            $a .= 'app_id：' . $data->app_id . PHP_EOL;
             $loger->log($a);
 
 

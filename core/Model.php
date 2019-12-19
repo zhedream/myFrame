@@ -1039,7 +1039,7 @@ class Model {
     }
 
     static function TransactionCall(callable $Action) {
-        self::$pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING); // 报错模式 非严格
+        self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING); // 报错模式 非严格
         self::$pdo->beginTransaction();
 
         if ($Action()) {

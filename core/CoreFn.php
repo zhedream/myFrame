@@ -230,9 +230,9 @@ function jj($data, $option = true) {
     // throwE('','');
     // die;
     if (gettype($data) == 'boolean')
-        die('boolean:' . $data . "\r\n<br>file:{$file},<br>line:{$line}");
+        die('boolean:' . $data . PHP_EOL ."<br>file:{$file},<br>line:{$line}");
     if (gettype($data) == 'string ')
-        die('string :' . $data . "\r\n<br>file:{$file},<br>line:{$line}");
+        die('string :' . $data . PHP_EOL ."<br>file:{$file},<br>line:{$line}");
 
     $data['jj-callinfo'] = ['file' => $file, 'line' => $line];
 

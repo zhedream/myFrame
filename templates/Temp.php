@@ -1,6 +1,6 @@
 
 namespace <?=$namespace?>;
-<?= ($namespace =='app\models') ? "\r\n" :  'use app\\models\\Model;'."\r\n" ?>
+<?= ($namespace =='app\Models') ? PHP_EOL :  'use app\\models\\Model;'.PHP_EOL ?>
 use core\RD; // redis 类
 use core\DB; // DB 类
 

@@ -48,7 +48,8 @@ class Loader {
      * 1.dirCodeCount('指定路径范围',类名):path
      */
     public static function auto_load($className) {
-        $path = dirCodeCount(self::$myclassDir, $className);
+        // $path = dirCodeCount(self::$myclassDir, $className);
+        $path = '';
         // echo $path."<br>";
         if (file_exists($path)) {
             if (self::$is_debug)

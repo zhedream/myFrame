@@ -3,6 +3,7 @@
 namespace core;
 
 use \PDO;
+use \PDOException;
 
 DB::getDB();
 
