@@ -1,7 +1,7 @@
 <?php
 
 return array(
-    //    key    value
+    //    key  -  value
     'mode'=> env('mode','dev'),
     'APP_URL' => env('APP_URL','http://lhz.ngrok.xiaomiqiu.cn'),
     'db' => array(
