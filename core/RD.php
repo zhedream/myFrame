@@ -4,6 +4,8 @@ namespace core;
 
 use \Predis\Client as redis;
 
+use PDOException;
+
 RD::getRD();
 
 class RD {
@@ -228,6 +230,3 @@ class RD {
     }
 
 }
-
-
-?>

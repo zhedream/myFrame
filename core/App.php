@@ -40,7 +40,7 @@ class App {
         //UPLOAD目录
         define("UPLOAD_PATH", ROOT . "uploads" . DS);
         //配置目录
-        define("CONFIG_PATH", ROOT . "Config" . DS);
+        define("CONFIG_PATH", ROOT . "config" . DS);
 
         $GLOBALS['config'] = include CONFIG_PATH . "/config.php";
         $conf = $GLOBALS['config'];
