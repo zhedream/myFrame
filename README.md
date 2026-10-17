@@ -96,3 +96,29 @@
 
 
 ## END
+
+## PHP 8 开发环境
+
+需要 PHP 8.2+、Composer、Redis，以及 PHP Redis 扩展（会话）、mbstring、XML 和 PDO MySQL 扩展（数据库功能）。
+
+```sh
+composer install
+# 首次运行时复制配置；已有 env.php 时请保留
+cp -n env.php.example env.php
+# 先启动本地 Redis，再启动 PHP 开发服务器
+php -S 127.0.0.1:9999 -t public public/index.php
+```
+
+首页应显示 `welcome to myFrame`。入口使用 `Asia/Shanghai` 时区；Linux 路径区分大小写。
+日志目录会在首次写日志时创建，请确保项目目录可写。
+
+兼容性验证（需要本地 Redis）：
+
+```sh
+php tests/runtime_smoke.php
+```
+
+依赖已更新为 Predis 3、Smarty 5 和新版 HTMLPurifier，并通过锁文件固定版本。
+Smarty 5 的类名为 `Smarty\Smarty`，自定义控制器若要启用模板引擎，请使用
+`new \Smarty\Smarty()`，并通过 setter 方法配置模板目录等选项。
+默认首页使用框架自己的 PHP 视图，不依赖 Smarty。

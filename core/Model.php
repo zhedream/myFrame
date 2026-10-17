@@ -905,8 +905,7 @@ class Model {
             . $this->limit;
         if ($fill) {
             $whereVals = $this->whereVals;
-            $sql = preg_replace_callback('/\?/', function ($matches) use ($whereVals) {
-                static $whereVals;
+            $sql = preg_replace_callback('/\?/', function ($matches) use (&$whereVals) {
                 $str = "'" . current($whereVals) . "'";
                 next($whereVals);
                 return $str;

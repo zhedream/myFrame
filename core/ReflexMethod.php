@@ -65,7 +65,7 @@ class ReflexMethod extends ReflectionMethod {
     protected function _after_analysis(){
     }
 
-    function invokeArgs($object, array $args = []) {
+    function invokeArgs($object, array $args = []): mixed {
 
         // dd($args);
         // var_dump($this->paramNames);die;
@@ -73,7 +73,7 @@ class ReflexMethod extends ReflectionMethod {
             $object = new $object;
         }
         $this->_before_invokeArgs($args);
-        parent::invokeArgs($object, $args);
+        return parent::invokeArgs($object, $args);
     }
 
     /**

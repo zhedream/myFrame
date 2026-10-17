@@ -31,7 +31,7 @@ class Middleware {
         // dd($request);
         $routeInfo = $request->getCurrentRouteInfo();
         // dd($routeInfo['middlewares']);
-        $middlewares = include ROOT . "Config/middleware.php";
+        $middlewares = include CONFIG_PATH . "middleware.php";
         
         $pipes = $middlewares['middleware']; // 全局中间件
 

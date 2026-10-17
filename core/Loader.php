@@ -79,6 +79,3 @@ function substr_ab($str, $a = 0, $b = 0) {
     // echo $str2;
     return $str2;
 }
-
-?>
-

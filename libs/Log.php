@@ -7,7 +7,14 @@ class Log {
     private $fp = null;
 
     public function __construct($fileName) {
-        $this->fp = fopen(ROOT . 'logs/' . $fileName . '.log', 'a');
+        $directory = ROOT . 'logs/';
+        if (!is_dir($directory) && !mkdir($directory, 0775, true) && !is_dir($directory)) {
+            throw new \RuntimeException('Cannot create log directory');
+        }
+        $this->fp = fopen($directory . $fileName . '.log', 'a');
+        if ($this->fp === false) {
+            throw new \RuntimeException('Cannot open log file');
+        }
     }
 
     /**

@@ -78,7 +78,7 @@ class App {
                 $action = 'index';
             }
         }
-        $fullController = 'app\\controllers\\' . $controller;
+        $fullController = 'app\\Controllers\\' . $controller;
         $_C = new $fullController;
         $_C->$action(array_slice($argv, 3));
     }
